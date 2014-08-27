@@ -29,12 +29,12 @@ class FlowMonitor:
 
 		for i in range(len(self.interfacesList)):
 			completeInterfaceDict = dict.fromkeys(['name','dpid','capacity', 'lowerLimit', 'upperLimit', 'threshold', 'samples','useAverages','monitoring','isCongested','numQueues'])
-			completeInterfaceDict['name'] = code.interfacesList[i]['name']
-			completeInterfaceDict['dpid'] = code.interfacesList[i]['dpid']
-			completeInterfaceDict['capacity'] = code.interfacesList[i]['capacity']
+			completeInterfaceDict['name'] = self.interfacesList[i]['name']
+			completeInterfaceDict['dpid'] = self.interfacesList[i]['dpid']
+			completeInterfaceDict['capacity'] = self.interfacesList[i]['capacity']
 			completeInterfaceDict['lowerLimit'] = lowerLimit
 			completeInterfaceDict['upperLimit'] = upperLimit
-			completeInterfaceDict['threshold'] = threshold
+			completeInterfaceDict['threshold'] = upperLimit
 			completeInterfaceDict['samples'] = []
 			completeInterfaceDict['prevEma'] = 0
 			completeInterfaceDict['currentEma'] = 0
@@ -43,36 +43,21 @@ class FlowMonitor:
 			completeInterfaceDict['isCongested'] = 0
 			completeInterfaceDict['numQueues'] = 10
 			self.completeInterfaceList.append(completeInterfaceDict)
-    
 
-            #In Mbps: Threshold is link capacity * some factor
-            # toDo: It should receive a % of occupation and it should measure the link capacity.
-            #self.upperLimit = upperLimit
-            #self.lowerLimit = lowerLimit
-            #self.threshold  = self.upperLimit
+			for i in range(len(self.completeInterfaceList)):
+				self.completeInterfaceList[i]['useAverages'] = deque( maxlen=self.nSamples )
 
-            #self.useAverages = deque( maxlen=self.nSamples )
-            for i in range(len(self.completeInterfaceList)):
-                self.completeInterfaceList[i]['useAverages'] = deque( maxlen=self.nSamples )
-
-            #Control variables
-            self.threadId=0
-	            
-	    #self.interface='eth0'
-	    
-        # toDo: Obtain this data from the module that handles de switch information
-
-            self.resetQueues()
-            self.initWindow()
-
-            print 'Initialization proccess finished, average: ' + str(self.useAverages)
+			#Control variables
+			self.threadId=0
+			self.resetQueues()
+			self.initWindow()
+			print 'Initialization proccess finished'
 
         def initWindow(self):
 
             for j in range(len(self.completeInterfaceList)):
                 for i in range(self.nSamples):                
                     self.completeInterfaceList[j]['useAverages'].append(0)
-            print self.useAverages
 
             for i in range(self.nSamples):
 
@@ -86,7 +71,7 @@ class FlowMonitor:
                 #print useAverages
 
                 if i == 0:
-                    self.completeInterfaceList[j]['prevema'] = self.lastSamples
+                    self.completeInterfaceList[j]['prevema'] = lastSamples
                     #self.prevema = self.lastSamples
 
             for j in range(len(self.completeInterfaceList)):       
@@ -100,14 +85,14 @@ class FlowMonitor:
 
 			#sample list of dicts, each dict has ['name']['sample']
 			result = self.getSample() # < ---- GOTTA CHECK THIS
-
+			lastSamples=0
 			for j in range(len(self.completeInterfaceList)):
 				lastSamples = result[j]['sample']
 				self.completeInterfaceList[j]['useAverages'].popleft()
 				self.completeInterfaceList[j]['useAverages'].append(lastSamples)
 
 			if i == 0:
-				self.completeInterfaceList[j]['prevema'] = self.lastSamples
+				self.completeInterfaceList[j]['prevema'] = lastSamples
 	
 			for j in range(len(self.completeInterfaceList)):
 				for bar, close in enumerate(self.completeInterfaceList[j]['useAverages']):
