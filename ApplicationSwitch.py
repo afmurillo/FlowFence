@@ -1,5 +1,5 @@
 from FeedbackMessage import *
-from LinkMonitoring import *
+from FlowMonitor import *
 import json
 import subprocess
 
@@ -85,7 +85,7 @@ if __name__=="__main__":
 		
 		print 'LALALALA dpid: ' + str(code.dpid)
 		
-		code.linkState=LinkMonitoring(code.dpid, code.samples, code.period, code.intervalTime, code.upperLimit, code.lowerLimit, code.incremental, code.decremental)		
+		code.linkState=FlowMonitor(code.dpid, code.samples, code.period, code.intervalTime, code.upperLimit, code.lowerLimit, code.incremental, code.decremental)		
 		code.linkState.startMonitoring()
 
 		#Check how to stop it properly
