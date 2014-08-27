@@ -77,25 +77,24 @@ class FlowMonitor:
 
 	def updateWindow(self):
 
-        for i in range(self.nSamples):
+		for i in range(self.nSamples):
 
-            #sample list of dicts, each dict has ['name']['sample']
-            result = self.getSample() # < ---- GOTTA CHECK THIS
-            for j in range(len(self.completeInterfaceList)):
-                lastSamples = result[j]['sample']
-                self.completeInterfaceList[j]['useAverages'].popleft()
-                self.completeInterfaceList[j]['useAverages'].append(lastSamples)
+			#sample list of dicts, each dict has ['name']['sample']
+			result = self.getSample() # < ---- GOTTA CHECK THIS
 
-            if i == 0:
-                self.completeInterfaceList[j]['prevema'] = self.lastSamples
+			for j in range(len(self.completeInterfaceList)):
+				lastSamples = result[j]['sample']
+				self.completeInterfaceList[j]['useAverages'].popleft()
+				self.completeInterfaceList[j]['useAverages'].append(lastSamples)
 
-            for j in range(len(self.completeInterfaceList)):
-
-                for bar, close in enumerate(self.completeInterfaceList[j]['useAverages']):
-                    self.completeInterfaceList[j]['currentEma'] = self.ema(bar, self.completeInterfaceList[j]['useAverages'], self.period, self.completeInterfaceList[j]['prevEma'], smoothing=None)
-                    self.completeInterfaceList[j]['prevEma'] = self.completeInterfaceList[j]['currentEma']
-
-                print "Current channel occupation for interface " + str(self.completeInterfaceList[j]['name']) + " : " + str(self.completeInterfaceList[j]['currentEma'])
+			if i == 0:
+				self.completeInterfaceList[j]['prevema'] = self.lastSamples
+	
+			for j in range(len(self.completeInterfaceList)):
+				for bar, close in enumerate(self.completeInterfaceList[j]['useAverages']):
+					self.completeInterfaceList[j]['currentEma'] = self.ema(bar, self.completeInterfaceList[j]['useAverages'], self.period, self.completeInterfaceList[j]['prevEma'], smoothing=None)
+					self.completeInterfaceList[j]['prevEma'] = self.completeInterfaceList[j]['currentEma']
+				print "Current channel occupation for interface " + str(self.completeInterfaceList[j]['name']) + " : " + str(self.completeInterfaceList[j]['currentEma'])
 		
         def startMonitoring(self):
             
@@ -116,49 +115,33 @@ class FlowMonitor:
 	def monitor(self):
 
 		while self.monitoring == 1:
-
 			try:
-
 				self.updateWindow()
-
 				#Has histeresis
-                for j in range(len(self.completeInterfaceList)):
-				    if (self.completeInterfaceList[j]['isCongested'] == 0) and (self.completeInterfaceList[j]['currentEma'] >= self.completeInterfaceList[j]['threshold']:
+				for j in range(len(self.completeInterfaceList)):
+					if (self.completeInterfaceList[j]['isCongested'] == 0) and (self.completeInterfaceList[j]['currentEma'] >= self.completeInterfaceList[j]['threshold']):
+						print 'Congestion detected in interface: ' + self.completeInterfaceList[j]['name']
+						self.completeInterfaceList[j]['isCongested']=1
+						self.completeInterfaceList[j]['threshold']=self.completeInterfaceList[j]['lowerLimit']
+						self.initQueues()
+						self.reportObject.congestionDetected(self.completeInterfaceList[j]['dpid'])
+						#toDo: After of reporting, it should init the queues and wait for further actions from the controller
+						print 'Decrementing..'
 
-    					print 'Congestion detected in interface: ' + self.completeInterfaceList[j]['name']
-    					self.completeInterfaceList[j]['isCongested']=1
-    					self.completeInterfaceList[j]['threshold']=self.completeInterfaceList[j]['lowerLimit']
-    					self.initQueues()
-    					self.reportObject.congestionDetected(self.completeInterfaceList[j]['dpid'])
-    					#toDo: After of reporting, it should init the queues and wait for further actions from the controller
-    					print 'Decrementing..'
-    					#newRate = 100000000/self.numQueues
-    					#for i in range(self.numQueues):
-    						#subprocess.check_output("ovs-vsctl set queue " + self.queues_uuid[i+1]['uuid'] + " other-config:max-rate="+str(newRate), shell=True)
-    						#flows=subprocess.check_output("ovs-ofctl dump-flows eth0br", shell=True)
-    					#print flows
+					elif (self.completeInterfaceList[j]['isCongested'] == 1) and (self.completeInterfaceList[j]['currentEma'] <= self.completeInterfaceList[j]['threshold']):
+						print 'Congestion ceased'
+						self.completeInterfaceList[j]['isCongested']=0
+						self.completeInterfaceList[j]['threshold']=self.completeInterfaceList[j]['upperLimit']
+						self.reportObject.congestionDetected(self.completeInterfaceList[j]['dpid'])
 
-    				elif (self.completeInterfaceList[j]['isCongested'] == 1) and (self.completeInterfaceList[j]['currentEma'] <= self.completeInterfaceList[j]['threshold']):
+					if (self.completeInterfaceList[j]['isCongested'] == 1) and (self.completeInterfaceList[j]['currentEma'] >= self.completeInterfaceList[j]['lowerLimit']):
+						#Decrement delta
+						print 'Decrementing..'
 
-    					print 'Congestion ceased'
-    					self.completeInterfaceList[j]['isCongested']=0
-    					self.completeInterfaceList[j]['threshold']=self.completeInterfaceList[j]['upperLimit']
-    					self.reportObject.congestionDetected(self.completeInterfaceList[j]['dpid'])
-
-    				if (self.completeInterfaceList[j]['isCongested'] == 1) and (self.completeInterfaceList[j]['currentEma'] >= self.completeInterfaceList[j]['lowerLimit']):
-    					#Decrement delta
-    					print 'Decrementing..'
-    					#newRate = 100000000/self.numQueues
-    	
-    					#for i in range(self.numQueues):
-    					#subprocess.check_output("ovs-vsctl set queue " + self.queues_uuid[i+1]['uuid'] + " other-config:max-rate="+str(newRate), shell=True)
-    					#flows=subprocess.check_output("ovs-ofctl dump-flows eth0br", shell=True)
-    					#print flows
-
-            except KeyboardInterrupt:
-                print " \n *** So long and thanks for all the fish! *** "
-                self.monitoring = 0
-                break
+			except KeyboardInterrupt:
+				print " \n *** So long and thanks for all the fish! *** "
+				self.monitoring = 0
+				break
 
 	def initQueues(self):
 
@@ -252,30 +235,27 @@ class FlowMonitor:
 
         #toDo: Handle to manage all interfaces samples
         def getSample(self, intervalTime=1.0):
+		samplesList=[]
 
-            # Creates a list containing 5 lists initialized to 0            
-            #Creates a matrix of interfacex x nSamples size
-            samplesList=[]
-            for j in range(len(self.completeInterfaceList)):
-                sampleDict=dict.fromkeys(['interfaceName'],['sample'])                
-                samplesList.append(sampleDict)
-            
-            #lists to Store first and second sample value of each interface
-            # Each value of a and b represents a sample taken in each interface
-            a=[]
-            b=[]
-                                
-            for j in range(len(self.completeInterfaceList)):
-                    a.append((float(subprocess.check_output("cat /proc/net/dev | grep " + self.completeInterfaceList[j]['name'] + " | awk '{print $10;}'", shell=True).split('\n')[0])))
+		for j in range(len(self.completeInterfaceList)):
+			sampleDict=dict.fromkeys(['interfaceName'],['sample'])
+			samplesList.append(sampleDict)
 
-            sleep(1.0)                    
+		#lists to Store first and second sample value of each interface
+		# Each value of a and b represents a sample taken in each interface
+		a=[]
+		b=[]
 
-            for j in range(len(self.completeInterfaceList)):                    
-    	           	b.append((float(subprocess.check_output("cat /proc/net/dev | grep " + self.completeInterfaceList[j]['name'] + " | awk '{print $10;}'", shell=True).split('\n')[0])))                                                    
-                    samplesList[j]['name'] = self.completeInterfaceList[j]['name']
-                    samplesList[j]['sample']=((b[j]-a[j])/1048576)
+		for j in range(len(self.completeInterfaceList)):
+			a.append((float(subprocess.check_output("cat /proc/net/dev | grep " + self.completeInterfaceList[j]['name'] + " | awk '{print $10;}'", shell=True).split('\n')[0])))
+		sleep(1.0)
 
-            return samplesList
+		for j in range(len(self.completeInterfaceList)):
+			b.append((float(subprocess.check_output("cat /proc/net/dev | grep " + self.completeInterfaceList[j]['name'] + " | awk '{print $10;}'", shell=True).split('\n')[0])))
+			samplesList[j]['name'] = self.completeInterfaceList[j]['name']
+			samplesList[j]['sample']=((b[j]-a[j])/1048576)
+
+		return samplesList
 
     #todo: Improve the flow dictionary
 	def createFlowDict(self, nwDst, interface):		
