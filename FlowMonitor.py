@@ -268,7 +268,7 @@ class FlowMonitor:
             for j in range(len(self.completeInterfaceList)):
                     a.append((float(subprocess.check_output("cat /proc/net/dev | grep " + self.completeInterfaceList[j]['name'] + " | awk '{print $10;}'", shell=True).split('\n')[0])))
 
-            sleep(1.0)                    
+            sleep(intervalTime)                    
 
             for j in range(len(self.completeInterfaceList)):                    
     	           	b.append((float(subprocess.check_output("cat /proc/net/dev | grep " + self.completeInterfaceList[j]['name'] + " | awk '{print $10;}'", shell=True).split('\n')[0])))                                                    
