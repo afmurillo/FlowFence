@@ -19,12 +19,31 @@ class FlowMonitor:
 
         def __init__(self, samples=10, period=3, intervalTime=1.0, upperLimit=10*0.8, lowerLimit=10*0.6):
 
-            # SOME DATA LIKE INTERFACES NAME AND ETC, SHOULD BE OBTAINED USING SWITCH CHARACTERISTICS!!
+		# SOME DATA LIKE INTERFACES NAME AND ETC, SHOULD BE OBTAINED USING SWITCH CHARACTERISTICS!!
+		self.nSamples=samples
+		self.period=period
+		self.intervalTime=intervalTime
+		self.switchProperties=SwitchProperties()
+		self.interfacesList = self.switchProperties.getInterfaces()
+		self.completeInterfaceList=[]
 
-            self.nSamples=samples
-            self.period=period
-            
-            self.intervalTime=intervalTime
+		for i in range(len(self.interfacesList)):
+			completeInterfaceDict = dict.fromkeys(['name','dpid','capacity', 'lowerLimit', 'upperLimit', 'threshold', 'samples','useAverages','monitoring','isCongested','numQueues'])
+			completeInterfaceDict['name'] = code.interfacesList[i]['name']
+			completeInterfaceDict['dpid'] = code.interfacesList[i]['dpid']
+			completeInterfaceDict['capacity'] = code.interfacesList[i]['capacity']
+			completeInterfaceDict['lowerLimit'] = lowerLimit
+			completeInterfaceDict['upperLimit'] = upperLimit
+			completeInterfaceDict['threshold'] = threshold
+			completeInterfaceDict['samples'] = []
+			completeInterfaceDict['prevEma'] = 0
+			completeInterfaceDict['currentEma'] = 0
+			completeInterfaceDict['useAverages'] = 0
+			completeInterfaceDict['monitoring'] = 0
+			completeInterfaceDict['isCongested'] = 0
+			completeInterfaceDict['numQueues'] = 10
+			self.completeInterfaceList.append(completeInterfaceDict)
+    
 
             #In Mbps: Threshold is link capacity * some factor
             # toDo: It should receive a % of occupation and it should measure the link capacity.
@@ -246,13 +265,10 @@ class FlowMonitor:
 		a=[]
 		b=[]
 
-<<<<<<< HEAD
-            sleep(intervalTime)                    
-=======
 		for j in range(len(self.completeInterfaceList)):
 			a.append((float(subprocess.check_output("cat /proc/net/dev | grep " + self.completeInterfaceList[j]['name'] + " | awk '{print $10;}'", shell=True).split('\n')[0])))
-		sleep(1.0)
->>>>>>> 10b0887475e627f7d60dcc72ffc1d3aa2b8ec748
+
+		sleep(intervalTime)
 
 		for j in range(len(self.completeInterfaceList)):
 			b.append((float(subprocess.check_output("cat /proc/net/dev | grep " + self.completeInterfaceList[j]['name'] + " | awk '{print $10;}'", shell=True).split('\n')[0])))
@@ -294,7 +310,6 @@ class FlowMonitor:
 #todo: Main is broken, fix it, is it still broken?
 if __name__=="__main__":
 
-    switchProperties = SwitchProperties()    
     nSamples=10
     period = 3  #number of bars to average
     intervalTime=1.0
@@ -305,26 +320,4 @@ if __name__=="__main__":
 
     useAverages = deque( maxlen=nSamples )
     code = FlowMonitor(nSamples, intervalTime, upperLimit)
-    code.interfacesList = switchProperties.getInterfaces()
-    code.completeInterfaceList=[]
-
-    for i in range(len(code.interfacesList)):
-        completeInterfaceDict = dict.fromkeys(['name','dpid','capacity', 'lowerLimit', 'upperLimit', 'threshold', 'samples','useAverages','monitoring','isCongested','numQueues'])
-        completeInterfaceDict['name'] = code.interfacesList[i]['name']
-        completeInterfaceDict['dpid'] = code.interfacesList[i]['dpid']
-        completeInterfaceDict['capacity'] = code.interfacesList[i]['capacity']
-        completeInterfaceDict['lowerLimit'] = lowerLimit
-        completeInterfaceDict['upperLimit'] = upperLimit
-        completeInterfaceDict['threshold'] = threshold
-        completeInterfaceDict['samples'] = []
-        completeInterfaceDict['prevEma'] = 0
-        completeInterfaceDict['currentEma'] = 0
-        completeInterfaceDict['useAverages'] = 0
-        completeInterfaceDict['monitoring'] = 0
-        completeInterfaceDict['isCongested'] = 0
-        completeInterfaceDict['numQueues'] = 10
-        code.completeInterfaceList.append(completeInterfaceDict)
-
-    print 'Initialization proccess finished, average: ' + str(useAverages)
-
     code.startMonitoring()
