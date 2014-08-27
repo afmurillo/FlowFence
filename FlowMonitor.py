@@ -29,7 +29,7 @@ class FlowMonitor:
             # toDo: It should receive a % of occupation and it should measure the link capacity.
             self.upperLimit = upperLimit
             self.lowerLimit = lowerLimit
-	    self.threshold  = self.upperLimit
+            self.threshold  = self.upperLimit
 
             self.useAverages = deque( maxlen=self.nSamples )
 
@@ -94,6 +94,7 @@ class FlowMonitor:
 
         def startMonitoring(self):
             
+            print self.completeInterfaceList
             self.reportObject = ApplicationSwitch()
 
             self.monitoring=1            
@@ -293,19 +294,6 @@ class FlowMonitor:
 
 #todo: Main is broken, fix it, is it still broken?
 if __name__=="__main__":
-    #        def __init__(self, dpid, samples=10, period=3, intervalTime=1.0, upperLimit=10*0.8, lowerLimit=10*0.6):
-    # To get the dpid
-    #ovs-ofctl show system@eth1br | grep dpid | awk '{print $4;}', output: dpid:00000049d0b1217c
-    
-    #that's a friggin' long line!
-    #dpid=subprocess.check_output("ovs-ofctl show system@eth1br | grep dpid | awk '{print $4;}'", shell=True).split(':')[1].split('\n')[0].split('c')[0]
-    #print "Dpid: " + dpid
-
-    #Another way of getting the dpid, used in ApplicationSwitch
-    #self.interface='eth0'
-    #awk="{print $3;}'"
-    #awkString="awk '" + awk
-    #self.dpid=subprocess.check_output('ovs-vsctl list bridge ' + self.interface + 'br | grep datapath_id | ' + awkString, shell=True)
 
     switchProperties = switchProperties()    
     nSamples=10
@@ -314,10 +302,27 @@ if __name__=="__main__":
 
     #toDo: Handle this as a percentage of total link capacity
     upperLimit = 8.4
+    lowerLimit = 0.6
 
     useAverages = deque( maxlen=nSamples )
     code = FlowMonitor(dpid, nSamples, intervalTime, upperLimit)
     code.interfacesList = switchProperties.getInterfaces()
+    code.completeInterfaceList=[]
+
+    for i in range(len(code.interfacesList)):
+        completeInterfaceDict = dict.fromkeys(['name','dpid','capacity', 'lowerLimit', 'upperLimit', 'threshold', 'samples','useAverages','monitoring','isCongested','numQueues'])
+        completeInterfaceDict['name'] = code.interfacesList[i]['name']
+        completeInterfaceDict['dpid'] = code.interfacesList[i]['dpid']
+        completeInterfaceDict['capacity'] = code.interfacesList[i]['capacity']
+        completeInterfaceDict['lowerLimit'] = lowerLimit
+        completeInterfaceDict['upperLimit'] = upperLimit
+        completeInterfaceDict['threshold'] = threshold
+        completeInterfaceDict['samples'] = []
+        completeInterfaceDict['useAverages'] = 0
+        completeInterfaceDict['monitoring'] = 0
+        completeInterfaceDict['isCongested'] = 0
+        completeInterfaceDict['numQueues'] = 10
+        code.completeInterfaceList.append(completeInterfaceDict)
 
     print 'Initialization proccess finished, average: ' + str(useAverages)
 
