@@ -5,7 +5,7 @@ from collections import deque
 import threading
 
 from ApplicationSwitch import *
-from switchProperties import *
+from SwitchProperties import *
 
 
 class FlowMonitor:
@@ -16,7 +16,7 @@ class FlowMonitor:
             subprocess.check_output('./clear_queues.sh ' + self.interface + ' ' + self.interface + 'br', shell=True)
             subprocess.check_output('ovs-ofctl del-flows ' + self.interface + 'br', shell=True)
 
-        def __init__(self, dpid, samples=10, period=3, intervalTime=1.0, upperLimit=10*0.8, lowerLimit=10*0.6):
+        def __init__(self, samples=10, period=3, intervalTime=1.0, upperLimit=10*0.8, lowerLimit=10*0.6):
 
             # SOME DATA LIKE INTERFACES NAME AND ETC, SHOULD BE OBTAINED USING SWITCH CHARACTERISTICS!!
 
@@ -48,7 +48,6 @@ class FlowMonitor:
 	    self.interface='eth0'
 	    
         # toDo: Obtain this data from the module that handles de switch information
-	    self.dpid=dpid
 
             self.resetQueues()
             self.initWindow()
@@ -126,7 +125,7 @@ class FlowMonitor:
 					self.isCongested=1
 					self.Threshold=self.lowerLimit
 					self.initQueues()
-					self.reportObject.congestionDetected(self.dpid)
+					self.reportObject.congestionDetected(self.completeInterfaceList[0]['dpid'])
 					#toDo: After of reporting, it should init the queues and wait for further actions from the controller
 					print 'Decrementing..'
 					#newRate = 100000000/self.numQueues
@@ -295,7 +294,7 @@ class FlowMonitor:
 #todo: Main is broken, fix it, is it still broken?
 if __name__=="__main__":
 
-    switchProperties = switchProperties()    
+    switchProperties = SwitchProperties()    
     nSamples=10
     period = 3  #number of bars to average
     intervalTime=1.0
@@ -305,7 +304,7 @@ if __name__=="__main__":
     lowerLimit = 0.6
 
     useAverages = deque( maxlen=nSamples )
-    code = FlowMonitor(dpid, nSamples, intervalTime, upperLimit)
+    code = FlowMonitor(nSamples, intervalTime, upperLimit)
     code.interfacesList = switchProperties.getInterfaces()
     code.completeInterfaceList=[]
 
