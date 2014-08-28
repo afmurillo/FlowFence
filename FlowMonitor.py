@@ -236,7 +236,27 @@ class FlowMonitor:
                  
             else:
                 return prevma + ((series[bar] - prevma) / (bar + 1.0))
+		
+		def getFlows(self):
+			# A list of dicts is created for each interface
+			# Dict estructure: dl_src, dl_dst, nw_src, nw_dst, length(bytes), action
+			self.FlowInterfaceDictList=[]
 
+			#toDo: Actually, we should modify flows, to receive a parameter with the interface name
+			for each i in range(len(self.completeInterfaceList)):
+					flowIntDict = dict.fromkeys(['interfaceName'],['flowList'])
+					flowIntDict['interfaceName']=self.completeInterfaceList[i]['name']
+					flowIntDict['flowList']=[]
+
+					#IN THE NEX LINE, we should pass the interface name
+					flowString=subprocess.check_output('./flows.sh', shell=True)
+					numFlows=flowString.split('\n')[0].split('=')[1]
+					#from the split with '\n': 1 dl_src, 2 dl_dst, 3 nw_src, 4 nw_dst, 5 legnth, 6 action
+						for each j in range(numFlows):
+							flowDict=dict.fromKeys(['dl_src','dl_dst','nw_src','nw_dst','length','action'])
+							
+
+					
         #toDo: Handle to manage all interfaces samples
         def getSample(self, intervalTime=1.0):
 		samplesList=[]
