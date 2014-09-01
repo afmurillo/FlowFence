@@ -89,9 +89,9 @@ class FlowMonitor:
 
 		# First, we get samples from all the flows in all interfaces
 		for j in range(len(self.completeInterfaceList)):			
-			if self.completeInterfaceList[j]['name'] == self.completeFlowList[j]['interfaceName']
-				self.completeFlowList[j]['flowList'] = self.getflows(self.completeFlowList[j]['interfaceName'])
-			
+			if self.completeInterfaceList[j]['name'] == self.completeFlowList[j]['interfaceName']:
+				self.completeFlowList[j]['flowList'] = self.getFlows(self.completeFlowList[j]['interfaceName'])
+		print 'Flow List: ' + str(self.completeFlowList)
 		for i in range(self.nSamples):
 
 			# Sample list of dicts, each dict has ['name']['sample']
@@ -248,32 +248,39 @@ class FlowMonitor:
                  
             else:
                 return prevma + ((series[bar] - prevma) / (bar + 1.0))
-		
-		def getFlows(self, interfaceName):
-			# A list of dicts is created for each interface
-			# Dict estructure: dl_src, dl_dst, nw_src, nw_dst, length(bytes), action			
 
-			flowList=[]
 
-			prevFlowString=subprocess.check_output('./flows.sh ' + interfaceName, shell=True)
+	def getFlows(self, interfaceName):
+		# A list of dicts is created for each interface
+		# Dict estructure: dl_src, dl_dst, nw_src, nw_dst, length(bytes), action			
 
-			# toDo: Check a better way of doing this, what happens with flows that die?
-			time.sleep(0.4)
+		flowList=[]
+		prevFlowString=subprocess.check_output('./flows.sh ' + interfaceName, shell=True)
 
-			flowString=subprocess.check_output('./flows.sh ' + interfaceName, shell=True)
-			numFlows=flowString.split('\n')[0].split('=')[1]
+		# toDo: Check a better way of doing this, what happens with flows that die?
+		sleep(0.4)
 
-			for each i in range(numFlows):
-				flowDict=dict.fromKeys(['dl_src','dl_dst','nw_src','nw_dst','length','action'])
-				flowDict['dl_src']=flowString.split('\n')[1].split('=')[1].split(' ')[i]
-				flowDict['dl_dst']=flowString.split('\n')[2].split('=')[1].split(' ')[i]
-				flowDict['nw_src']=flowString.split('\n')[3].split('=')[1].split(' ')[i]
-				flowDict['nw_dst']=flowString.split('\n')[4].split('=')[1].split(' ')[i]
-				flowDict['length']=flowString.split('\n')[5].split('=')[1].split(' ')[i]-prevFlowString.split('\n')[5].split('=')[1].split(' ')[i]
-				flowDict['action']=flowString.split('\n')[6].split('=')[1].split(' ')[i]
-				flowList.append(flowDict)
+		flowString=subprocess.check_output('./flows.sh ' + interfaceName, shell=True)
+		numFlows=int(flowString.split('\n')[0].split('=')[1])
+
+		for i in range(numFlows):
+			flowDict=dict.fromkeys(['dl_src','dl_dst','nw_src','nw_dst','length','action'])
+			flowDict['dl_src']=flowString.split('\n')[1].split('=')[1].split(' ')[i]
+			flowDict['dl_dst']=flowString.split('\n')[2].split('=')[1].split(' ')[i]
+			flowDict['nw_src']=flowString.split('\n')[3].split('=')[1].split(' ')[i]
+			flowDict['nw_dst']=flowString.split('\n')[4].split('=')[1].split(' ')[i]
+			flowDict['action']=flowString.split('\n')[6].split('=')[1].split(' ')[i]
+			#print "Flow List, without lenth \n " + str(flowDict)
+			aux1 = flowString.split('\n')[5].split('=')[1].split(' ')[i]
+			aux2 = prevFlowString.split('\n')[5].split('=')[1].split(' ')[i]
+			if (aux1 is not None) and (aux2 is not None):
+				#print "Lengths, current = " + str(aux1) + " previous= " + str(aux2)
+				flowDict['length']=int(aux1) - int(aux2)
+			else:
+				flowDict['length']=0
+			flowList.append(flowDict)
 					
-			return flowList			
+		return flowList			
 
         def getSample(self, intervalTime=1.0):
 		samplesList=[]
