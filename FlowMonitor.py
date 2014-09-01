@@ -163,14 +163,13 @@ class FlowMonitor:
 				break
 
 	def initQueues(self):
-	
-		for i in range(len(self.completeInterfaceList)):
 
+		for i in range(len(self.completeInterfaceList)):
 			subprocess.check_output('./clear_queues.sh ' + self.completeInterfaceList[i]['name'] + ' ' + self.completeInterfaceList[i]['name'] + 'br', shell=True)
 			self.queues_uuid=[]
 
-		qosString='ovs-vsctl -- set Port ' + self.interface + ' qos=@testqos -- --id=@testqos create QoS type=linux-htb'
-		queuesString=''
+			qosString='ovs-vsctl -- set Port ' + self.completeInterfaceList[i]['name'] + ' qos=@testqos -- --id=@testqos create QoS type=linux-htb'
+			queuesString=''
 
 			for j in range(self.numQueues):
 				aQueue= ',' + str(j+1) +'=@queue' + str(j+1)
@@ -180,7 +179,7 @@ class FlowMonitor:
 			#toDo: Check the string creation
 
 			queuesCreation='-- --id=@queue0 create Queue other-config:max-rate=1000000000 '
-			#toDj: Check the numqueues handling
+			#toDo: Check the numqueues handling
 
 			for j in range(self.numQueues):
 				aCreation='-- --id=@queue' + str(j+1) + ' create Queue other-config:max-rate=1000000000 '

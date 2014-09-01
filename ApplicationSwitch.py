@@ -1,5 +1,7 @@
 from FeedbackMessage import *
 from FlowMonitor import *
+from SwitchProperties import *
+
 import json
 import subprocess
 
@@ -84,24 +86,23 @@ class ApplicationSwitch:
 
 if __name__=="__main__":
 
-		code=ApplicationSwitch()
-		
-		print 'Current dpids: ' 
-		for i in range(len(code.interfacesList)):
-			print "Dpid: " + str(code.interfacesList[i]['dpid'])
-		
-		code.linkState=FlowMonitor(code.dpid, code.samples, code.period, code.intervalTime, code.upperLimit, code.lowerLimit)		
-		code.linkState.startMonitoring()
+	code=ApplicationSwitch()
+	print 'Current dpids: '
+	for i in range(len(code.interfacesList)):
 
-		#toDo: Check how to stop it properly
-		while True:
-			try:
+		print "Dpid: " + str(code.interfacesList[i]['dpid'])
 
-				a=1
+	code.linkState=FlowMonitor(code.samples, code.period, code.intervalTime, code.upperLimit, code.lowerLimit)
+	code.linkState.startMonitoring()
+	
+	#toDo: Check how to stop it properly
 
-			except KeyboardInterrupt:
+	while True:
+		try:
+			a=1
 
-				print " \n *** So long and thanks for all the fish! *** "
-				code.linkState.stopMonitoring()
-				self.msgSender.closeConnection()
-        		break        	
+		except KeyboardInterrupt:
+			print " \n *** So long and thanks for all the fish! *** "
+			code.linkState.stopMonitoring()
+			self.msgSender.closeConnection()
+			break        	
