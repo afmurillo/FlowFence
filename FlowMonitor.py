@@ -140,7 +140,9 @@ class FlowMonitor:
 						self.completeInterfaceList[j]['isCongested']=1
 						self.completeInterfaceList[j]['threshold']=self.completeInterfaceList[j]['lowerLimit']
 						self.initQueues()
-						self.reportObject.congestionDetected(self.completeInterfaceList[j]['dpid'])
+						#toDo: This should start a thread in Application switch that "dies", once the local control and congestion message is sent
+						#self.completeFlowList[j]['flowList']
+						self.reportObject.congestionDetected(self.completeInterfaceList[j]['dpid'], self.completeFlowList[j]['flowList'])
 						#toDo: After of reporting, it should init the queues and wait for further actions from the controller
 						print 'Decrementing..'
 
@@ -148,9 +150,10 @@ class FlowMonitor:
 						print 'Congestion ceased'
 						self.completeInterfaceList[j]['isCongested']=0
 						self.completeInterfaceList[j]['threshold']=self.completeInterfaceList[j]['upperLimit']
-						self.reportObject.congestionDetected(self.completeInterfaceList[j]['dpid'])
+						self.reportObject.congestionDetected(self.completeInterfaceList[j]['dpid'], self.completeFlowList[j]['flowList'])
 
 					if (self.completeInterfaceList[j]['isCongested'] == 1) and (self.completeInterfaceList[j]['currentEma'] >= self.completeInterfaceList[j]['lowerLimit']):
+						#toDo: Check if this case is still neccessary
 						#Decrement delta
 						print 'Decrementing..'
 
@@ -160,42 +163,40 @@ class FlowMonitor:
 				break
 
 	def initQueues(self):
+	
+		for i in range(len(self.completeInterfaceList)):
 
-        #toDo: Handle for each interface
-		subprocess.check_output('./clear_queues.sh ' + self.interface + ' ' + self.interface + 'br', shell=True)
-		self.queues_uuid=[]
+			subprocess.check_output('./clear_queues.sh ' + self.completeInterfaceList[i]['name'] + ' ' + self.completeInterfaceList[i]['name'] + 'br', shell=True)
+			self.queues_uuid=[]
 
 		qosString='ovs-vsctl -- set Port ' + self.interface + ' qos=@testqos -- --id=@testqos create QoS type=linux-htb'
 		queuesString=''
 
-		for i in range(self.numQueues):
-		        aQueue= ',' + str(i+1) +'=@queue' + str(i+1)
-		        queuesString=queuesString+aQueue
-		
-		queuesString='queues=0=@queue0'+queuesString
+			for j in range(self.numQueues):
+				aQueue= ',' + str(j+1) +'=@queue' + str(j+1)
+				queuesString=queuesString+aQueue
 
-        #toDo: Check the string creation
-		queuesCreation='-- --id=@queue0 create Queue other-config:max-rate=1000000000 '
+			queuesString='queues=0=@queue0'+queuesString
+			#toDo: Check the string creation
 
-        #toDo: Check the numqueues handling
-		for i in range(self.numQueues):
+			queuesCreation='-- --id=@queue0 create Queue other-config:max-rate=1000000000 '
+			#toDj: Check the numqueues handling
 
-		        aCreation='-- --id=@queue' + str(i+1) + ' create Queue other-config:max-rate=1000000000 '
-		        queuesCreation=queuesCreation+aCreation
+			for j in range(self.numQueues):
+				aCreation='-- --id=@queue' + str(j+1) + ' create Queue other-config:max-rate=1000000000 '
+				queuesCreation=queuesCreation+aCreation
+			command=qosString + ' ' + queuesString + ' ' + queuesCreation
+			subprocess.check_output(command, shell=True)
 
-		command=qosString + ' ' + queuesString + ' ' + queuesCreation	
-		subprocess.check_output(command, shell=True)
+			for j in range(self.numQueues+1):
+				k=j+3
+				awk="{print $" + str(k) + ";}'"
+				awkString="awk '" + awk
+				auxString=subprocess.check_output('ovs-vsctl list qos | grep queues | ' + awkString, shell=True).split('=')[1]
+				self.queues_uuid.append({'id':i,'uuid':auxString[:len(auxString)-2]})
 
-		for i in range(self.numQueues+1):
-
-		        j=i+3
-		        awk="{print $" + str(j) + ";}'"
-		        awkString="awk '" + awk
-		        auxString=subprocess.check_output('ovs-vsctl list qos | grep queues | ' + awkString, shell=True).split('=')[1]
-		        self.queues_uuid.append({'id':i,'uuid':auxString[:len(auxString)-2]})
-
-		print self.queues_uuid
-		#subprocess.check_output('ovs-ofctl add-flow ' + self.interface + 'br in_port=LOCAL,priority=0,actions=enqueue:1:0', shell=True)		
+			print self.queues_uuid
+			#subprocess.check_output('ovs-ofctl add-flow ' + self.interface + 'br in_port=LOCAL,priority=0,actions=enqueue:1:0', shell=True)		
 
 	def getUuid(self):
 		uuid=subprocess.check_output("ovs-vsctl list qos | grep queues | awk '{print $4;}'", shell=True).split('=')[1].split('}')[0]

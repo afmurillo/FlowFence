@@ -12,38 +12,41 @@ class ApplicationSwitch:
 		def __init__(self):
 
 			#Controller message parameters
-			self.aVersion=1
+			self.aVersion=2.0
 			self.controllerIp='10.1.4.1'		
+	
+			#todo: ???
 			self.aType='request'
+
+			#todo What's this?
 			self.aProto='udp'
 			self.someFlags='none'
 			self.aPriority=0
+
+			#todo: Handle this!
 			self.aLink = '10.1.2.2'
 			self.flowFencePort = 12345
 
 			self.Ka='\x08+\xe1\x8d\x85\x86E\x02?H.K\xf7@\xe5\xeb'
 			self.Kab='\x17\xf4\x9c\x98\xd6\x84\xcb\xcf\xe6\x93\x11\xe2\xbaI\xdfM'
 
-			#Link monitoring parameters
-			something=1
+			#Link monitoring parameters			
 			self.controlInProcess=0
 
 			self.samples=10
 			self.period=3
 			self.intervalTime=1.0
-			self.upperLimit=60
-			self.lowerLimit=40
-			self.incremental=5000000
-			self.decremental=0.5
-			self.interface='eth0'
+			self.upperLimit=8.4
+			self.lowerLimit=0.6
 
-                        awk="{print $3;}'"
-                        awkString="awk '" + awk
+			awk="{print $3;}'"
+			awkString="awk '" + awk
 
-			self.dpid=subprocess.check_output('ovs-vsctl list bridge ' + self.interface + 'br | grep datapath_id | ' + awkString, shell=True)
-
+			self.switchProperties=SwitchProperties()
+			self.interfacesList = self.switchProperties.getInterfaces()		
 			self.msgSender = FeedbackMessage(self.aVersion, self.aType, self.aProto, self.someFlags, self.aPriority, self.controllerIp, self.flowFencePort)
 
+		#toDo: This method should: Create a thread to handle that congestion report that applies local control and reports congestion and bad flows to controller
 		def congestionDetected(self, dpid):
 
 			if self.controlInProcess == 0:
@@ -83,12 +86,14 @@ if __name__=="__main__":
 
 		code=ApplicationSwitch()
 		
-		print 'LALALALA dpid: ' + str(code.dpid)
+		print 'Current dpids: ' 
+		for i in range(len(code.interfacesList)):
+			print "Dpid: " + str(code.interfacesList[i]['dpid'])
 		
-		code.linkState=FlowMonitor(code.dpid, code.samples, code.period, code.intervalTime, code.upperLimit, code.lowerLimit, code.incremental, code.decremental)		
+		code.linkState=FlowMonitor(code.dpid, code.samples, code.period, code.intervalTime, code.upperLimit, code.lowerLimit)		
 		code.linkState.startMonitoring()
 
-		#Check how to stop it properly
+		#toDo: Check how to stop it properly
 		while True:
 			try:
 
