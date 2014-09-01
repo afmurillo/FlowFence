@@ -26,6 +26,7 @@ class FlowMonitor:
 		self.switchProperties=SwitchProperties()
 		self.interfacesList = self.switchProperties.getInterfaces()
 		self.completeInterfaceList=[]
+		self.completeFlowList=[]
 
 		for i in range(len(self.interfacesList)):
 			completeInterfaceDict = dict.fromkeys(['name','dpid','capacity', 'lowerLimit', 'upperLimit', 'threshold', 'samples','useAverages','monitoring','isCongested','numQueues'])
@@ -41,8 +42,13 @@ class FlowMonitor:
 			completeInterfaceDict['useAverages'] = 0
 			completeInterfaceDict['monitoring'] = 0
 			completeInterfaceDict['isCongested'] = 0
-			completeInterfaceDict['numQueues'] = 10
+			completeInterfaceDict['numQueues'] = 10			
 			self.completeInterfaceList.append(completeInterfaceDict)
+	
+			flowIntDict = dict.fromkeys(['interfaceName'],['flowList'])
+			flowIntDict['interfaceName']= self.interfacesList[i]['name']
+			flowIntDict['flowList']=[]					
+			self.completeFlowList.append(flowIntDict)
 
 			for i in range(len(self.completeInterfaceList)):
 				self.completeInterfaceList[i]['useAverages'] = deque( maxlen=self.nSamples )
@@ -81,11 +87,17 @@ class FlowMonitor:
 
 	def updateWindow(self):
 
+		# First, we get samples from all the flows in all interfaces
+		for j in range(len(self.completeInterfaceList)):			
+			if self.completeInterfaceList[j]['name'] == self.completeFlowList[j]['interfaceName']
+				self.completeFlowList[j]['flowList'] = self.getflows(self.completeFlowList[j]['interfaceName'])
+			
 		for i in range(self.nSamples):
 
-			#sample list of dicts, each dict has ['name']['sample']
+			# Sample list of dicts, each dict has ['name']['sample']
 			result = self.getSample() # < ---- GOTTA CHECK THIS
 			lastSamples=0
+
 			for j in range(len(self.completeInterfaceList)):
 				lastSamples = result[j]['sample']
 				self.completeInterfaceList[j]['useAverages'].popleft()
@@ -93,7 +105,7 @@ class FlowMonitor:
 
 			if i == 0:
 				self.completeInterfaceList[j]['prevema'] = lastSamples
-	
+					
 			for j in range(len(self.completeInterfaceList)):
 				for bar, close in enumerate(self.completeInterfaceList[j]['useAverages']):
 					self.completeInterfaceList[j]['currentEma'] = self.ema(bar, self.completeInterfaceList[j]['useAverages'], self.period, self.completeInterfaceList[j]['prevEma'], smoothing=None)
@@ -237,27 +249,32 @@ class FlowMonitor:
             else:
                 return prevma + ((series[bar] - prevma) / (bar + 1.0))
 		
-		def getFlows(self):
+		def getFlows(self, interfaceName):
 			# A list of dicts is created for each interface
-			# Dict estructure: dl_src, dl_dst, nw_src, nw_dst, length(bytes), action
-			self.FlowInterfaceDictList=[]
+			# Dict estructure: dl_src, dl_dst, nw_src, nw_dst, length(bytes), action			
 
-			#toDo: Actually, we should modify flows, to receive a parameter with the interface name
-			for each i in range(len(self.completeInterfaceList)):
-					flowIntDict = dict.fromkeys(['interfaceName'],['flowList'])
-					flowIntDict['interfaceName']=self.completeInterfaceList[i]['name']
-					flowIntDict['flowList']=[]
+			flowList=[]
 
-					#IN THE NEX LINE, we should pass the interface name
-					flowString=subprocess.check_output('./flows.sh', shell=True)
-					numFlows=flowString.split('\n')[0].split('=')[1]
-					#from the split with '\n': 1 dl_src, 2 dl_dst, 3 nw_src, 4 nw_dst, 5 legnth, 6 action
-						for each j in range(numFlows):
-							flowDict=dict.fromKeys(['dl_src','dl_dst','nw_src','nw_dst','length','action'])
-							
+			prevFlowString=subprocess.check_output('./flows.sh ' + interfaceName, shell=True)
 
+			# toDo: Check a better way of doing this, what happens with flows that die?
+			time.sleep(0.4)
+
+			flowString=subprocess.check_output('./flows.sh ' + interfaceName, shell=True)
+			numFlows=flowString.split('\n')[0].split('=')[1]
+
+			for each i in range(numFlows):
+				flowDict=dict.fromKeys(['dl_src','dl_dst','nw_src','nw_dst','length','action'])
+				flowDict['dl_src']=flowString.split('\n')[1].split('=')[1].split(' ')[i]
+				flowDict['dl_dst']=flowString.split('\n')[2].split('=')[1].split(' ')[i]
+				flowDict['nw_src']=flowString.split('\n')[3].split('=')[1].split(' ')[i]
+				flowDict['nw_dst']=flowString.split('\n')[4].split('=')[1].split(' ')[i]
+				flowDict['length']=flowString.split('\n')[5].split('=')[1].split(' ')[i]-prevFlowString.split('\n')[5].split('=')[1].split(' ')[i]
+				flowDict['action']=flowString.split('\n')[6].split('=')[1].split(' ')[i]
+				flowList.append(flowDict)
 					
-        #toDo: Handle to manage all interfaces samples
+			return flowList			
+
         def getSample(self, intervalTime=1.0):
 		samplesList=[]
 
@@ -282,37 +299,6 @@ class FlowMonitor:
 
 		return samplesList
 
-    #todo: Improve the flow dictionary
-	def createFlowDict(self, nwDst, interface):		
-
-		total=subprocess.check_output("ovs-ofctl dump-flows " + interface +"br", shell=True)
-
-		if len(total) != 27:
-
-                #todo: This line is broken!!
-		        flows=subprocess.check_output("ovs-ofctl dump-flows " + interface + "br | grep nw_dst=" + nwDst, shell=True).split('\n')
-
-		        for i in range(len(flows)):
-
-		                items=flows[i].split(',')
-		                pairs=[]
-
-		                for i in range(len(items)):
-		                        pairs.append(items[i].split('='))
-
-                		twoPairs=[]
-
-		                for i in range(len(pairs)):
-		                        if len(pairs[i]) == 2:
-		                                twoPairs.append(pairs[i])
-
-		                flowsDict.append(dict((k.strip(), v.strip()) for k,v in twoPairs))
-
-	        #Improve! :P
-	        flowsDict=flowsDict[0:len(flowsDict)-1]
-
-
-#todo: Main is broken, fix it, is it still broken?
 if __name__=="__main__":
 
     nSamples=10
