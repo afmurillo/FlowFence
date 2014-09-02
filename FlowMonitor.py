@@ -27,6 +27,7 @@ class FlowMonitor:
 		self.interfacesList = self.switchProperties.getInterfaces()
 		self.completeInterfaceList=[]
 		self.completeFlowList=[]
+		self.k=0.2 #Actually, k is 0.6 in "CPU" time
 
 		for i in range(len(self.interfacesList)):
 			completeInterfaceDict = dict.fromkeys(['name','dpid','capacity', 'lowerLimit', 'upperLimit', 'threshold', 'samples','useAverages','monitoring','isCongested','numQueues'])
@@ -91,7 +92,7 @@ class FlowMonitor:
 			try:			
 				# We get samples from all the flows in all interfaces								
 				self.getFlows()
-				print 'Flow List: ' + str(self.completeFlowList)				
+				#print 'Flow List: ' + str(self.completeFlowList)				
 			except KeyboardInterrupt:
 				self.monitoring=0
 				break
@@ -265,7 +266,7 @@ class FlowMonitor:
 		# Dict estructure: dl_src, dl_dst, nw_src, nw_dst, length(bytes), action			
 
 		# We get samples from all the flows in all interfaces
-		print "Actual time 1: " + str(time())		
+		print "Actual time 1: " + str(time.time())		
 		interfacesFlowString=dict.fromkeys(['interfaceName','string'])
 		interfacesFlowPrevStringList=[]
 		interfacesFlowStringList=[]		
@@ -279,7 +280,7 @@ class FlowMonitor:
 			interfacesFlowPrevStringList.append(interfacesFlowString)
 			
 		# toDo: Check a better way of doing this, what happens with flows that die?		
-		sleep(0.4)
+		sleep(self.k)
 
 		for i in range(len(self.completeInterfaceList)):			
 
@@ -290,7 +291,7 @@ class FlowMonitor:
 			interfacesFlowStringList.append(interfacesFlowString)
 			
 		# toDo: Check a better way of doing this, what happens with flows that die?		
-		print "Actual time 2: " + str(time())		
+		print "Actual time 2: " + str(time.time())		
 
 		for j in range(len(self.completeInterfaceList)):			
 
