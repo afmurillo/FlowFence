@@ -54,7 +54,7 @@ class FlowMonitor:
 				self.completeInterfaceList[i]['useAverages'] = deque( maxlen=self.nSamples )
 
 			#Control variables
-			self.threadId=0
+			self.threadsId=[]
 			self.resetQueues()
 			self.initWindow()
 			#print 'Initialization proccess finished'
@@ -85,13 +85,16 @@ class FlowMonitor:
                     self.completeInterfaceList[j]['currentEma'] = self.ema(bar, self.completeInterfaceList[j]['useAverages'], self.period, self.completeInterfaceList[j]['prevEma'], smoothing=None)
                     self.completeInterfaceList[j]['prevEma'] = self.completeInterfaceList[j]['currentEma']
 
-	def updateWindow(self):
+	def updateFlows(self):
 
-		# First, we get samples from all the flows in all interfaces
+		# We get samples from all the flows in all interfaces
 		for j in range(len(self.completeInterfaceList)):			
 			if self.completeInterfaceList[j]['name'] == self.completeFlowList[j]['interfaceName']:
 				self.completeFlowList[j]['flowList'] = self.getFlows(self.completeFlowList[j]['interfaceName'])
 		#print 'Flow List: ' + str(self.completeFlowList)
+
+	def updateWindow(self):
+
 		for i in range(self.nSamples):
 
 			# Sample list of dicts, each dict has ['name']['sample']
@@ -118,8 +121,13 @@ class FlowMonitor:
             self.reportObject = ApplicationSwitch()
 
             self.monitoring=1            
-            self.threadId = threading.Thread(name = 'Monitor', target=self.monitor)
-            self.threadId.start()    
+            self.threadId.append((threading.Thread(name = 'Monitor', target=self.monitor))
+            self.threadId[0].start()  
+
+            self.threadId.append((threading.Thread(name = 'updateFlows', target=self.updateFlows))
+            self.threadId[0].start()  
+			 
+
 
         def stopMonitoring(self):
             self.monitoring=0                  
@@ -141,7 +149,6 @@ class FlowMonitor:
 						self.completeInterfaceList[j]['threshold']=self.completeInterfaceList[j]['lowerLimit']
 						self.initQueues()
 						#toDo: This should start a thread in Application switch that "dies", once the local control and congestion message is sent
-						#self.completeFlowList[j]['flowList']
 						self.reportObject.congestionDetected(self.completeInterfaceList[j]['dpid'], self.completeFlowList[j]['flowList'])
 						#toDo: After of reporting, it should init the queues and wait for further actions from the controller
 						#print 'Decrementing..'
