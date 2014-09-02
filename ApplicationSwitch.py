@@ -46,10 +46,27 @@ class ApplicationSwitch:
 
 			self.switchProperties=SwitchProperties()
 			self.interfacesList = self.switchProperties.getInterfaces()		
-			self.msgSender = FeedbackMessage(self.aVersion, self.aType, self.aProto, self.someFlags, self.aPriority, self.controllerIp, self.flowFencePort)
 
+			for i in range(len(self.interfacesList)):
+				flowIntDict = dict.fromkeys(['interfaceName'],['flowList'])
+				flowIntDict['interfaceName']= self.interfacesList[i]['name']
+				flowIntDict['dpid']= self.interfacesList[i]['dpid']
+				flowIntDict['flowList']=[]					
+				self.completeFlowList.append(flowIntDict)
+		
+			self.msgSender = FeedbackMessage(self.aVersion, self.aType, self.aProto, self.someFlags, self.aPriority, self.controllerIp, self.flowFencePort)
+			
 		#toDo: This method should: Create a thread to handle that congestion report that applies local control and reports congestion and bad flows to controller
-		def congestionDetected(self, dpid):
+		def congestionDetected(self, dpid, flowList):
+		
+			for i in range(len(self.interfacesList)):
+				if dpid == completeFlowList[i]['dpid']:
+					#Here we should calculate the arrival rates for each flow, each flow is an element of flowList	
+					completeFlowList[i]['flowList']=flowList
+					for j in range(len(completeFlowList[i]['flowList'])):
+						completeFlowList[i]['flowList'][j]['arrivalRate'] = self.calculateArrivalRate()
+						#TODO: IMPLEMENT CALCULATE ARRIVAL RATE!!!
+			
 
 			if self.controlInProcess == 0:
 
@@ -80,6 +97,9 @@ class ApplicationSwitch:
 				#toDo: When we should send a report again?				
 				#toDo: controlInProcess is a semaphore variable? how to handle it? make a state diagram
 			
+
+		def self.calculateArrivalRate()
+			return 1
 
 		def getInstance(self):
 			return ApplicationSwitch()

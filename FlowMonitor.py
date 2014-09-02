@@ -256,23 +256,25 @@ class FlowMonitor:
 
 		flowList=[]
 		prevFlowString=subprocess.check_output('./flows.sh ' + interfaceName, shell=True)
-
+		print "Actual time 1: " + str(time())
 		# toDo: Check a better way of doing this, what happens with flows that die?
 		sleep(0.4)
 
 		flowString=subprocess.check_output('./flows.sh ' + interfaceName, shell=True)
+		print "Actual time 2: " + str(time())
 		numFlows=int(flowString.split('\n')[0].split('=')[1])
 
 		for i in range(numFlows):
-			flowDict=dict.fromkeys(['dl_src','dl_dst','nw_src','nw_dst','length','action'])
+			flowDict=dict.fromkeys(['dl_src','dl_dst','nw_src','nw_dst','packets','length','action'])
 			flowDict['dl_src']=flowString.split('\n')[1].split('=')[1].split(' ')[i]
 			flowDict['dl_dst']=flowString.split('\n')[2].split('=')[1].split(' ')[i]
 			flowDict['nw_src']=flowString.split('\n')[3].split('=')[1].split(' ')[i]
 			flowDict['nw_dst']=flowString.split('\n')[4].split('=')[1].split(' ')[i]
-			flowDict['action']=flowString.split('\n')[6].split('=')[1].split(' ')[i]
+			flowDict['packets']=flowString.split('\n')[5].split('=')[1].split(' ')[i]
+			flowDict['action']=flowString.split('\n')[7].split('=')[1].split(' ')[i]
 			#print "Flow List, without lenth \n " + str(flowDict)
-			aux1 = flowString.split('\n')[5].split('=')[1].split(' ')[i]
-			aux2 = prevFlowString.split('\n')[5].split('=')[1].split(' ')[i]
+			aux1 = flowString.split('\n')[6].split('=')[1].split(' ')[i]
+			aux2 = prevFlowString.split('\n')[6].split('=')[1].split(' ')[i]
 			if (aux1 is not None) and (aux2 is not None):
 				#print "Lengths, current = " + str(aux1) + " previous= " + str(aux2)
 				flowDict['length']=int(aux1) - int(aux2)
