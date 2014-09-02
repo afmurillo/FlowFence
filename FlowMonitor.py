@@ -87,11 +87,17 @@ class FlowMonitor:
 
 	def updateFlows(self):
 
-		# We get samples from all the flows in all interfaces
-		for j in range(len(self.completeInterfaceList)):			
-			if self.completeInterfaceList[j]['name'] == self.completeFlowList[j]['interfaceName']:
-				self.completeFlowList[j]['flowList'] = self.getFlows(self.completeFlowList[j]['interfaceName'])
-		#print 'Flow List: ' + str(self.completeFlowList)
+		while self.monitoring == 1:
+			try:			
+				# We get samples from all the flows in all interfaces
+				for j in range(len(self.completeInterfaceList)):			
+					if self.completeInterfaceList[j]['name'] == self.completeFlowList[j]['interfaceName']:
+						self.completeFlowList[j]['flowList'] = self.getFlows(self.completeFlowList[j]['interfaceName'])
+						#print 'Flow List: ' + str(self.completeFlowList)
+				sleep(0.4)
+			except KeyboardInterrupt:
+				self.monitoring=0
+				break
 
 	def updateWindow(self):
 
@@ -121,11 +127,11 @@ class FlowMonitor:
             self.reportObject = ApplicationSwitch()
 
             self.monitoring=1            
-            self.threadId.append((threading.Thread(name = 'Monitor', target=self.monitor))
-            self.threadId[0].start()  
+            self.threadsId.append(threading.Thread(name = 'Monitor', target=self.monitor))
+            self.threadsId[0].start()  
 
-            self.threadId.append((threading.Thread(name = 'updateFlows', target=self.updateFlows))
-            self.threadId[0].start()  
+            self.threadsId.append(threading.Thread(name = 'updateFlows', target=self.updateFlows))
+            self.threadsId[1].start()  
 			 
 
 
@@ -263,16 +269,16 @@ class FlowMonitor:
 
 		flowList=[]
 		prevFlowString=subprocess.check_output('./flows.sh ' + interfaceName, shell=True)
-		print "Actual time 1: " + str(time.time())
+		print "Actual time 1: " + str(time())
 		# toDo: Check a better way of doing this, what happens with flows that die?
 		sleep(0.4)
 
 		flowString=subprocess.check_output('./flows.sh ' + interfaceName, shell=True)
-		print "Actual time 2: " + str(time.time())
+		print "Actual time 2: " + str(time())
 		numFlows=int(flowString.split('\n')[0].split('=')[1])
 
 		for i in range(numFlows):
-			flowDict=dict.fromkeys(['dl_src','dl_dst','nw_src','nw_dst','packets','length','action'])
+			flowDict=dict.fromkeys(['dl_src','dl_dst','nw_src','nw_dst','prevPackets','packets','prevLength','length','action'])
 			flowDict['dl_src']=flowString.split('\n')[1].split('=')[1].split(' ')[i]
 			flowDict['dl_dst']=flowString.split('\n')[2].split('=')[1].split(' ')[i]
 			flowDict['nw_src']=flowString.split('\n')[3].split('=')[1].split(' ')[i]
