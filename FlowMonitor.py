@@ -57,7 +57,7 @@ class FlowMonitor:
 			self.threadId=0
 			self.resetQueues()
 			self.initWindow()
-			print 'Initialization proccess finished'
+			#print 'Initialization proccess finished'
 
         def initWindow(self):
 
@@ -91,7 +91,7 @@ class FlowMonitor:
 		for j in range(len(self.completeInterfaceList)):			
 			if self.completeInterfaceList[j]['name'] == self.completeFlowList[j]['interfaceName']:
 				self.completeFlowList[j]['flowList'] = self.getFlows(self.completeFlowList[j]['interfaceName'])
-		print 'Flow List: ' + str(self.completeFlowList)
+		#print 'Flow List: ' + str(self.completeFlowList)
 		for i in range(self.nSamples):
 
 			# Sample list of dicts, each dict has ['name']['sample']
@@ -110,11 +110,11 @@ class FlowMonitor:
 				for bar, close in enumerate(self.completeInterfaceList[j]['useAverages']):
 					self.completeInterfaceList[j]['currentEma'] = self.ema(bar, self.completeInterfaceList[j]['useAverages'], self.period, self.completeInterfaceList[j]['prevEma'], smoothing=None)
 					self.completeInterfaceList[j]['prevEma'] = self.completeInterfaceList[j]['currentEma']
-				print "Current channel occupation for interface " + str(self.completeInterfaceList[j]['name']) + " : " + str(self.completeInterfaceList[j]['currentEma'])
+				#print "Current channel occupation for interface " + str(self.completeInterfaceList[j]['name']) + " : " + str(self.completeInterfaceList[j]['currentEma'])
 		
         def startMonitoring(self):
             
-            print self.completeInterfaceList
+            #print self.completeInterfaceList
             self.reportObject = ApplicationSwitch()
 
             self.monitoring=1            
@@ -136,7 +136,7 @@ class FlowMonitor:
 				#Has histeresis
 				for j in range(len(self.completeInterfaceList)):
 					if (self.completeInterfaceList[j]['isCongested'] == 0) and (self.completeInterfaceList[j]['currentEma'] >= self.completeInterfaceList[j]['threshold']):
-						print 'Congestion detected in interface: ' + self.completeInterfaceList[j]['name']
+						#print 'Congestion detected in interface: ' + self.completeInterfaceList[j]['name']
 						self.completeInterfaceList[j]['isCongested']=1
 						self.completeInterfaceList[j]['threshold']=self.completeInterfaceList[j]['lowerLimit']
 						self.initQueues()
@@ -144,10 +144,10 @@ class FlowMonitor:
 						#self.completeFlowList[j]['flowList']
 						self.reportObject.congestionDetected(self.completeInterfaceList[j]['dpid'], self.completeFlowList[j]['flowList'])
 						#toDo: After of reporting, it should init the queues and wait for further actions from the controller
-						print 'Decrementing..'
+						#print 'Decrementing..'
 
 					elif (self.completeInterfaceList[j]['isCongested'] == 1) and (self.completeInterfaceList[j]['currentEma'] <= self.completeInterfaceList[j]['threshold']):
-						print 'Congestion ceased'
+						#print 'Congestion ceased'
 						self.completeInterfaceList[j]['isCongested']=0
 						self.completeInterfaceList[j]['threshold']=self.completeInterfaceList[j]['upperLimit']
 						self.reportObject.congestionDetected(self.completeInterfaceList[j]['dpid'], self.completeFlowList[j]['flowList'])
@@ -194,7 +194,7 @@ class FlowMonitor:
 				auxString=subprocess.check_output('ovs-vsctl list qos | grep queues | ' + awkString, shell=True).split('=')[1]
 				self.queues_uuid.append({'id':i,'uuid':auxString[:len(auxString)-2]})
 
-			print self.queues_uuid
+			#print self.queues_uuid
 			#subprocess.check_output('ovs-ofctl add-flow ' + self.interface + 'br in_port=LOCAL,priority=0,actions=enqueue:1:0', shell=True)		
 
 	def getUuid(self):
@@ -256,12 +256,12 @@ class FlowMonitor:
 
 		flowList=[]
 		prevFlowString=subprocess.check_output('./flows.sh ' + interfaceName, shell=True)
-		print "Actual time 1: " + str(time())
+		print "Actual time 1: " + str(time.time())
 		# toDo: Check a better way of doing this, what happens with flows that die?
 		sleep(0.4)
 
 		flowString=subprocess.check_output('./flows.sh ' + interfaceName, shell=True)
-		print "Actual time 2: " + str(time())
+		print "Actual time 2: " + str(time.time())
 		numFlows=int(flowString.split('\n')[0].split('=')[1])
 
 		for i in range(numFlows):

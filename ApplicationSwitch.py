@@ -44,6 +44,8 @@ class ApplicationSwitch:
 			awk="{print $3;}'"
 			awkString="awk '" + awk
 
+			self.completeFlowList=[]
+
 			self.switchProperties=SwitchProperties()
 			self.interfacesList = self.switchProperties.getInterfaces()		
 
@@ -98,7 +100,7 @@ class ApplicationSwitch:
 				#toDo: controlInProcess is a semaphore variable? how to handle it? make a state diagram
 			
 
-		def self.calculateArrivalRate()
+		def calculateArrivalRate():
 			return 1
 
 		def getInstance(self):
