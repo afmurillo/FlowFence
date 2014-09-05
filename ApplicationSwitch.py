@@ -59,14 +59,15 @@ class ApplicationSwitch:
 			self.msgSender = FeedbackMessage(self.aVersion, self.aType, self.aProto, self.someFlags, self.aPriority, self.controllerIp, self.flowFencePort)
 			
 		#toDo: This method should: Create a thread to handle that congestion report that applies local control and reports congestion and bad flows to controller
-		def congestionDetected(self, dpid, flowList):
+		def congestionDetected(self, dpid, flowList, measuredK):
 		
 			for i in range(len(self.interfacesList)):
 				if dpid == completeFlowList[i]['dpid']:
 					#Here we should calculate the arrival rates for each flow, each flow is an element of flowList	
 					completeFlowList[i]['flowList']=flowList
+
 					for j in range(len(completeFlowList[i]['flowList'])):
-						completeFlowList[i]['flowList'][j]['arrivalRate'] = self.calculateArrivalRate()
+						completeFlowList[i]['flowList'][j]['arrivalRate'] = self.calculateArrivalRate(completeFlowList[i]['flowList'][j]['packets'], completeFlowList[i]['flowList'][j]['length'],measuredK)
 						#TODO: IMPLEMENT CALCULATE ARRIVAL RATE!!!
 			
 
@@ -100,8 +101,8 @@ class ApplicationSwitch:
 				#toDo: controlInProcess is a semaphore variable? how to handle it? make a state diagram
 			
 
-		def calculateArrivalRate():
-			return 1
+		
+				
 
 		def getInstance(self):
 			return ApplicationSwitch()

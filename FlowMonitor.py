@@ -3,6 +3,7 @@ import subprocess
 import time
 from collections import deque
 import threading
+import math
 
 from ApplicationSwitch import *
 from SwitchProperties import *
@@ -28,6 +29,7 @@ class FlowMonitor:
 		self.completeInterfaceList=[]
 		self.completeFlowList=[]
 		self.k=0.2 #Actually, k is 0.6 in "CPU" time
+		self.measuredK=0.2
 
 		for i in range(len(self.interfacesList)):
 			completeInterfaceDict = dict.fromkeys(['name','dpid','capacity', 'lowerLimit', 'upperLimit', 'threshold', 'samples','useAverages','monitoring','isCongested','numQueues'])
@@ -153,7 +155,7 @@ class FlowMonitor:
 						self.completeInterfaceList[j]['threshold']=self.completeInterfaceList[j]['lowerLimit']
 						self.initQueues()
 						#toDo: This should start a thread in Application switch that "dies", once the local control and congestion message is sent
-						self.reportObject.congestionDetected(self.completeInterfaceList[j]['dpid'], self.completeFlowList[j]['flowList'])
+						self.reportObject.congestionDetected(self.completeInterfaceList[j]['dpid'], self.completeFlowList[j]['flowList'], self.measuredK)
 						#toDo: After of reporting, it should init the queues and wait for further actions from the controller
 						#print 'Decrementing..'
 
@@ -266,7 +268,8 @@ class FlowMonitor:
 		# Dict estructure: dl_src, dl_dst, nw_src, nw_dst, length(bytes), action			
 
 		# We get samples from all the flows in all interfaces
-		print "Actual time 1: " + str(time.time())		
+		time1=time.time()		
+		#print "Actual time 1: " + str(time1)		
 		interfacesFlowString=dict.fromkeys(['interfaceName','string'])
 		interfacesFlowPrevStringList=[]
 		interfacesFlowStringList=[]		
@@ -281,6 +284,7 @@ class FlowMonitor:
 			
 		# toDo: Check a better way of doing this, what happens with flows that die?		
 		sleep(self.k)
+		self.measuredK = time.time() - time1
 
 		for i in range(len(self.completeInterfaceList)):			
 
@@ -291,7 +295,8 @@ class FlowMonitor:
 			interfacesFlowStringList.append(interfacesFlowString)
 			
 		# toDo: Check a better way of doing this, what happens with flows that die?		
-		print "Actual time 2: " + str(time.time())		
+		print "Measured k: " + str(self.measuredK)
+		
 
 		for j in range(len(self.completeInterfaceList)):			
 
@@ -301,7 +306,7 @@ class FlowMonitor:
 
 			for i in range(numFlows):
 
-				flowDict=dict.fromkeys(['dl_src','dl_dst','nw_src','nw_dst','packets','length','action'])
+				flowDict=dict.fromkeys(['dl_src','dl_dst','nw_src','nw_dst','packets','length','arrivalTime', 'oldArrivalTime','action'])
 				flowDict['dl_src']=interfacesFlowStringList[j]['string'].split('\n')[1].split('=')[1].split(' ')[i]
 				flowDict['dl_dst']=interfacesFlowStringList[j]['string'].split('\n')[2].split('=')[1].split(' ')[i]
 				flowDict['nw_src']=interfacesFlowStringList[j]['string'].split('\n')[3].split('=')[1].split(' ')[i]
@@ -325,11 +330,64 @@ class FlowMonitor:
 					flowDict['length']=int(aux1) - int(aux2)
 				else:
 					flowDict['length']=0
-				flowList.append(flowDict)
 
-			self.completeFlowList[j]['flowList'] = flowList
+				# Here we should validate if the flow exists, if not, append; if yes overwrite values and update Ri
+				# toDo: Validate if the flowList is not empty
+				for k in range(len(self.completeFlowList[j]['flowList'])):
+					if self.checkIfFlowExists(j, flowDict):
+						self.completeFlowList[j]['flowList'][k] = flowDict
+						flowDict['oldArrivalTime'] = flowDict['arrivalTime']
+						flowDict['arrivalTime'] = calculateArrivalRate(flowDict['packets'], flowDict['length'], self.measuredK, flowDict['oldArrivalTime'] )
 						
-        def getSample(self, intervalTime=1.0):
+					else:
+						# Because this is a new flow, oldArrivalTime should be zero	
+						flowDict['oldArrivalTime'] = 0
+						flowDict['arrivalTime'] = calculateArrivalRate(flowDict['packets'], flowDict['length'], self.measuredK, 0 )
+						self.completeFlowList[j]['flowList'].append(flowDict)
+				
+				# Finally we should check if according to our last sample, a flow in flowList stopped existing
+			
+				for k in range(len(self.completeFlowList[j]['flowList'])):
+					if not (self.checkIfFlowStopped(interfacesFlowStringList[j]['string'], flowDict)):
+						#splice
+						self.completeFlowList[j]['flowList'].remove(k)
+
+			
+
+	def checkIfFlowStopped(self, aFlowString, aFlowDict):
+
+				# If dL_src exists, checks in that flow if dl_dst and other fields coincide, if true: Flow exists
+				numFlows=int(aFlowString.split('\n')[0].split('=')[1])
+				dl_srcExists = 0
+				flowIndex = 0
+	
+				for i in range(numFlows):
+					if aFlowDict['dl_src'] == aFlowString.split('\n')[1].split('=')[1].split(' ')[i]:
+						dl_srcExists = 1
+						flowIndex = i
+						break
+				
+				if dl_srcExists == 0:
+					return 0
+				else:
+					if (aFlowDict['dl_dst'] == aFlowString.split('\n')[2].split('=')[1].split(' ')[flowIndex]) and (aFlowDict['nw_src'] == aFlowString.split('\n')[3].split('=')[1].split(' ')[flowIndex]) and (aFlowDict['nw_dst'] == aFlowString.split('\n')[4].split('=')[1].split(' ')[flowIndex]):
+						return 1
+					else:
+						return 0					
+
+	def checkIfFlowExists(self, anInterfaceIndex, aFlowDict):
+			#toDo: Comparation with "in values" does not work, we should make either a hash in correct order or a case case comparation
+			exists = False
+			for i in range(len(self.completeFlowList[anInterfaceIndex]['flowList'])):
+				if (aFlowDic['dl_src'] == self.completeFlowList[anInterfaceIndex]['flowList'][i]['dl_src']) and (aFlowDic['dl_dst'] == self.completeFlowList[anInterfaceIndex]['flowList'][i]['dl_dst']) and (aFlowDic['nw_src'] == self.completeFlowList[anInterfaceIndex]['flowList'][i]['nw_src']) and (aFlowDic['nw_dst'] == self.completeFlowList[anInterfaceIndex]['flowList'][i]['nw_dst']):
+					exists = True
+					break
+			return exists
+			
+	def calculateArrivalRate(self, packets, length, measuredK, oldArrivalTime):			
+		return (1 - math.exp(-1))
+
+	def getSample(self, intervalTime=1.0):
 		samplesList=[]
 
 		for j in range(len(self.completeInterfaceList)):

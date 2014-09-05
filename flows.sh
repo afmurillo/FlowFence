@@ -1,6 +1,6 @@
 #!/bin/bash
 flowsString=`ovs-ofctl dump-flows $1 | grep cookie`
-numFlows=`echo $flowsString | wc -l`
+numFlows=`echo $flowsString | grep -c nw_dst
 dl_src=`echo $flowsString |grep -o 'dl_src=[^ ,]\+' | awk 'BEGIN { FS = "=" } ; {print $2}'`
 dl_dst=`echo $flowsString |grep -o 'dl_dst=[^ ,]\+' | awk 'BEGIN { FS = "=" } ; {print $2}'`
 nw_src=`echo $flowsString |grep -o 'nw_src=[^ ,]\+' | awk 'BEGIN { FS = "=" } ; {print $2}'`
