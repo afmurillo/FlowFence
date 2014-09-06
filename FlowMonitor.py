@@ -340,10 +340,9 @@ class FlowMonitor:
 						self.completeFlowList[j]['flowList'][k] = flowDict
 						#THERE IS SOME ERROR WITH THE FUNCTION THAT CHECKS IF IT DOES NOT EXISTS
 					else:
-						# Because this is a new flow, oldArrivalTime should be zero	
 						print "Appending new flow"
 						flowDict['oldArrivalTime'] = 0
-						flowDict['arrivalTime'] = self.calculateArrivalRate(flowDict['packets'], flowDict['length'], self.measuredK, 0 )			
+						flowDict['arrivalTime'] = self.calculateArrivalRate(flowDict['packets'], flowDict['length'], self.measuredK, 0 )
 						self.completeFlowList[j]['flowList'].append(flowDict)
 				
 				# Finally we should check if according to our last sample, a flow in flowList stopped existing
@@ -355,46 +354,44 @@ class FlowMonitor:
 						#self.completeFlowList[j]['flowList'].remove(k)
 
 				if not self.completeFlowList[j]['flowList']:
-                                                print "Appending new flow, because flowList was empty"
-						flowDict['oldArrivalTime'] = 0
-						flowDict['arrivalTime'] = self.calculateArrivalRate(flowDict['packets'], flowDict['length'], self.measuredK, 0 )
-						self.completeFlowList[j]['flowList'].append(flowDict)
+					print "Appending new flow, because flowList was empty"
+					flowDict['oldArrivalTime'] = 0
+					flowDict['arrivalTime'] = self.calculateArrivalRate(flowDict['packets'], flowDict['length'], self.measuredK, 0 )
+					self.completeFlowList[j]['flowList'].append(flowDict)
 
 	def checkIfFlowStopped(self, aFlowString, aFlowDict):
 
-				# If dL_src exists, checks in that flow if dl_dst and other fields coincide, if true: Flow exists
-				numFlows=int(aFlowString.split('\n')[0].split('=')[1])
-				dl_srcExists = 0
-				flowIndex = 0
-	
-				for i in range(numFlows):
-					if aFlowDict['dl_src'] == aFlowString.split('\n')[1].split('=')[1].split(' ')[i]:
-						dl_srcExists = 1
-						flowIndex = i
-						break
-				
-				if dl_srcExists == 0:
-					return 0
-				else:
-					if (aFlowDict['dl_dst'] == aFlowString.split('\n')[2].split('=')[1].split(' ')[flowIndex]) and (aFlowDict['nw_src'] == aFlowString.split('\n')[3].split('=')[1].split(' ')[flowIndex]) and (aFlowDict['nw_dst'] == aFlowString.split('\n')[4].split('=')[1].split(' ')[flowIndex]):
-						return 1
-					else:
-						return 0					
+		# If dL_src exists, checks in that flow if dl_dst and other fields coincide, if true: Flow exists
+		numFlows=int(aFlowString.split('\n')[0].split('=')[1])
+		dl_srcExists = 0
+		flowIndex = 0
+
+		for i in range(numFlows):
+			if aFlowDict['dl_src'] == aFlowString.split('\n')[1].split('=')[1].split(' ')[i]:
+				dl_srcExists = 1
+				flowIndex = i
+				break
+
+		if dl_srcExists == 0:
+			return 0
+		else:
+			
+			if (aFlowDict['dl_dst'] == aFlowString.split('\n')[2].split('=')[1].split(' ')[flowIndex]) and (aFlowDict['nw_src'] == aFlowString.split('\n')[3].split('=')[1].split(' ')[flowIndex]) and (aFlowDict['nw_dst'] == aFlowString.split('\n')[4].split('=')[1].split(' ')[flowIndex]):
+				return True
+			else:
+				return False
 
 	def checkIfFlowExists(self, anInterfaceIndex, aFlowDict):
 			#toDo: Comparation with "in values" does not work, we should make either a hash in correct order or a case case comparation
-			exists = False
 			for i in range(len(self.completeFlowList[anInterfaceIndex]['flowList'])):
 				if (aFlowDict['dl_src'] == self.completeFlowList[anInterfaceIndex]['flowList'][i]['dl_src']) and (aFlowDict['dl_dst'] == self.completeFlowList[anInterfaceIndex]['flowList'][i]['dl_dst']) and (aFlowDict['nw_src'] == self.completeFlowList[anInterfaceIndex]['flowList'][i]['nw_src']) and (aFlowDict['nw_dst'] == self.completeFlowList[anInterfaceIndex]['flowList'][i]['nw_dst']):
-					exists = True
 					print "flow exists"
-					break
+					return True
 
-			if exists == False:
-				#THERE IS AN ERROR HERE!!!
-				print "Flow does not exists, flow: " + str(aFlowDict)
-				print "Interface: " + self.completeFlowList[anInterfaceIndex]['interfaceName']
-			return exists
+			#THERE IS AN ERROR HERE!!!
+			print "Flow does not exists, flow: " + str(aFlowDict)			
+			print "Interface: " + self.completeFlowList[anInterfaceIndex]['interfaceName']
+			return False			
 			
 	def calculateArrivalRate(self, packets, length, measuredK, oldArrivalTime):			
 		return (1 - math.exp(-1))
