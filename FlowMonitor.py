@@ -383,7 +383,10 @@ class FlowMonitor:
 
 	def checkIfFlowExists(self, anInterfaceIndex, aFlowDict):
 			#toDo: Comparation with "in values" does not work, we should make either a hash in correct order or a case case comparation
+			print "Comparing flow: " + str(aFlowDict)
 			for i in range(len(self.completeFlowList[anInterfaceIndex]['flowList'])):
+				print "With flow in flow list:  " + str(self.completeFlowList[anInterfaceIndex]['flowList'][i])					
+
 				if (aFlowDict['dl_src'] == self.completeFlowList[anInterfaceIndex]['flowList'][i]['dl_src']) and (aFlowDict['dl_dst'] == self.completeFlowList[anInterfaceIndex]['flowList'][i]['dl_dst']) and (aFlowDict['nw_src'] == self.completeFlowList[anInterfaceIndex]['flowList'][i]['nw_src']) and (aFlowDict['nw_dst'] == self.completeFlowList[anInterfaceIndex]['flowList'][i]['nw_dst']):
 					print "flow exists"
 					return True
