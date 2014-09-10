@@ -370,22 +370,24 @@ class FlowMonitor:
 		flowIndex = -1
 
 		for i in range(numFlows):
-			if aFlowDict['dl_src'] == aFlowString.split('\n')[1].split('=')[1].split(' ')[i]:
-				print "Dl_src exists"
+			#now we are doing this ds_ip, we have to check if there's always a unique pair nw_dst and dl_src and dl_dst
+			if aFlowDict['nw_dst'] == aFlowString.split('\n')[4].split('=')[1].split(' ')[i]:
+																
+				print "nw_dst exists"
 				dl_srcExists = 1
 				flowIndex = i
 				break
 
 		if dl_srcExists == 0:
-			print "Dl_src does not exists"
+			print "nw_dst  does not exists"
 			return True
 		else:
 			
-			if (aFlowDict['dl_dst'] == aFlowString.split('\n')[2].split('=')[1].split(' ')[flowIndex]) and (aFlowDict['nw_src'] == aFlowString.split('\n')[3].split('=')[1].split(' ')[flowIndex]) and (aFlowDict['nw_dst'] == aFlowString.split('\n')[4].split('=')[1].split(' ')[flowIndex]):
-				print "Dl_src exists, and other values do match"
+			if (aFlowDict['dl_dst'] == aFlowString.split('\n')[2].split('=')[1].split(' ')[flowIndex]) and (aFlowDict['nw_src'] == aFlowString.split('\n')[3].split('=')[1].split(' ')[flowIndex]) and (aFlowDict['dl_src'] == aFlowString.split('\n')[1].split('=')[1].split(' ')[flowIndex]):
+				print "nw_dst  exists, and other values do match"
 				return False
 			else:
-				print "Dl_src exists, but other values do not match"
+				print "nw_dst  exists, but other values do not match"
 				return True
 
 	def checkIfFlowExists(self, anInterfaceIndex, aFlowDict):
