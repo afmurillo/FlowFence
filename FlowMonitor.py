@@ -289,13 +289,13 @@ class FlowMonitor:
 
 			interfacesFlowString=dict.fromkeys(['interfaceName','string'])
 			interfacesFlowString['interfaceName'] =  self.completeInterfaceList[i]['name']
-			print "Getting flows for interface: " + interfacesFlowString['interfaceName']
+			#print "Getting flows for interface: " + interfacesFlowString['interfaceName']
 
 			interfacesFlowString['string']=subprocess.check_output('./flows.sh ' + interfacesFlowString['interfaceName'], shell=True)
-			print "Interface string: " + str(interfacesFlowString)
+			#print "Interface string: " + str(interfacesFlowString)
 
 			interfacesFlowStringList.append(interfacesFlowString)
-			print "Interfaces flows string: " + str(interfacesFlowStringList)
+			#print "Interfaces flows string: " + str(interfacesFlowStringList)
 
 		for j in range(len(self.completeInterfaceList)):			
 
@@ -336,13 +336,13 @@ class FlowMonitor:
 				flowIndex = self.checkIfFlowExists(j, flowDict)
 
 				if flowIndex == -1:
-					print "Appending new flow"
+					#print "Appending new flow"
 					flowDict['oldArrivalTime'] = 0
 					flowDict['arrivalTime'] = self.calculateArrivalRate(flowDict['packets'], flowDict['length'], self.measuredK, 0 )
 					self.completeFlowList[j]['flowList'].append(flowDict)
 
 				else:
-					print "Updating flow"
+					#print "Updating flow"
 					flowDict['oldArrivalTime'] = flowDict['arrivalTime']
 					flowDict['arrivalTime'] = self.calculateArrivalRate(flowDict['packets'], flowDict['length'], self.measuredK, flowDict['oldArrivalTime'] )
 					self.completeFlowList[j]['flowList'][flowIndex] = flowDict								
@@ -351,11 +351,14 @@ class FlowMonitor:
 				for k in range(len(self.completeFlowList[j]['flowList'])):
 					if (self.checkIfFlowStopped(interfacesFlowStringList[j]['string'], flowDict)):
 						#splice
-						print "Should remove this flow"
+						print "with Sflow string: " + interfacesFlowStringList[j]['string']
+						print "From flowlist: " + str(self.completeFlowList[j])
+						print "Should remove this flow: " + str(flowDict) 
+						print "Index: " + str(k)
 						self.completeFlowList[j]['flowList'].remove(k)
 
 				if not self.completeFlowList[j]['flowList']:
-					print "Appending new flow, because flowList was empty"
+					#print "Appending new flow, because flowList was empty"
 					flowDict['oldArrivalTime'] = 0
 					flowDict['arrivalTime'] = self.calculateArrivalRate(flowDict['packets'], flowDict['length'], self.measuredK, 0 )
 					self.completeFlowList[j]['flowList'].append(flowDict)
@@ -384,17 +387,17 @@ class FlowMonitor:
 
 	def checkIfFlowExists(self, anInterfaceIndex, aFlowDict):
 			#toDo: Comparation with "in values" does not work, we should make either a hash in correct order or a case case comparation
-			print "Comparing flow: " + str(aFlowDict)
+			#print "Comparing flow: " + str(aFlowDict)
 			for i in range(len(self.completeFlowList[anInterfaceIndex]['flowList'])):
-				print "With flow in flow list:  " + str(self.completeFlowList[anInterfaceIndex]['flowList'][i])					
+				#print "With flow in flow list:  " + str(self.completeFlowList[anInterfaceIndex]['flowList'][i])					
 
 				if (aFlowDict['dl_src'] == self.completeFlowList[anInterfaceIndex]['flowList'][i]['dl_src']) and (aFlowDict['dl_dst'] == self.completeFlowList[anInterfaceIndex]['flowList'][i]['dl_dst']) and (aFlowDict['nw_src'] == self.completeFlowList[anInterfaceIndex]['flowList'][i]['nw_src']) and (aFlowDict['nw_dst'] == self.completeFlowList[anInterfaceIndex]['flowList'][i]['nw_dst']):
-					print "flow exists"
+					#print "flow exists"
 					return i
 
 			#THERE IS AN ERROR HERE!!!
-			print "Flow does not exists, flow: " + str(aFlowDict)			
-			print "Interface: " + self.completeFlowList[anInterfaceIndex]['interfaceName']
+			#print "Flow does not exists, flow: " + str(aFlowDict)			
+			#print "Interface: " + self.completeFlowList[anInterfaceIndex]['interfaceName']
 			return -1			
 			
 	def calculateArrivalRate(self, packets, length, measuredK, oldArrivalTime):			
