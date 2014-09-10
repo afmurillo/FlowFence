@@ -303,6 +303,7 @@ class FlowMonitor:
 			#numFlows=int(flowString.split('\n')[0].split('=')[1])
 			flowList=[]
 
+			#this cycle runs over all the flows in the string
 			for i in range(numFlows):
 
 				flowDict=dict.fromkeys(['dl_src','dl_dst','nw_src','nw_dst','packets','length','arrivalTime', 'oldArrivalTime','action'])
@@ -331,27 +332,27 @@ class FlowMonitor:
 					flowDict['length']=0
 
 				# Here we should validate if the flow exists, if not, append; if yes overwrite values and update Ri
-				# toDo: Validate if the flowList is not empty
+				# toDo: Validate if the flowList is not empty								
+				flowIndex = self.checkIfFlowExists(j, flowDict)
+
+				if flowIndex == -1:
+					print "Appending new flow"
+					flowDict['oldArrivalTime'] = 0
+					flowDict['arrivalTime'] = self.calculateArrivalRate(flowDict['packets'], flowDict['length'], self.measuredK, 0 )
+					self.completeFlowList[j]['flowList'].append(flowDict)
+
+				else:
+					print "Updating flow"
+					flowDict['oldArrivalTime'] = flowDict['arrivalTime']
+					flowDict['arrivalTime'] = self.calculateArrivalRate(flowDict['packets'], flowDict['length'], self.measuredK, flowDict['oldArrivalTime'] )
+					self.completeFlowList[j]['flowList'][flowIndex] = flowDict								
+	
+				# Finally we should check if according to our last sample, a flow in flowList stopped existing							
 				for k in range(len(self.completeFlowList[j]['flowList'])):
-					if (self.checkIfFlowExists(j, flowDict)):
-						print "Updating flow"
-						flowDict['oldArrivalTime'] = flowDict['arrivalTime']
-						flowDict['arrivalTime'] = self.calculateArrivalRate(flowDict['packets'], flowDict['length'], self.measuredK, flowDict['oldArrivalTime'] )
-						self.completeFlowList[j]['flowList'][k] = flowDict
-						#THERE IS SOME ERROR WITH THE FUNCTION THAT CHECKS IF IT DOES NOT EXISTS
-					else:
-						print "Appending new flow"
-						flowDict['oldArrivalTime'] = 0
-						flowDict['arrivalTime'] = self.calculateArrivalRate(flowDict['packets'], flowDict['length'], self.measuredK, 0 )
-						self.completeFlowList[j]['flowList'].append(flowDict)
-				
-				# Finally we should check if according to our last sample, a flow in flowList stopped existing
-			
-				for k in range(len(self.completeFlowList[j]['flowList'])):
-					if not (self.checkIfFlowStopped(interfacesFlowStringList[j]['string'], flowDict)):
+					if (self.checkIfFlowStopped(interfacesFlowStringList[j]['string'], flowDict)):
 						#splice
 						print "Should remove this flow"
-						#self.completeFlowList[j]['flowList'].remove(k)
+						self.completeFlowList[j]['flowList'].remove(k)
 
 				if not self.completeFlowList[j]['flowList']:
 					print "Appending new flow, because flowList was empty"
@@ -373,13 +374,13 @@ class FlowMonitor:
 				break
 
 		if dl_srcExists == 0:
-			return 0
+			return True
 		else:
 			
 			if (aFlowDict['dl_dst'] == aFlowString.split('\n')[2].split('=')[1].split(' ')[flowIndex]) and (aFlowDict['nw_src'] == aFlowString.split('\n')[3].split('=')[1].split(' ')[flowIndex]) and (aFlowDict['nw_dst'] == aFlowString.split('\n')[4].split('=')[1].split(' ')[flowIndex]):
-				return True
-			else:
 				return False
+			else:
+				return True
 
 	def checkIfFlowExists(self, anInterfaceIndex, aFlowDict):
 			#toDo: Comparation with "in values" does not work, we should make either a hash in correct order or a case case comparation
@@ -389,12 +390,12 @@ class FlowMonitor:
 
 				if (aFlowDict['dl_src'] == self.completeFlowList[anInterfaceIndex]['flowList'][i]['dl_src']) and (aFlowDict['dl_dst'] == self.completeFlowList[anInterfaceIndex]['flowList'][i]['dl_dst']) and (aFlowDict['nw_src'] == self.completeFlowList[anInterfaceIndex]['flowList'][i]['nw_src']) and (aFlowDict['nw_dst'] == self.completeFlowList[anInterfaceIndex]['flowList'][i]['nw_dst']):
 					print "flow exists"
-					return True
+					return i
 
 			#THERE IS AN ERROR HERE!!!
 			print "Flow does not exists, flow: " + str(aFlowDict)			
 			print "Interface: " + self.completeFlowList[anInterfaceIndex]['interfaceName']
-			return False			
+			return -1			
 			
 	def calculateArrivalRate(self, packets, length, measuredK, oldArrivalTime):			
 		return (1 - math.exp(-1))
