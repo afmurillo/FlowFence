@@ -270,9 +270,6 @@ class FlowMonitor:
 			interfacesFlowString['string']=subprocess.check_output('./flows.sh ' + self.completeInterfaceList[i]['name'], shell=True)			
 			interfacesFlowPrevStringList.append(interfacesFlowString)
 			
-                        #print "interface name: " + interfacesFlowString['interfaceName']
-                        #print "prev interface String: " + str(interfacesFlowString)
-
 		# toDo: Check a better way of doing this, what happens with flows that die?		
 		sleep(self.k)
 		self.measuredK = time() - time1
@@ -290,10 +287,12 @@ class FlowMonitor:
 			#print "interface String: " + str(interfacesFlowString)
 
 		for j in range(len(self.completeInterfaceList)):			
-
+			
+			prevNumFlows = int(interfacesFlowPrevStringList[j]['string'].split('\n')[0].split('=')[1])
 			numFlows=int(interfacesFlowStringList[j]['string'].split('\n')[0].split('=')[1])
 			#numFlows=int(flowString.split('\n')[0].split('=')[1])
 			flowList=[]
+					
 
 			#this cycle runs over all the flows in the string
 			for i in range(numFlows):
@@ -306,21 +305,24 @@ class FlowMonitor:
 				flowDict['action']=interfacesFlowStringList[j]['string'].split('\n')[7].split('=')[1].split(' ')[i]
 
 				aux1 = interfacesFlowStringList[j]['string'].split('\n')[5].split('=')[1].split(' ')[i]
-				#print "Interface name: " + str(interfacesFlowStringList[j]['interfaceName'])
-				#print "Aux 1: " + str(aux1)
-				#todo: Here's a bug, sometimes the prevString will have less flows than the actual one. 
 
-				aux2 = interfacesFlowPrevStringList[j]['string'].split('\n')[5].split('=')[1].split(' ')[i]
-				#print "Aux 2: " + str(aux2)
+				if (numFlows <= prevNumFlows):
+					aux2 = interfacesFlowPrevStringList[j]['string'].split('\n')[5].split('=')[1].split(' ')[i]
+				else:	
+					aux2 = 0
 
+				#check if this is still necessary
 				if (aux1 is not None) and (aux2 is not None):
 					flowDict['packets']=int(aux1) - int(aux2)
-					#print "FlowDict packets: " + str(flowDict['packets'])
 				else:
 					flowDict['packets']=0
-					
+				
 				aux1 = interfacesFlowStringList[j]['string'].split('\n')[6].split('=')[1].split(' ')[i]
-				aux2 = interfacesFlowPrevStringList[j]['string'].split('\n')[6].split('=')[1].split(' ')[i]
+
+				if (numFlows <= prevNumFlows):					
+					aux2 = interfacesFlowPrevStringList[j]['string'].split('\n')[6].split('=')[1].split(' ')[i]
+				else:	
+					aux2 = 0
 
 				if (aux1 is not None) and (aux2 is not None):
 					flowDict['length']=int(aux1) - int(aux2)
@@ -329,7 +331,6 @@ class FlowMonitor:
 					flowDict['length']=0
 
 				# Here we should validate if the flow exists, if not, append; if yes overwrite values and update Ri
-				# toDo: Validate if the flowList is not empty								
 				flowIndex = self.checkIfFlowExists(j, flowDict)
 
 				#Flow does not exist
@@ -353,12 +354,15 @@ class FlowMonitor:
 						#splice
 						self.completeFlowList[j]['flowList'].remove(k)
 
-				# Flowlist es empty, start filling it
+				# Flowlist is empty, start filling it
 				if not self.completeFlowList[j]['flowList']:
 					flowDict['oldArrivalRate'] = 0.0
 					flowDict['arrivalRate'] = self.calculateArrivalRate(flowDict['packets'], flowDict['length'], self.measuredK, 0.0 )
 					print "Calculated Arrival Rate: " + str(flowDict['arrivalRate'])
 					self.completeFlowList[j]['flowList'].append(flowDict)
+
+		#else from "if (numFlows <= prevNumFlows):", this means that we have new flows between the samples
+
 
 	def checkIfFlowStopped(self, aFlowString, aFlowDict):
 
