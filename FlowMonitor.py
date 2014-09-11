@@ -337,28 +337,29 @@ class FlowMonitor:
 				if flowIndex == -1:
 					flowDict['oldArrivalRate'] = 0.0
 					flowDict['arrivalRate'] = self.calculateArrivalRate(flowDict['packets'], flowDict['length'], self.measuredK, 0.0 )
-					print "Calculated Arrival Rate: " + str(flowDict['arrivalRate'])
+					#print "Calculated Arrival Rate: " + str(flowDict['arrivalRate'])
 					self.completeFlowList[j]['flowList'].append(flowDict)
 
 				else:
 					flowDict['oldArrivalRate'] = self.completeFlowList[j]['flowList'][flowIndex]['arrivalRate']
 					#flowDict['oldArrivalRate'] = flowDict['arrivalRate']
-					print "Old arrival rate is: " + str(flowDict['oldArrivalRate'])
+					#print "Old arrival rate is: " + str(flowDict['oldArrivalRate'])
 					flowDict['arrivalRate'] = self.calculateArrivalRate(flowDict['packets'], flowDict['length'], self.measuredK, flowDict['oldArrivalRate'] )
-					print "Calculated Arrival Rate: " + str(flowDict['arrivalRate'])
+					#print "Calculated Arrival Rate: " + str(flowDict['arrivalRate'])
 					self.completeFlowList[j]['flowList'][flowIndex] = flowDict								
 	
 				# Finally we should check if according to our last sample, a flow in flowList stopped existing							
 				for k in range(len(self.completeFlowList[j]['flowList'])):
 					if (self.checkIfFlowStopped(interfacesFlowStringList[j]['string'], flowDict)):
 						#splice
-						self.completeFlowList[j]['flowList'].remove(k)
+						#self.completeFlowList[j]['flowList'].remove(k)
+						print "Should remove this flow"
 
 				# Flowlist is empty, start filling it
 				if not self.completeFlowList[j]['flowList']:
 					flowDict['oldArrivalRate'] = 0.0
 					flowDict['arrivalRate'] = self.calculateArrivalRate(flowDict['packets'], flowDict['length'], self.measuredK, 0.0 )
-					print "Calculated Arrival Rate: " + str(flowDict['arrivalRate'])
+					#print "Calculated Arrival Rate: " + str(flowDict['arrivalRate'])
 					self.completeFlowList[j]['flowList'].append(flowDict)
 
 		#else from "if (numFlows <= prevNumFlows):", this means that we have new flows between the samples
@@ -398,7 +399,7 @@ class FlowMonitor:
 			return -1			
 			
 	def calculateArrivalRate(self, packets, length, measuredK, oldArrivalRate):			
-		print "Calculating arrival time, with: packets "  + str(packets) + " length " + str(length) + " old arrival time " + str(oldArrivalRate)
+		#print "Calculating arrival time, with: packets "  + str(packets) + " length " + str(length) + " old arrival time " + str(oldArrivalRate)
 
 		if packets <= 0:
 			return length/measuredK		
