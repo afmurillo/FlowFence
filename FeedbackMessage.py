@@ -9,33 +9,18 @@ class FeedbackMessage:
 		Class that sends link congestion update messages to the FlowFence application run on the controller
 		"""
 
-		def __init__(self, version = 1, type = 'request', proto='udp' , priority = 0, someFlags='none', controllerIp='127.0.0.1', applicationPort=12345):
+		def __init__(self, version = 1, priority = 0, controllerIp='127.0.0.1', applicationPort=12345):
 
 			self.version=version			
-			self.type=type
-			self.proto='udp'
 			self.piority=priority
-			self.someFlags=someFlags
-
 			self.dstIp=controllerIp
 			self.appPort = applicationPort
 
-
 			print controllerIp
 			print applicationPort
-			#self.anId=inet_aton(self)
-
-			#decrMsg = createDecrFeedback(Ka, Kab, aVersion, aType, aProto, aPriority, someFlags, anId)				
-			#deedbackMsg = json.dumps(str(decrMsg))
 
 			self.socket = socket(AF_INET, SOCK_STREAM)			
 	
-
-			#addMethodToSend
-			#self.s.send(feedbackMsg) #msg sent
-			#addMethodToCloseConnection
-			#s.close()
-
 		def createMAC(self, key, message):
 
 			hasher = AES.new(key, AES.MODE_CBC, 'This is an IV456')

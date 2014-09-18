@@ -45,6 +45,7 @@ class FlowMonitor:
 			completeInterfaceDict['monitoring'] = 0
 			completeInterfaceDict['isCongested'] = 0
 			completeInterfaceDict['numQueues'] = 10			
+			completeInterfaceDict['goodBehaved'] = 1
 			self.completeInterfaceList.append(completeInterfaceDict)
 	
 			flowIntDict = dict.fromkeys(['interfaceName'],['flowList'])
@@ -148,7 +149,8 @@ class FlowMonitor:
 						self.completeInterfaceList[j]['threshold']=self.completeInterfaceList[j]['lowerLimit']
 						self.initQueues()
 						#toDo: This should start a thread in Application switch that "dies", once the local control and congestion message is sent
-						self.reportObject.congestionDetected(self.completeInterfaceList[j]['dpid'], self.completeFlowList[j]['flowList'], self.measuredK)
+						self.calculateControls(j)
+						self.reportObject.congestionDetected(self.completeInterfaceList[j], self.completeFlowList[j]['flowList'])
 						#toDo: After of reporting, it should init the queues and wait for further actions from the controller
 
 					elif (self.completeInterfaceList[j]['isCongested'] == 1) and (self.completeInterfaceList[j]['currentEma'] <= self.completeInterfaceList[j]['threshold']):
@@ -253,6 +255,14 @@ class FlowMonitor:
             else:
                 return prevma + ((series[bar] - prevma) / (bar + 1.0))
 
+	def calculateControls(self, anInterfaceIndex):
+		self.classifyFlows(anInterfaceIndex)
+		
+
+	def classifyFlows(self, anInterfaceIndex):
+		for i in range(len(self.completeFlowList[anInterfaceIndex]['flowList'])):
+			if self.completeFlowList[anInterfaceIndex['flowList'][i]['arrivalRate'] > self.completeInterfaceList[anInterfaceIndex]['capacity']/len(self.completeFlowList[anInterfaceIndex['flowList'][i]):
+				self.completeFlowList[anInterfaceIndex['flowList'][i]['goodBehaved']=0
 
 	def getFlows(self):
 		# A list of dicts is created for each interface

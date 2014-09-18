@@ -49,6 +49,8 @@ class ApplicationSwitch:
 			self.switchProperties=SwitchProperties()
 			self.interfacesList = self.switchProperties.getInterfaces()		
 
+			self.actionDict=dict.fromKeys(['Notification'])
+
 			for i in range(len(self.interfacesList)):
 				flowIntDict = dict.fromkeys(['interfaceName'],['flowList'])
 				flowIntDict['interfaceName']= self.interfacesList[i]['name']
@@ -56,53 +58,34 @@ class ApplicationSwitch:
 				flowIntDict['flowList']=[]					
 				self.completeFlowList.append(flowIntDict)
 		
-			self.msgSender = FeedbackMessage(self.aVersion, self.aType, self.aProto, self.someFlags, self.aPriority, self.controllerIp, self.flowFencePort)
+			self.msgSender = FeedbackMessage(self.aVersion, self.aPriority, self.controllerIp, self.flowFencePort)
 			
 		#toDo: This method should: Create a thread to handle that congestion report that applies local control and reports congestion and bad flows to controller
-		def congestionDetected(self, dpid, flowList, measuredK):
-		
-			for i in range(len(self.interfacesList)):
-				if dpid == completeFlowList[i]['dpid']:
-					#Here we should calculate the arrival rates for each flow, each flow is an element of flowList	
-					completeFlowList[i]['flowList']=flowList
+		def congestionDetected(self, interfaceDict, flowList):
 
-					for j in range(len(completeFlowList[i]['flowList'])):
-						completeFlowList[i]['flowList'][j]['arrivalRate'] = self.calculateArrivalRate(completeFlowList[i]['flowList'][j]['packets'], completeFlowList[i]['flowList'][j]['length'],measuredK)
-						#TODO: IMPLEMENT CALCULATE ARRIVAL RATE!!!
-			
-
+			#control variable to avoid sending multiple process		
 			if self.controlInProcess == 0:
 
-				#Congestion Detected, sent notification to controller			
-				self.decrMsg = self.msgSender.createDecrFeedback(self.Ka, self.Kab, self.dpid, self.aVersion, self.aType, self.aProto, self.aPriority, self.someFlags, self.controllerIp, self.aLink)			
-				self.feedbackMsg = json.dumps(str(self.decrMsg))
-				print 'Message sent: ' + self.feedbackMsg
-				#print 'Sending congestion message...'
-				self.msgSender.sendMessage(self.feedbackMsg, self.controllerIp, self.flowFencePort)
+				self.actionDict['Notification']="Congestion"
+				self.notificationMessage = json.dumps(str(self.actionDict) +str(interfaceDict) + str(flowList))
+				print 'Message sent: ' + self.notificationMessage
+
+				self.msgSender.sendMessage(self.notificationMessage, self.controllerIp, self.flowFencePort)
 				self.msgSender.closeConnection()
-				#print 'Message sent'
+
 				self.controlInProcess = 1
-				#toDo: When we should send a report again?				
 
 		def congestionCeased(self, dpid):
 
 			if self.controlInProcess == 1:			
 
 				#Congestion Detected, sent notification to controller			
-				self.incrMsg = self.msgSender.createIncrFeedback(self.Ka, self.dpid, self.aVersion, self.aType, self.aProto, self.aPriority, self.someFlags, self.controllerIp, self.aLink)			
-				self.feedbackMsg = json.dumps(str(self.incrMsg))
-
-				#print 'Sending congestion ending message...'
+				self.actionDict['Notification']="Uncongestion"
+				self.notificationMessage = json.dumps(str(self.actionDict) +str(interfaceDict) + str(flowList))
+				
 				self.msgSender.sendMessage(self.feedbackMsg, self.controllerIp, self.flowFencePort)
 				self.msgSender.closeConnection()
-				#print 'Message sent'
-				self.controlInProcess = 0
-				#toDo: When we should send a report again?				
-				#toDo: controlInProcess is a semaphore variable? how to handle it? make a state diagram
-			
-
-		
-				
+				self.controlInProcess = 0			
 
 		def getInstance(self):
 			return ApplicationSwitch()
