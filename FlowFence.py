@@ -8,7 +8,7 @@ from pox.topology.topology import Switch, Entity
 from pox.lib.revent import EventMixin
 import pox.lib.packet as pkt
 import os
-import string, sys, socket, json, subprocess
+import  sys, socket, json, subprocess
 import thread 
 from threading import Thread
 import time
@@ -66,12 +66,13 @@ class handle_message(Thread):
 		print 'message from ' + str(self.srcAddress)
 		print 'Connections '
 		print self.myconnections
-		#print self.received + '\n'
+		print self.received + '\n'
 
-		message = eval(json.loads(self.received))
-
-		print 'message received'
-		print message[0]
+		try:
+			message = json.loads(self.received)
+			print "Message received " + str(message)
+		except:
+			print "An error ocurred processing the incoming message"
 
 		#aux_dpid=message[0]['src']
 		#nocoma=aux_dpid[:len(aux_dpid)-1]
