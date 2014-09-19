@@ -38,8 +38,8 @@ class ApplicationSwitch:
 			self.samples=10
 			self.period=3
 			self.intervalTime=1.0
-			self.upperLimit=8.4
-			self.lowerLimit=0.6
+			self.upperLimit=0.4
+			self.lowerLimit=0.1
 
 			awk="{print $3;}'"
 			awkString="awk '" + awk
@@ -49,7 +49,7 @@ class ApplicationSwitch:
 			self.switchProperties=SwitchProperties()
 			self.interfacesList = self.switchProperties.getInterfaces()		
 
-			self.actionDict=dict.fromKeys(['Notification'])
+			self.actionDict=dict.fromkeys(['Notification'])
 
 			for i in range(len(self.interfacesList)):
 				flowIntDict = dict.fromkeys(['interfaceName'],['flowList'])
@@ -73,7 +73,8 @@ class ApplicationSwitch:
 				self.msgSender.sendMessage(self.notificationMessage, self.controllerIp, self.flowFencePort)
 				self.msgSender.closeConnection()
 
-				self.controlInProcess = 1
+				#todo: WARNING, FOR DEBUG PURPOSES WE TOGGLED THIS CONTROL VARIABLE!!!!!!!!!!!!!!!!!
+				self.controlInProcess = 0
 
 		def congestionCeased(self, dpid):
 
@@ -101,14 +102,3 @@ if __name__=="__main__":
 	code.linkState=FlowMonitor(code.samples, code.period, code.intervalTime, code.upperLimit, code.lowerLimit)
 	code.linkState.startMonitoring()
 	
-	#toDo: Check how to stop it properly
-
-	while True:
-		try:
-			a=1
-
-		except KeyboardInterrupt:
-			print " \n *** So long and thanks for all the fish! *** "
-			code.linkState.stopMonitoring()
-			self.msgSender.closeConnection()
-			break        	

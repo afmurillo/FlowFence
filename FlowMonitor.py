@@ -91,7 +91,7 @@ class FlowMonitor:
 			try:			
 				# We get samples from all the flows in all interfaces								
 				self.getFlows()
-				print 'Flow List: ' + str(self.completeFlowList)				
+				#print 'Flow List: ' + str(self.completeFlowList)				
 			except KeyboardInterrupt:
 				self.monitoring=0
 				break
@@ -144,12 +144,15 @@ class FlowMonitor:
 				self.updateWindow()
 				#Has histeresis
 				for j in range(len(self.completeInterfaceList)):
+					print "Interface statistics: " + str(self.completeInterfaceList[j]['currentEma']) + " Threshold: " + str(self.completeInterfaceList[j]['threshold'])
 					if (self.completeInterfaceList[j]['isCongested'] == 0) and (self.completeInterfaceList[j]['currentEma'] >= self.completeInterfaceList[j]['threshold']):
 						self.completeInterfaceList[j]['isCongested']=1
 						self.completeInterfaceList[j]['threshold']=self.completeInterfaceList[j]['lowerLimit']
-						self.initQueues()
+						#toDo: Implement queue management
+						#self.initQueues()
 						#toDo: This should start a thread in Application switch that "dies", once the local control and congestion message is sent
 						self.calculateControls(j)
+						print "FlowList Congested: " + str(self.completeFlowList[j]['flowList'])
 						self.reportObject.congestionDetected(self.completeInterfaceList[j], self.completeFlowList[j]['flowList'])
 						#toDo: After of reporting, it should init the queues and wait for further actions from the controller
 
@@ -261,15 +264,15 @@ class FlowMonitor:
 
 	def classifyFlows(self, anInterfaceIndex):
 		for i in range(len(self.completeFlowList[anInterfaceIndex]['flowList'])):
-			if self.completeFlowList[anInterfaceIndex['flowList'][i]['arrivalRate'] > self.completeInterfaceList[anInterfaceIndex]['capacity']/len(self.completeFlowList[anInterfaceIndex['flowList'][i]):
-				self.completeFlowList[anInterfaceIndex['flowList'][i]['goodBehaved']=0
+			if self.completeFlowList[anInterfaceIndex]['flowList'][i]['arrivalRate'] > (self.completeInterfaceList[anInterfaceIndex]['capacity']/len(self.completeFlowList[anInterfaceIndex]['flowList'])):
+				self.completeFlowList[anInterfaceIndex]['flowList'][i]['goodBehaved']=0
 
 	def getFlows(self):
 		# A list of dicts is created for each interface
 		# Dict estructure: dl_src, dl_dst, nw_src, nw_dst, length(bytes), action			
 
 		# We get samples from all the flows in all interfaces
-		time1=time()
+		time1=time.time()
 		#interfacesFlowString=dict.fromkeys(['interfaceName','string'])
 		interfacesFlowPrevStringList=[]
 		interfacesFlowStringList=[]		
@@ -282,8 +285,8 @@ class FlowMonitor:
 			
 		# toDo: Check a better way of doing this, what happens with flows that die?		
 		sleep(self.k)
-		self.measuredK = time() - time1
-		print "measured time: " + str(self.measuredK)
+		self.measuredK = time.time() - time1
+		#print "measured time: " + str(self.measuredK)
 
 		for i in range(len(self.completeInterfaceList)):
 
@@ -440,6 +443,8 @@ class FlowMonitor:
 			b.append((float(subprocess.check_output("cat /proc/net/dev | grep " + self.completeInterfaceList[j]['name'] + " | awk '{print $10;}'", shell=True).split('\n')[0])))
 			samplesList[j]['name'] = self.completeInterfaceList[j]['name']
 			samplesList[j]['sample']=((b[j]-a[j])/1048576)
+			print "interface : " + str(self.completeInterfaceList[j]['name'])
+			print "Sample: " + str(samplesList[j]['sample'])
 
 		return samplesList
 
@@ -450,8 +455,8 @@ if __name__=="__main__":
     intervalTime=1.0
 
     #toDo: Handle this as a percentage of total link capacity
-    upperLimit = 8.4
-    lowerLimit = 0.6
+    upperLimit = 0.4
+    lowerLimit = 0.41
 
     useAverages = deque( maxlen=nSamples )
     code = FlowMonitor(nSamples, intervalTime, upperLimit)
