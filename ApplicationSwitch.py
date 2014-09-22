@@ -49,10 +49,11 @@ class ApplicationSwitch:
 			self.switchProperties=SwitchProperties()
 			self.interfacesList = self.switchProperties.getInterfaces()		
 
-			self.actionDict=dict.fromkeys(['Notification'])
+			self.feedbackDict=dict.fromkeys(['Notification','Flowlist','Interface'])
 
 			for i in range(len(self.interfacesList)):
-				flowIntDict = dict.fromkeys(['interfaceName'],['flowList'])
+				#todo: WARNING, HERE SEEMS TO BE A "WORKING" BUG! fromkeys is (['aaa','bbb'])
+				flowIntDict = dict.fromkeys(['interfaceName','flowList'])
 				flowIntDict['interfaceName']= self.interfacesList[i]['name']
 				flowIntDict['dpid']= self.interfacesList[i]['dpid']
 				flowIntDict['flowList']=[]					
@@ -66,12 +67,11 @@ class ApplicationSwitch:
 			#control variable to avoid sending multiple process		
 			if self.controlInProcess == 0:
 
-				self.actionDict['Notification']="Congestion"
-
-				congestedFlowDict=dict.fromkeys(['flowList'])
-				congestedFlowDict['flowList']=flowList
-
-				self.notificationMessage = json.dumps(str(self.actionDict) +str(interfaceDict) + str(congestedFlowDict))
+				print "Interface Dict: " + str(interfaceDict)
+				self.feedbackDict['Notification']="Congestion"
+				self.feedbackDict['Flowlist']=flowList
+				self.feedbackDict['Interface']=interfaceDict
+				self.notificationMessage = json.dumps(str(self.feedbackDict))
 				print 'Message sent: ' + self.notificationMessage
 
 				self.msgSender.sendMessage(self.notificationMessage, self.controllerIp, self.flowFencePort)
