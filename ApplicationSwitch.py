@@ -67,7 +67,11 @@ class ApplicationSwitch:
 			if self.controlInProcess == 0:
 
 				self.actionDict['Notification']="Congestion"
-				self.notificationMessage = json.dumps(str(self.actionDict) +str(interfaceDict) + str(flowList))
+
+				congestedFlowDict=dict.fromkeys(['flowList'])
+				congestedFlowDict['flowList']=flowList
+
+				self.notificationMessage = json.dumps(str(self.actionDict) +str(interfaceDict) + str(congestedFlowDict))
 				print 'Message sent: ' + self.notificationMessage
 
 				self.msgSender.sendMessage(self.notificationMessage, self.controllerIp, self.flowFencePort)
@@ -79,9 +83,10 @@ class ApplicationSwitch:
 		def congestionCeased(self, dpid):
 
 			if self.controlInProcess == 1:			
-
+			
 				#Congestion Detected, sent notification to controller			
 				self.actionDict['Notification']="Uncongestion"
+
 				self.notificationMessage = json.dumps(str(self.actionDict) +str(interfaceDict) + str(flowList))
 				
 				self.msgSender.sendMessage(self.feedbackMsg, self.controllerIp, self.flowFencePort)

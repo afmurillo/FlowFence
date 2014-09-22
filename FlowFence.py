@@ -12,6 +12,7 @@ import  sys, socket, json, subprocess
 import thread 
 from threading import Thread
 import time
+import math
 #######################################
 
 log = core.getLogger()
@@ -25,7 +26,7 @@ class server_socket(Thread):
 		Thread.__init__(self)
 		global received
 		self.sock = None
-		self.status =-1			
+		#self.status =-1			
 		self.connections = connections						#dpdi of the switch
 
 	def run(self):
@@ -59,6 +60,7 @@ class handle_message(Thread):
 		self.received = received
 		self.myconnections = connections
 		self.srcAddress = addr[0]
+		self.alfa=1
 		print self.myconnections
 
 	def run(self):
@@ -73,6 +75,11 @@ class handle_message(Thread):
 			print "Message received " + str(message)
 		except:
 			print "An error ocurred processing the incoming message"
+
+		if message['Notification'] == 'Congestion':
+			self.handleCongestionNotification(message)
+		else if: message['Notification']) == 'Uncongestion'
+			self.handleUncongestionNotification(message)
 
 		#aux_dpid=message[0]['src']
 		#nocoma=aux_dpid[:len(aux_dpid)-1]
@@ -120,6 +127,59 @@ class handle_message(Thread):
 		#print 'Well...done'	
 
 ############################
+
+	def handleCongestionNotification(self, notificationMessage):
+		# Algorithm: Classify good and bad flows, assign bandwidth fo good flows, assign band fo bad flows, assign remaining band
+		# Bad flows bw: assignedBw(j,i)=avaliableBw/badFlows - (1 -exp( - (rates(i)-capacityOverN) ) )*alfas(j)*rates(i);
+
+		flowBwList=[]
+		flowBwDict=dict.fromkeys(['srcIp'],['dstIp'],['goodBehaved'],['bandwidth'])
+		badFlows=0
+		bwForBadFlows=0
+
+		remainingBw = notificationMessage['capacity']
+
+		# Good Flows
+		for i in range(len(notificationMessage['flowList'])):
+			flowBwDict['srcIp'] = notificationMessage['flowList'][i]['srcIp']
+			flowBwDict['dstIp'] = notificationMessage['flowList'][i]['dstIp']
+			flowBwDict['goodBehaved'] = self.classifyFlows(notificationMessage['capacity'], notificationMessage['flowList'][i]['arrivalRate'],len(notificationMessage['flowList']))
+
+			if flowBwDict['goodBehaved'] == True:
+				flowBwDict['bw']= notificationMessage['flowList'][i]['arrivalRate']
+				remainingBw = remainingBw - notificationMessage['flowList'][i]['arrivalRate']
+			else:
+				badFlows=badFlows+1
+
+			flowBwList.append(flowBwDict)
+
+		bwForBadFlows=remainingBw
+
+		# Bad Flows
+		for i in range(len(notificationMessage['flowList'])):
+			if flowBwDict['goodBehaved'] == False:
+				flowBwList[i]['bw']= assignBwToBadBehaved(bwForBadFlows, badFlows, notificationMessage['capacity'], len(notificationMessage['flowList']), notificationMessage['flowList'][i]['arrivalRate'], self.alfa)
+				# Here we should check witch switches also handle the bad behaved flow to apply the same control, in the simplest topology (Dumb-bell), it is not neccesary
+				remainingBw = remainingBw - flowBwList[i]['bw']
+
+		# Give remmaining bw between good flows
+		for i in range(len(notificationMessage['flowList'])):
+			if flowBwDict['goodBehaved'] == True:
+				flowBwList[i]['bw']= remainingBw/(len(notificationMessage['flowList']) - badFlows)
+		
+		print "Calculated Bandwidth: " + str(flowBwList)
+		
+	#In further versions, other classification methods could be used
+	def classifyFlows(self, capacity, estimatedBw, numFlows):
+		if (estimatedBw>capacity/numFlows):
+			return False
+		else:
+			return True
+
+	def assignBwToBadBehaved(avaliableBw, numBadFlows, capacity, numTotalFlows, flowRate, alfa):
+		#assignedBw(j,i)=avaliableBw/badFlows - (1 -exp( - (rates(i)-capacityOverN) ) )*alfas(j)*rates(i);		
+		return avaliableBw/numBadFlows - (1 - math.exp(-(flowRate-(capacity/numTotalFlows))))*alfa*flowRate
+
 
 class connect_test(EventMixin):	
   # Waits for OpenFlow switches to connect and makes them learning switches.
