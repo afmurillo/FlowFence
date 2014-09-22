@@ -11,6 +11,8 @@ import os
 import  sys, socket, json, subprocess
 import thread 
 from threading import Thread
+from collections import deque
+
 import time
 import math
 #######################################
@@ -66,19 +68,21 @@ class handle_message(Thread):
 	def run(self):
 		
 		print 'message from ' + str(self.srcAddress)
-		print 'Connections '
-		print self.myconnections
-		print self.received + '\n'
+		#print 'Connections '
+		#print self.myconnections
+		#print self.received + '\n'
 
 		try:
-			message = json.loads(self.received)
+			message = eval(json.loads(self.received))
 			print "Message received " + str(message)
 		except:
 			print "An error ocurred processing the incoming message"
 
+		print "Type of message " + str(message['Notification'])
+	
 		if message['Notification'] == 'Congestion':
 			self.handleCongestionNotification(message)
-		else if: message['Notification']) == 'Uncongestion'
+		elif message['Notification'] == 'Uncongestion':
 			self.handleUncongestionNotification(message)
 
 		#aux_dpid=message[0]['src']
@@ -104,7 +108,7 @@ class handle_message(Thread):
 		#for i in range(senders):
 			
 		#my_match = of.ofp_match(dl_type = 0x800,
-		#nw_src=IPAddr(addresses[i]),		#toDo: Get flowlist going to destination
+		#nw_src=IPAddr(addresses[i]),		#toDo: Get Flowlist going to destination
 		#nw_dst=linkId,
 		#in_port=65534)
 
@@ -133,21 +137,21 @@ class handle_message(Thread):
 		# Bad flows bw: assignedBw(j,i)=avaliableBw/badFlows - (1 -exp( - (rates(i)-capacityOverN) ) )*alfas(j)*rates(i);
 
 		flowBwList=[]
-		flowBwDict=dict.fromkeys(['srcIp'],['dstIp'],['goodBehaved'],['bandwidth'])
+		flowBwDict=dict.fromkeys(['srcIp','dstIp','goodBehaved','bandwidth'])
 		badFlows=0
 		bwForBadFlows=0
 
-		remainingBw = notificationMessage['capacity']
+		remainingBw = notificationMessage['Interface']['capacity']
 
 		# Good Flows
-		for i in range(len(notificationMessage['flowList'])):
-			flowBwDict['srcIp'] = notificationMessage['flowList'][i]['srcIp']
-			flowBwDict['dstIp'] = notificationMessage['flowList'][i]['dstIp']
-			flowBwDict['goodBehaved'] = self.classifyFlows(notificationMessage['capacity'], notificationMessage['flowList'][i]['arrivalRate'],len(notificationMessage['flowList']))
+		for i in range(len(notificationMessage['Flowlist'])):
+			flowBwDict['srcIp'] = notificationMessage['Flowlist'][i]['srcIp']
+			flowBwDict['dstIp'] = notificationMessage['Flowlist'][i]['dstIp']
+			flowBwDict['goodBehaved'] = self.classifyFlows(notificationMessage['Interface']['capacity'], notificationMessage['Flowlist'][i]['arrivalRate'],len(notificationMessage['Flowlist']))
 
 			if flowBwDict['goodBehaved'] == True:
-				flowBwDict['bw']= notificationMessage['flowList'][i]['arrivalRate']
-				remainingBw = remainingBw - notificationMessage['flowList'][i]['arrivalRate']
+				flowBwDict['bw']= notificationMessage['Flowlist'][i]['arrivalRate']
+				remainingBw = remainingBw - notificationMessage['Flowlist'][i]['arrivalRate']
 			else:
 				badFlows=badFlows+1
 
@@ -156,16 +160,16 @@ class handle_message(Thread):
 		bwForBadFlows=remainingBw
 
 		# Bad Flows
-		for i in range(len(notificationMessage['flowList'])):
+		for i in range(len(notificationMessage['Flowlist'])):
 			if flowBwDict['goodBehaved'] == False:
-				flowBwList[i]['bw']= assignBwToBadBehaved(bwForBadFlows, badFlows, notificationMessage['capacity'], len(notificationMessage['flowList']), notificationMessage['flowList'][i]['arrivalRate'], self.alfa)
+				flowBwList[i]['bw']= assignBwToBadBehaved(bwForBadFlows, badFlows, notificationMessage['Interface']['capacity'], len(notificationMessage['Flowlist']), notificationMessage['Flowlist'][i]['arrivalRate'], self.alfa)
 				# Here we should check witch switches also handle the bad behaved flow to apply the same control, in the simplest topology (Dumb-bell), it is not neccesary
 				remainingBw = remainingBw - flowBwList[i]['bw']
 
 		# Give remmaining bw between good flows
-		for i in range(len(notificationMessage['flowList'])):
+		for i in range(len(notificationMessage['Flowlist'])):
 			if flowBwDict['goodBehaved'] == True:
-				flowBwList[i]['bw']= remainingBw/(len(notificationMessage['flowList']) - badFlows)
+				flowBwList[i]['bw']= remainingBw/(len(notificationMessage['Flowlist']) - badFlows)
 		
 		print "Calculated Bandwidth: " + str(flowBwList)
 		
