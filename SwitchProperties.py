@@ -3,13 +3,8 @@ import subprocess
 
 class SwitchProperties:
 
-        def __init__(self):
-                print "Init"
-                #interfaceDict = dict.fromkeys(['name','dpid','capacity'])
-                self.interfacesList=[]
-
         def getInterfaces(self):
-
+		interfacesList=[]
                 interfacesName=[]
                 interfacesString=subprocess.check_output("ovs-vsctl show | grep Bridge | awk '{print $2;}'",shell=True).split("\n")
 
@@ -23,10 +18,9 @@ class SwitchProperties:
                                 interfaceDict['name']=interfacesString[i]
                                 interfaceDict['dpid']=self.getDpid(interfaceDict['name'])
                                 interfaceDict['capacity']=self.getInterfaceCapacity(interfaceDict['name'])
-                                self.interfacesList.append(interfaceDict)
+                                interfacesList.append(interfaceDict)
 
-                print self.interfacesList
-                return self.interfacesList
+                return interfacesList
 
         def getDpid(self, interfaceName):
         		awk="{print $3;}'"
@@ -36,8 +30,8 @@ class SwitchProperties:
         def getInterfaceCapacity(self, interfaceName):
 
                 #todo: Is there a way of finding a vif capacity? Already used: lshw, ethtool, dmesg, miitool
-                #Capacity is returned in Mbps
-                return 100
+                #Capacity is returned in bytes!!!!
+                return 100000000
 
 if __name__=="__main__":
 

@@ -65,21 +65,23 @@ class ApplicationSwitch:
 		#toDo: This method should: Create a thread to handle that congestion report that applies local control and reports congestion and bad flows to controller
 		def congestionDetected(self, interfaceDict, flowList):
 
-			#control variable to avoid sending multiple process		
+			#Control variable to avoid sending multiple process		
 			if self.controlInProcess == 0:
 
 				print "Interface Dict: " + str(interfaceDict)
 				self.feedbackDict['Notification']="Congestion"
 				self.feedbackDict['Flowlist']=flowList
-				self.feedbackDict['Interface']=interfaceDict
+				self.feedbackDict['Interface']=dict.fromkeys(['capacity','dpid'])
+				self.feedbackDict['Interface']['capacity']=interfaceDict['capacity']
+				self.feedbackDict['Interface']['dpid']=interfaceDict['dpid']
 				self.notificationMessage = json.dumps(str(self.feedbackDict))
+				print "flow list: " + str(flowList)
 				print 'Message sent: ' + self.notificationMessage
 
 				self.msgSender.sendMessage(self.notificationMessage, self.controllerIp, self.flowFencePort)
 				self.msgSender.closeConnection()
 
-				#todo: WARNING, FOR DEBUG PURPOSES WE TOGGLED THIS CONTROL VARIABLE!!!!!!!!!!!!!!!!!
-				self.controlInProcess = 0
+				self.controlInProcess = 1
 
 		def congestionCeased(self, dpid):
 

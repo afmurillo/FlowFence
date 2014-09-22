@@ -90,7 +90,6 @@ class FlowMonitor:
 			try:			
 				# We get samples from all the flows in all interfaces								
 				self.getFlows()
-				#print 'Flow List: ' + str(self.completeFlowList)				
 			except KeyboardInterrupt:
 				self.monitoring=0
 				break
@@ -117,24 +116,22 @@ class FlowMonitor:
 					self.completeInterfaceList[j]['prevEma'] = self.completeInterfaceList[j]['currentEma']				
 		
         def startMonitoring(self):
-            
-            self.reportObject = ApplicationSwitch()
 
-            self.monitoring=1            
-            self.threadsId.append(threading.Thread(name = 'Monitor', target=self.monitor))
-            self.threadsId[0].start()  
+		self.reportObject = ApplicationSwitch()
+		self.monitoring=1
+		
+		self.threadsId.append(threading.Thread(name = 'updateFlows', target=self.updateFlows))
+		self.threadsId[0].start()
 
-            self.threadsId.append(threading.Thread(name = 'updateFlows', target=self.updateFlows))
-            self.threadsId[1].start()  
-			 
+		self.threadsId.append(threading.Thread(name = 'Monitor', target=self.monitor))
+		self.threadsId[1].start()
 
+	def stopMonitoring(self):
+		self.monitoring=0
 
-        def stopMonitoring(self):
-            self.monitoring=0                  
-
-        #toDo: Handle
-        def congestionStopped(self):
-            self.isCongested=0
+	#toDo: Handle
+	def congestionStopped(self):
+		self.isCongested=0
 
 	def monitor(self):
 
@@ -142,17 +139,15 @@ class FlowMonitor:
 			try:
 				self.updateWindow()
 				#Has histeresis
+				print "Complete Interface List: " + str(self.completeInterfaceList)
 				for j in range(len(self.completeInterfaceList)):
-					print "Interface statistics: " + str(self.completeInterfaceList[j]['currentEma']) + " Threshold: " + str(self.completeInterfaceList[j]['threshold'])
+					#print "Interface statistics: " + str(self.completeInterfaceList[j]['currentEma']) + " Threshold: " + str(self.completeInterfaceList[j]['threshold'])
 					if (self.completeInterfaceList[j]['isCongested'] == 0) and (self.completeInterfaceList[j]['currentEma'] >= self.completeInterfaceList[j]['threshold']):
 						self.completeInterfaceList[j]['isCongested']=1
 						self.completeInterfaceList[j]['threshold']=self.completeInterfaceList[j]['lowerLimit']
-						#toDo: Implement queue management
-						#self.initQueues()
-						#toDo: This should start a thread in Application switch that "dies", once the local control and congestion message is sent
-						self.calculateControls(j)
-						print "FlowList Congested: " + str(self.completeFlowList[j]['flowList'])
-						self.reportObject.congestionDetected(self.completeInterfaceList[j], self.completeFlowList[j]['flowList'])
+						#self.calculateControls(j)
+						if len(self.completeFlowList[j]['flowList']) > 0:
+							self.reportObject.congestionDetected(self.completeInterfaceList[j], self.completeFlowList[j]['flowList'])
 						#toDo: After of reporting, it should init the queues and wait for further actions from the controller
 
 					elif (self.completeInterfaceList[j]['isCongested'] == 1) and (self.completeInterfaceList[j]['currentEma'] <= self.completeInterfaceList[j]['threshold']):
@@ -202,7 +197,6 @@ class FlowMonitor:
 				auxString=subprocess.check_output('ovs-vsctl list qos | grep queues | ' + awkString, shell=True).split('=')[1]
 				self.queues_uuid.append({'id':i,'uuid':auxString[:len(auxString)-2]})
 
-			#print self.queues_uuid
 			#subprocess.check_output('ovs-ofctl add-flow ' + self.interface + 'br in_port=LOCAL,priority=0,actions=enqueue:1:0', shell=True)		
 
 	def getUuid(self):
@@ -285,7 +279,6 @@ class FlowMonitor:
 		# toDo: Check a better way of doing this, what happens with flows that die?		
 		sleep(self.k)
 		self.measuredK = time.time() - time1
-		#print "measured time: " + str(self.measuredK)
 
 		for i in range(len(self.completeInterfaceList)):
 
@@ -295,8 +288,6 @@ class FlowMonitor:
 			interfacesFlowString['string']=subprocess.check_output('./flows.sh ' + interfacesFlowString['interfaceName'], shell=True)
 			interfacesFlowStringList.append(interfacesFlowString)
 
-			#print "interface name: " + interfacesFlowString['interfaceName']
-			#print "interface String: " + str(interfacesFlowString)
 
 		for j in range(len(self.completeInterfaceList)):			
 			
@@ -338,7 +329,6 @@ class FlowMonitor:
 
 				if (aux1 is not None) and (aux2 is not None):
 					flowDict['length']=int(aux1) - int(aux2)
-					#print "FlowDict length: " + str(flowDict['length'])
 				else:
 					flowDict['length']=0
 
@@ -350,15 +340,12 @@ class FlowMonitor:
 					flowDict['oldArrivalRate'] = 0.0
 					flowDict['goodBehaved'] = 0
 					flowDict['arrivalRate'] = self.calculateArrivalRate(flowDict['packets'], flowDict['length'], self.measuredK, 0.0 )
-					#print "Calculated Arrival Rate: " + str(flowDict['arrivalRate'])
 					self.completeFlowList[j]['flowList'].append(flowDict)
 
 				else:
 					flowDict['oldArrivalRate'] = self.completeFlowList[j]['flowList'][flowIndex]['arrivalRate']
 					#flowDict['oldArrivalRate'] = flowDict['arrivalRate']
-					#print "Old arrival rate is: " + str(flowDict['oldArrivalRate'])
 					flowDict['arrivalRate'] = self.calculateArrivalRate(flowDict['packets'], flowDict['length'], self.measuredK, flowDict['oldArrivalRate'] )
-					#print "Calculated Arrival Rate: " + str(flowDict['arrivalRate'])
 					self.completeFlowList[j]['flowList'][flowIndex] = flowDict								
 	
 				# Finally we should check if according to our last sample, a flow in flowList stopped existing							
@@ -373,7 +360,6 @@ class FlowMonitor:
 					flowDict['oldArrivalRate'] = 0.0
 					flowDict['goodBehaved'] = 0
 					flowDict['arrivalRate'] = self.calculateArrivalRate(flowDict['packets'], flowDict['length'], self.measuredK, 0.0 )
-					#print "Calculated Arrival Rate: " + str(flowDict['arrivalRate'])
 					self.completeFlowList[j]['flowList'].append(flowDict)
 
 	def checkIfFlowStopped(self, aFlowString, aFlowDict):
@@ -410,7 +396,6 @@ class FlowMonitor:
 			return -1			
 			
 	def calculateArrivalRate(self, packets, length, measuredK, oldArrivalRate):			
-		#print "Calculating arrival time, with: packets "  + str(packets) + " length " + str(length) + " old arrival time " + str(oldArrivalRate)
 
 		if packets <= 0:
 			return length/measuredK		
@@ -441,8 +426,6 @@ class FlowMonitor:
 			b.append((float(subprocess.check_output("cat /proc/net/dev | grep " + self.completeInterfaceList[j]['name'] + " | awk '{print $10;}'", shell=True).split('\n')[0])))
 			samplesList[j]['name'] = self.completeInterfaceList[j]['name']
 			samplesList[j]['sample']=((b[j]-a[j])/1048576)
-			print "interface : " + str(self.completeInterfaceList[j]['name'])
-			print "Sample: " + str(samplesList[j]['sample'])
 
 		return samplesList
 
