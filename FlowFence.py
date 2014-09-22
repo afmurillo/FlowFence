@@ -137,7 +137,7 @@ class handle_message(Thread):
 		# Bad flows bw: assignedBw(j,i)=avaliableBw/badFlows - (1 -exp( - (rates(i)-capacityOverN) ) )*alfas(j)*rates(i);
 
 		flowBwList=[]
-		flowBwDict=dict.fromkeys(['srcIp','dstIp','goodBehaved','bandwidth'])
+		flowBwDict=dict.fromkeys(['nw_src','nw_dst','goodBehaved','bw'])
 		badFlows=0
 		bwForBadFlows=0
 
@@ -145,8 +145,8 @@ class handle_message(Thread):
 
 		# Good Flows
 		for i in range(len(notificationMessage['Flowlist'])):
-			flowBwDict['srcIp'] = notificationMessage['Flowlist'][i]['srcIp']
-			flowBwDict['dstIp'] = notificationMessage['Flowlist'][i]['dstIp']
+			flowBwDict['nw_src'] = notificationMessage['Flowlist'][i]['nw_src']
+			flowBwDict['nw_dst'] = notificationMessage['Flowlist'][i]['nw_dst']
 			flowBwDict['goodBehaved'] = self.classifyFlows(notificationMessage['Interface']['capacity'], notificationMessage['Flowlist'][i]['arrivalRate'],len(notificationMessage['Flowlist']))
 
 			if flowBwDict['goodBehaved'] == True:
@@ -162,7 +162,7 @@ class handle_message(Thread):
 		# Bad Flows
 		for i in range(len(notificationMessage['Flowlist'])):
 			if flowBwDict['goodBehaved'] == False:
-				flowBwList[i]['bw']= assignBwToBadBehaved(bwForBadFlows, badFlows, notificationMessage['Interface']['capacity'], len(notificationMessage['Flowlist']), notificationMessage['Flowlist'][i]['arrivalRate'], self.alfa)
+				flowBwList[i]['bw']= self.assignBwToBadBehaved(bwForBadFlows, badFlows, notificationMessage['Interface']['capacity'], len(notificationMessage['Flowlist']), notificationMessage['Flowlist'][i]['arrivalRate'], self.alfa)
 				# Here we should check witch switches also handle the bad behaved flow to apply the same control, in the simplest topology (Dumb-bell), it is not neccesary
 				remainingBw = remainingBw - flowBwList[i]['bw']
 
@@ -180,7 +180,7 @@ class handle_message(Thread):
 		else:
 			return True
 
-	def assignBwToBadBehaved(avaliableBw, numBadFlows, capacity, numTotalFlows, flowRate, alfa):
+	def assignBwToBadBehaved(self, avaliableBw, numBadFlows, capacity, numTotalFlows, flowRate, alfa):
 		#assignedBw(j,i)=avaliableBw/badFlows - (1 -exp( - (rates(i)-capacityOverN) ) )*alfas(j)*rates(i);		
 		return avaliableBw/numBadFlows - (1 - math.exp(-(flowRate-(capacity/numTotalFlows))))*alfa*flowRate
 
