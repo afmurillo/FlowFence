@@ -49,11 +49,12 @@ class ApplicationSwitch:
 			self.switchProperties=SwitchProperties()
 			self.interfacesList = self.switchProperties.getInterfaces()		
 
+			print self.interfacesList
+
 			self.feedbackDict=dict.fromkeys(['Notification','Flowlist','Interface'])
 
-			for i in range(len(self.interfacesList)):
-				#todo: WARNING, HERE SEEMS TO BE A "WORKING" BUG! fromkeys is (['aaa','bbb'])
-				flowIntDict = dict.fromkeys(['interfaceName','flowList'])
+			for i in range(len(self.interfacesList)):				
+				flowIntDict = dict.fromkeys(['interfaceName','dpid','flowList'])
 				flowIntDict['interfaceName']= self.interfacesList[i]['name']
 				flowIntDict['dpid']= self.interfacesList[i]['dpid']
 				flowIntDict['flowList']=[]					
@@ -99,11 +100,6 @@ class ApplicationSwitch:
 if __name__=="__main__":
 
 	code=ApplicationSwitch()
-	print 'Current dpids: '
-	for i in range(len(code.interfacesList)):
-
-		print "Dpid: " + str(code.interfacesList[i]['dpid'])
-
 	code.linkState=FlowMonitor(code.samples, code.period, code.intervalTime, code.upperLimit, code.lowerLimit)
 	code.linkState.startMonitoring()
 	

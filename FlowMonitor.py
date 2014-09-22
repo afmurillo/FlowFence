@@ -44,8 +44,7 @@ class FlowMonitor:
 			completeInterfaceDict['useAverages'] = 0
 			completeInterfaceDict['monitoring'] = 0
 			completeInterfaceDict['isCongested'] = 0
-			completeInterfaceDict['numQueues'] = 10			
-			completeInterfaceDict['goodBehaved'] = 1
+			completeInterfaceDict['numQueues'] = 10					
 			self.completeInterfaceList.append(completeInterfaceDict)
 	
 			flowIntDict = dict.fromkeys(['interfaceName'],['flowList'])
@@ -310,7 +309,7 @@ class FlowMonitor:
 			#this cycle runs over all the flows in the string
 			for i in range(numFlows):
 
-				flowDict=dict.fromkeys(['dl_src','dl_dst','nw_src','nw_dst','packets','length','arrivalRate', 'oldArrivalRate','action'])
+				flowDict=dict.fromkeys(['dl_src','dl_dst','nw_src','nw_dst','packets','length','arrivalRate', 'oldArrivalRate','action','goodBehaved'])
 				flowDict['dl_src']=interfacesFlowStringList[j]['string'].split('\n')[1].split('=')[1].split(' ')[i]
 				flowDict['dl_dst']=interfacesFlowStringList[j]['string'].split('\n')[2].split('=')[1].split(' ')[i]
 				flowDict['nw_src']=interfacesFlowStringList[j]['string'].split('\n')[3].split('=')[1].split(' ')[i]
@@ -349,6 +348,7 @@ class FlowMonitor:
 				#Flow does not exist
 				if flowIndex == -1:
 					flowDict['oldArrivalRate'] = 0.0
+					flowDict['goodBehaved'] = 0
 					flowDict['arrivalRate'] = self.calculateArrivalRate(flowDict['packets'], flowDict['length'], self.measuredK, 0.0 )
 					#print "Calculated Arrival Rate: " + str(flowDict['arrivalRate'])
 					self.completeFlowList[j]['flowList'].append(flowDict)
@@ -371,12 +371,10 @@ class FlowMonitor:
 				# Flowlist is empty, start filling it
 				if not self.completeFlowList[j]['flowList']:
 					flowDict['oldArrivalRate'] = 0.0
+					flowDict['goodBehaved'] = 0
 					flowDict['arrivalRate'] = self.calculateArrivalRate(flowDict['packets'], flowDict['length'], self.measuredK, 0.0 )
 					#print "Calculated Arrival Rate: " + str(flowDict['arrivalRate'])
 					self.completeFlowList[j]['flowList'].append(flowDict)
-
-		#else from "if (numFlows <= prevNumFlows):", this means that we have new flows between the samples
-
 
 	def checkIfFlowStopped(self, aFlowString, aFlowDict):
 
