@@ -1,6 +1,7 @@
 from FeedbackMessage import *
 from FlowMonitor import *
 from SwitchProperties import *
+from SwitchSocket import *
 
 import json
 import subprocess
@@ -49,6 +50,8 @@ class ApplicationSwitch:
 			self.switchProperties=SwitchProperties()
 			self.interfacesList = self.switchProperties.getInterfaces()		
 
+			self.applicationPort=23456
+
 			print self.interfacesList
 
 			self.feedbackDict=dict.fromkeys(['Notification','Flowlist','Interface'])
@@ -61,12 +64,16 @@ class ApplicationSwitch:
 				self.completeFlowList.append(flowIntDict)
 		
 			self.msgSender = FeedbackMessage(self.aVersion, self.aPriority, self.controllerIp, self.flowFencePort)
+			self.listenSocket = SwitchSocket()
+			self.listenSocket.bind(self.applicationPort)
 			
 		#toDo: This method should: Create a thread to handle that congestion report that applies local control and reports congestion and bad flows to controller
 		def congestionDetected(self, interfaceDict, flowList):
 
 			#Control variable to avoid sending multiple process		
 			if self.controlInProcess == 0:
+				
+				self.completeFlowList = flowList
 
 				print "Interface Dict: " + str(interfaceDict)
 				self.feedbackDict['Notification']="Congestion"
@@ -95,6 +102,9 @@ class ApplicationSwitch:
 				self.msgSender.sendMessage(self.feedbackMsg, self.controllerIp, self.flowFencePort)
 				self.msgSender.closeConnection()
 				self.controlInProcess = 0			
+
+		def messageFromController(message,connections,srcAddress):
+			print "Message Received: " + str(message)
 
 		def getInstance(self):
 			return ApplicationSwitch()
