@@ -12,7 +12,7 @@ from threading import Thread
 from collections import deque
 
 import os
-import  sys, socket, json, subprocess
+import string, sys, socket, json, subprocess
 import thread 
 import time
 import math
@@ -86,8 +86,6 @@ class handle_message(Thread):
 		elif message['Notification'] == 'QueuesDone':
 			self.handleFlowsRedirection(message['Interface']['dpid'],connections, self.srcAddress, message)
 
-############################
-
 	def handleCongestionNotification(self, notificationMessage, switchAddres):
 		# Algorithm: Classify good and bad flows, assign bandwidth fo good flows, assign band fo bad flows, assign remaining band
 		# Bad flows bw: assignedBw(j,i)=avaliableBw/badFlows - (1 -exp( - (rates(i)-capacityOverN) ) )*alfas(j)*rates(i);
@@ -135,6 +133,9 @@ class handle_message(Thread):
 		queuesDict['bwList'] = flowBwList
 
 		responseMessage = json.dumps(str(queuesDict))
+
+		print "Response Message sent: " + str(responseMessage)
+
 		responseSocket = self.createSocket()
 		self.sendMessage(responseSocket,switchAddres, self.responsePort, responseMessage)
 		self.closeConnection(responseSocket)
@@ -147,9 +148,9 @@ class handle_message(Thread):
 		aSocket.close()
 
 	def createSocket(self):
-		return socket(AF_INET, SOCK_STREAM)
+		return socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 		
-	def handleCongestionNotification(self, notificationMessage, switchAddres):
+	def handleUnCongestionNotification(self, notificationMessage, switchAddres):
 		print "Congestion stopped"
 	
 	#In further versions, other classification methods could be used
@@ -164,77 +165,29 @@ class handle_message(Thread):
 
 	
 	def handleFlowsRedirection(self, dpid, connections, switchAddress, message):
+		for i in range(len(message['bwList'])):
 
-		for i in range(len(message['bwList'])):	
-			
-			my_match = of.ofp_match(dl_type = 0x800,
-			nw_src=message['bwList'][i]['nw_src'],		#toDo: Get flowlist going to destination
-			nw_dst=message['bwList'][i]['nw_dst'])
-
-			#print 'Match created'
-			#print my_match
-
+			my_match = of.ofp_match(dl_type = 0x800,nw_src=message['bwList'][i]['nw_src'],nw_dst=message['bwList'][i]['nw_dst'])
 			msg = of.ofp_flow_mod()
 			msg.match = my_match
-			msg.priority=65535		
+			msg.priority=65535
+			msg.actions.append(of.ofp_action_enqueue(port=message['bwList'][i]['action'].split(':')[1], queue_id=message['bwList'][i]['numQueue']))
 
-			msg.actions.append(of.ofp_action_enqueue(port=message['bwList'][i]['action'].split(':')[1], queue_id=message['bwList'][i]['numQueue'])
-			
-		#toDo: Check a better way to do this
-		for connection in connections:
-			connectionDpid=connection.dpid
-			dpidStr=dpidToStr(connectionDpid)
-			dpidStr=dpidStr.replace("-", "")
-			print 'Real dpidStr: ' + dpidStr
-			#print 'rec_dpid: ' + corrected 
-			#corrected=dpidStr[len(dpidStr)-12:]
-			if dpid == dpidStr:
-				connection.send(msg)
+                #toDo: Check a better way to do this
+		print "dpid parameter: " + str(dpid)
+                for connection in connections:
+                	connectionDpid=connection.dpid
+			print "Connection dpid: " + str(connectionDpid)
+                	dpidStr=dpidToStr(connectionDpid)
+                	dpidStr=dpidStr.replace("-", "")
+                	print 'Real dpidStr: ' + dpidStr
+                	if dpid == dpidStr:
+                		connection.send(msg)
 				print 'Sent to: ' + str(connection)
-		
-		#aux_dpid=message[0]['src']
-		#nocoma=aux_dpid[:len(aux_dpid)-1]
-		#corrected=nocoma[len(nocoma)-13:]
-		#corrected=corrected[:len(corrected)-1]
-		#linkId = message[0]['linkId']
-	
-		#Let's try to find a match
-
-		#todo: For now, we're doing this manually. We really should check how many pairs src, linkId are and mod those flows for the respective queues
-		#senders=10
-		#addresses=['10.1.1.1', '10.1.1.2', '10.1.1.3', '10.1.1.4', '10.1.1.5', '10.1.1.6', '10.1.1.7', '10.1.1.9', '10.1.1.10', '10.1.1.11']
-		#addresses=['10.1.1.1', '10.1.1.3']
-		#addresses=['10.1.1.1', '10.1.1.2', '10.1.1.3', '10.1.1.4']
-		#addresses=['10.1.1.1', '10.1.1.2', '10.1.1.3', '10.1.1.4', '10.1.1.5', '10.1.1.6', '10.1.1.7']		
-
-		#for i in range(senders):
-			
-		#my_match = of.ofp_match(dl_type = 0x800,
-		#nw_src=IPAddr(addresses[i]),		#toDo: Get Flowlist going to destination
-		#nw_dst=linkId,
-		#in_port=65534)
-
-		#msg = of.ofp_flow_mod()
-		#msg.match = my_match
-		#msg.priority=65535		
-
-		#msg.actions.append(of.ofp_action_enqueue(port=1, queue_id=(i+1)))
-	
-		#for connection in self.myconnections:
-		#dpid=connection.dpid
-		#dpidStr=dpidToStr(dpid)
-		#dpidStr=dpidStr.replace("-", "")
-		#print 'Real dpidStr: ' + dpidStr
-		#print 'rec_dpid: ' + corrected 
-		#corrected=dpidStr[len(dpidStr)-12:]
-		#if corrected == dpidStr:
-		#connection.send(msg)
-		#print 'Sent to: ' + str(connection)
-		#print 'Well...done'	
 
 
 class connect_test(EventMixin):	
-  # Waits for OpenFlow switches to connect and makes them learning switches.
+	# Waits for OpenFlow switches to connect and makes them learning switches.
 	#Global variables of connect_test subclass
 	#global received
 	def __init__(self):
