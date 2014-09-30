@@ -31,7 +31,7 @@ class FlowMonitor:
 		self.measuredK=0.2
 
 		for i in range(len(self.interfacesList)):
-			completeInterfaceDict = dict.fromkeys(['name','dpid','capacity', 'lowerLimit', 'upperLimit', 'threshold', 'samples','useAverages','monitoring','isCongested','numQueues'])
+			completeInterfaceDict = dict.fromkeys(['name','dpid','capacity', 'lowerLimit', 'upperLimit', 'threshold', 'samples','useAverages','monitoring','isCongested','queueList'])
 			completeInterfaceDict['name'] = self.interfacesList[i]['name']
 			completeInterfaceDict['dpid'] = self.interfacesList[i]['dpid']
 			completeInterfaceDict['capacity'] = self.interfacesList[i]['capacity']
@@ -44,7 +44,7 @@ class FlowMonitor:
 			completeInterfaceDict['useAverages'] = 0
 			completeInterfaceDict['monitoring'] = 0
 			completeInterfaceDict['isCongested'] = 0
-			completeInterfaceDict['numQueues'] = 10					
+			completeInterfaceDict['queueList'] = []					
 			self.completeInterfaceList.append(completeInterfaceDict)
 	
 			flowIntDict = dict.fromkeys(['interfaceName'],['flowList'])
@@ -138,9 +138,11 @@ class FlowMonitor:
 		while self.monitoring == 1:
 			try:
 				self.updateWindow()
-				#Has histeresis
-				print "Complete Interface List: " + str(self.completeInterfaceList)
+				
+				print "Complete Interface List: " + str(self.completeInterfaceList)				
 				for j in range(len(self.completeInterfaceList)):
+					self.completeInterfaceList[j]['queueList']=self.initQueues(completeInterfaceList[j]['name'],self.completeFlowList[j]['flowList'])
+					print "Created queues: " + str(self.completeInterfaceList[j]['queueList'])
 					#print "Interface statistics: " + str(self.completeInterfaceList[j]['currentEma']) + " Threshold: " + str(self.completeInterfaceList[j]['threshold'])
 					if (self.completeInterfaceList[j]['isCongested'] == 0) and (self.completeInterfaceList[j]['currentEma'] >= self.completeInterfaceList[j]['threshold']):
 						self.completeInterfaceList[j]['isCongested']=1
@@ -165,39 +167,47 @@ class FlowMonitor:
 				self.monitoring = 0
 				break
 
-	def initQueues(self):
+	def initQueues(self, interfaceName, flowList):
+		
+		subprocess.check_output('./clear_queues.sh ' + interfaceName, shell=True)
+		#queues_uuid=[]
+		queuesList=[]
+		
 
-		for i in range(len(self.completeInterfaceList)):
-			subprocess.check_output('./clear_queues.sh ' + self.completeInterfaceList[i]['name'] + ' ' + self.completeInterfaceList[i]['name'] + 'br', shell=True)
-			self.queues_uuid=[]
+		qosString='ovs-vsctl -- set Port ' + interfaceName + ' qos=@testqos -- --id=@testqos create QoS type=linux-htb'
+		queuesString=''
 
-			qosString='ovs-vsctl -- set Port ' + self.completeInterfaceList[i]['name'] + ' qos=@testqos -- --id=@testqos create QoS type=linux-htb'
-			queuesString=''
+		for j in range(len(flowList):
+			aQueueDict=dict.fromkeys(['queueId','queueuuid','nw_src','nw_dst','bw'])
+			aQueueDict['queueId']=j+1
+			aQueueDict['nw_src']=flowList[j]['nw_src']
+			aQueueDict['nw_dst']=flowList[j]['nw_dst']
+			aQueue= ',' + str(aQueueDict['queueId']) +'=@queue' + tr(aQueueDict['queueId'])
+			queuesString=queuesString+aQueue
+			queuesList.append(aQueueDict)
 
-			for j in range(self.numQueues):
-				aQueue= ',' + str(j+1) +'=@queue' + str(j+1)
-				queuesString=queuesString+aQueue
+		queuesString='queues=0=@queue0'+queuesString
+		#toDo: Check the string creation
 
-			queuesString='queues=0=@queue0'+queuesString
-			#toDo: Check the string creation
+		queuesCreation='-- --id=@queue0 create Queue other-config:max-rate=1000000000 '
+		#toDo: Check the numqueues handling
 
-			queuesCreation='-- --id=@queue0 create Queue other-config:max-rate=1000000000 '
-			#toDo: Check the numqueues handling
+		for j in range(len(flowList)
+			aCreation='-- --id=@queue' + str(aQueueDict['queueId']) + ' create Queue other-config:max-rate=1000000000 '
+			queuesCreation=queuesCreation+aCreation
+		command=qosString + ' ' + queuesString + ' ' + queuesCreation
+		subprocess.check_output(command, shell=True)
 
-			for j in range(self.numQueues):
-				aCreation='-- --id=@queue' + str(j+1) + ' create Queue other-config:max-rate=1000000000 '
-				queuesCreation=queuesCreation+aCreation
-			command=qosString + ' ' + queuesString + ' ' + queuesCreation
-			subprocess.check_output(command, shell=True)
-
-			for j in range(self.numQueues+1):
-				k=j+3
-				awk="{print $" + str(k) + ";}'"
-				awkString="awk '" + awk
-				auxString=subprocess.check_output('ovs-vsctl list qos | grep queues | ' + awkString, shell=True).split('=')[1]
-				self.queues_uuid.append({'id':i,'uuid':auxString[:len(auxString)-2]})
+		for j in range(len(flowList):
+			k=j+3
+			awk="{print $" + str(k) + ";}'"
+			awkString="awk '" + awk
+			auxString=subprocess.check_output('ovs-vsctl list qos | grep queues | ' + awkString, shell=True).split('=')[1]
+			queuesList[j]['queueuuid']={'id':i,'uuid':auxString[:len(auxString)-2]}
+			#self.queues_uuid.append({'id':i,'uuid':auxString[:len(auxString)-2]})
 
 			#subprocess.check_output('ovs-ofctl add-flow ' + self.interface + 'br in_port=LOCAL,priority=0,actions=enqueue:1:0', shell=True)		
+		return queuesList
 
 	def getUuid(self):
 		uuid=subprocess.check_output("ovs-vsctl list qos | grep queues | awk '{print $4;}'", shell=True).split('=')[1].split('}')[0]
