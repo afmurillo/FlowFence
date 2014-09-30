@@ -141,7 +141,8 @@ class FlowMonitor:
 				
 				print "Complete Interface List: " + str(self.completeInterfaceList)				
 				for j in range(len(self.completeInterfaceList)):
-					self.completeInterfaceList[j]['queueList']=self.initQueues(completeInterfaceList[j]['name'],self.completeFlowList[j]['flowList'])
+					print "Initing queues for: " + str(self.completeInterfaceList[j]['name'])
+					self.completeInterfaceList[j]['queueList']=self.initQueues(self.completeInterfaceList[j]['name'],self.completeFlowList[j]['flowList'])
 					print "Created queues: " + str(self.completeInterfaceList[j]['queueList'])
 					#print "Interface statistics: " + str(self.completeInterfaceList[j]['currentEma']) + " Threshold: " + str(self.completeInterfaceList[j]['threshold'])
 					if (self.completeInterfaceList[j]['isCongested'] == 0) and (self.completeInterfaceList[j]['currentEma'] >= self.completeInterfaceList[j]['threshold']):
@@ -170,14 +171,11 @@ class FlowMonitor:
 	def initQueues(self, interfaceName, flowList):
 		
 		subprocess.check_output('./clear_queues.sh ' + interfaceName, shell=True)
-		#queues_uuid=[]
 		queuesList=[]
-		
-
 		qosString='ovs-vsctl -- set Port ' + interfaceName + ' qos=@testqos -- --id=@testqos create QoS type=linux-htb'
 		queuesString=''
 
-		for j in range(len(flowList):
+		for j in range(len(flowList)):
 			aQueueDict=dict.fromkeys(['queueId','queueuuid','nw_src','nw_dst','bw'])
 			aQueueDict['queueId']=j+1
 			aQueueDict['nw_src']=flowList[j]['nw_src']
@@ -192,13 +190,14 @@ class FlowMonitor:
 		queuesCreation='-- --id=@queue0 create Queue other-config:max-rate=1000000000 '
 		#toDo: Check the numqueues handling
 
-		for j in range(len(flowList)
+		for j in range(len(flowList)):
 			aCreation='-- --id=@queue' + str(aQueueDict['queueId']) + ' create Queue other-config:max-rate=1000000000 '
 			queuesCreation=queuesCreation+aCreation
+
 		command=qosString + ' ' + queuesString + ' ' + queuesCreation
 		subprocess.check_output(command, shell=True)
 
-		for j in range(len(flowList):
+		for j in range(len(flowList)):
 			k=j+3
 			awk="{print $" + str(k) + ";}'"
 			awkString="awk '" + awk
