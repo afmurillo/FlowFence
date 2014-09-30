@@ -13,9 +13,10 @@ from threading import Thread
 
 class SwitchSocket(Thread):
 
-        def __init__(self, applicationPort):
+        def __init__(self, reportObject, applicationPort):
                 Thread.__init__(self)
                 self.applicationPort = applicationPort
+		self.reportObject=reportObject
 
         def run(self):
                 self.sock = socket.socket()     # Create a socket object
@@ -28,7 +29,7 @@ class SwitchSocket(Thread):
                                 client, addr = self.sock.accept()                               # Establish connection with client
                                 data = client.recv(1024)                                                # Get data from the client
                                 print 'Message from', addr                                              # Print a message confirming
-                                data_treatment = handle_message(data, addr)    # Call the thread to work with the data received
+                                data_treatment = handle_message(self.reportObject, data, addr)    # Call the thread to work with the data received
                                 data_treatment.setDaemon(True)                                  # Set the thread as a demond
                                 data_treatment.start()                                                  # Start the thread
                         except KeyboardInterrupt:
@@ -39,16 +40,13 @@ class SwitchSocket(Thread):
 
 class handle_message(Thread):
 
-        def __init__(self,received, addr):
+        def __init__(self,reportObject, received, addr):
                 Thread.__init__(self)
                 self.received = received
-                #self.myconnections = connections
                 self.srcAddress = addr[0]
                 self.responsePort=23456
                 self.bwForNewFlows=0.1
-                #self.reportObject = ApplicationSwitch()
-                #print self.myconnections
-		self.reportObject = ApplicationSwitch()
+		self.reportObject = reportObject
 
         def run(self):
                 self.reportObject.messageFromController(self.received,self.srcAddress)
@@ -162,7 +160,7 @@ if __name__=="__main__":
 
 	code=ApplicationSwitch()
 
-        code.listenSocket = SwitchSocket(code.listenPort)
+        code.listenSocket = SwitchSocket(code, code.listenPort)
         code.listenSocket.setDaemon(True)
         code.listenSocket.start()
 
