@@ -265,7 +265,7 @@ class FlowMonitor:
 		# Dict estructure: dl_src, dl_dst, nw_src, nw_dst, length(bytes), action			
 
 		# We get samples from all the flows in all interfaces
-		time1=time.time()
+		time1=time()
 		#interfacesFlowString=dict.fromkeys(['interfaceName','string'])
 		interfacesFlowPrevStringList=[]
 		interfacesFlowStringList=[]		
@@ -278,7 +278,7 @@ class FlowMonitor:
 			
 		# toDo: Check a better way of doing this, what happens with flows that die?		
 		sleep(self.k)
-		self.measuredK = time.time() - time1
+		self.measuredK = time() - time1
 
 		for i in range(len(self.completeInterfaceList)):
 
