@@ -9,14 +9,8 @@ from ApplicationSwitch import *
 from SwitchProperties import *
 
 
-class FlowMonitor:
+class FlowMonitor:               
 
-        def resetQueues(self):
-
-            for i in range(len(self.completeInterfaceList)):                
-            	subprocess.check_output('ovs-ofctl del-flows ' + self.completeInterfaceList[i]['name'], shell=True)
-                subprocess.check_output('./clear_queues.sh ' + self.completeInterfaceList[i]['name'], shell=True)
-                
         def __init__(self, samples=10, period=3, intervalTime=1.0, upperLimit=10*0.8, lowerLimit=10*0.6):
 
 		# SOME DATA LIKE INTERFACES NAME AND ETC, SHOULD BE OBTAINED USING SWITCH CHARACTERISTICS!!
@@ -59,6 +53,12 @@ class FlowMonitor:
 			self.threadsId=[]
 			self.resetQueues()
 			self.initWindow()			
+
+        def resetQueues(self):
+
+            for i in range(len(self.completeInterfaceList)):                
+            	subprocess.check_output('ovs-ofctl del-flows ' + self.completeInterfaceList[i]['name'], shell=True)
+                subprocess.check_output('./clear_queues.sh ' + self.completeInterfaceList[i]['name'], shell=True)
 
         def initWindow(self):
 
@@ -144,7 +144,7 @@ class FlowMonitor:
 					
 					print "Actual FlowList: " + str(self.completeFlowList[j]['flowList'])
 					self.completeInterfaceList[j]['queueList']=self.initQueues(self.completeInterfaceList[j]['name'],self.completeFlowList[j]['flowList'])
-					print "Created queues: " + str(self.completeInterfaceList[j]['queueList'])
+					print "Returned created queues: " + str(self.completeInterfaceList[j]['queueList'])
 					#print "Interface statistics: " + str(self.completeInterfaceList[j]['currentEma']) + " Threshold: " + str(self.completeInterfaceList[j]['threshold'])
 					if (self.completeInterfaceList[j]['isCongested'] == 0) and (self.completeInterfaceList[j]['currentEma'] >= self.completeInterfaceList[j]['threshold']):
 						self.completeInterfaceList[j]['isCongested']=1
@@ -169,6 +169,15 @@ class FlowMonitor:
 				self.monitoring = 0
 				break
 
+	def createQueues(self, controllerMessage):
+
+		for i in range(len(self.completeInterfaceList)):
+				if (self.completeInterfaceList[i]['name']) == controllerMessage['Interface']:
+					self.completeInterfaceList[i]['queueList']=self.initQueues(self.completeInterfaceList[i]['name'],self.completeFlowList[i]['flowList'])
+					self.setQueuesBw(self.completeInterfaceList[i]['queueList'], controllerMessage['bwList'])		
+					self.reportObject.queuesReady(self.completeInterfaceList[i],self.completeFlowList[i]['flowList'],self.completeInterfaceList[i]['queueList'])
+					break
+
 	def initQueues(self, interfaceName, flowList):
 		
 		print "Initing queues for: " + str(interfaceName)
@@ -192,8 +201,6 @@ class FlowMonitor:
 		queuesCreation='-- --id=@queue0 create Queue other-config:max-rate=1000000000 '
 		#toDo: Check the numqueues handling
 
-		print "Queue List: " + str(queuesList)
-
 		for j in range(len(flowList)):
 			aCreation='-- --id=@queue' + str(queuesList[j]['queueId']) + ' create Queue other-config:max-rate=1000000000 '
 			queuesCreation=queuesCreation+aCreation
@@ -211,7 +218,16 @@ class FlowMonitor:
 			#self.queues_uuid.append({'id':i,'uuid':auxString[:len(auxString)-2]})
 
 			#subprocess.check_output('ovs-ofctl add-flow ' + self.interface + 'br in_port=LOCAL,priority=0,actions=enqueue:1:0', shell=True)		
+		print "Queue List: " + str(queuesList)
 		return queuesList
+
+		def setQueuesBw(self, queuesList, flowBwList):
+
+			for i in range(queuesList): 
+				subprocess.check_output("ovs-vsctl set queue " + queuesList[i]['queueuuid']['uuid'] + " other-config:max-rate="+str(flowBwList[i]['bw']), shell=True)
+				#flows=subprocess.check_output("ovs-ofctl dump-flows eth0br", shell=True)
+
+		print "Queues Ready!"			
 
 	def getUuid(self):
 		uuid=subprocess.check_output("ovs-vsctl list qos | grep queues | awk '{print $4;}'", shell=True).split('=')[1].split('}')[0]

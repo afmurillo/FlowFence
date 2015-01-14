@@ -125,9 +125,10 @@ class ApplicationSwitch:
 				print "Interface Dict: " + str(interfaceDict)
 				self.feedbackDict['Notification']="Congestion"
 				self.feedbackDict['Flowlist']=flowList
-				self.feedbackDict['Interface']=dict.fromkeys(['capacity','dpid'])
+				self.feedbackDict['Interface']=dict.fromkeys(['capacity','dpid','name'])
 				self.feedbackDict['Interface']['capacity']=interfaceDict['capacity']
 				self.feedbackDict['Interface']['dpid']=interfaceDict['dpid']
+                                self.feedbackDict['Interface']['name']=interfaceDict['name']
 				self.notificationMessage = json.dumps(str(self.feedbackDict))
 				print "flow list: " + str(flowList)
 				print 'Message sent: ' + self.notificationMessage
@@ -150,8 +151,30 @@ class ApplicationSwitch:
 				self.msgSender.closeConnection()
 				self.controlInProcess = 0			
 
+                def queuesReady(self, interfaceDict, flowList, queueList):
+
+                        print "Interface Dict: " + str(interfaceDict)
+                        self.feedbackDict['Notification']="QueuesDone"
+                        self.feedbackDict['Flowlist']=flowList
+                        self.feedbackDict['QueueList']=queueList
+                        self.feedbackDict['Interface']=dict.fromkeys(['capacity','dpid'])
+                        self.feedbackDict['Interface']['capacity']=interfaceDict['capacity']
+                        self.feedbackDict['Interface']['dpid']=interfaceDict['dpid']
+                        self.feedbackDict['Interface']['name']=interfaceDict['name']
+                        self.notificationMessage = json.dumps(str(self.feedbackDict))
+                        
+                        print 'Message sent: ' + self.notificationMessage
+
+                        self.msgSender.sendMessage(self.notificationMessage, self.controllerIp, self.flowFencePort)
+                        self.msgSender.closeConnection()                
+
+
 		def messageFromController(self,message,srcAddress):
 			print "Message Received: " + str(message)
+                        # En caso que el mensaje sea una indicación de congestion, debemos preparar las filas y reportar que han sido inicializadas exitosamente
+                        # Luego recibiremos un flowmod enviando los flujos a las filas respectivas
+                        if message['Response'] == "Decrement":
+                                self.linkState.createQueues(message)
 
 		def getInstance(self):
 			return ApplicationSwitch()

@@ -129,6 +129,7 @@ class handle_message(Thread):
 		print "Calculated Bandwidth: " + str(flowBwList)
 
 		queuesDict = dict.fromkeys(['Response'],['bwList'])
+		queuesDict['Interface'] = notificationMessage['Interface']['name']
 		queuesDict['Response'] = "Decrement"
 		queuesDict['bwList'] = flowBwList
 
@@ -165,13 +166,13 @@ class handle_message(Thread):
 
 	
 	def handleFlowsRedirection(self, dpid, connections, switchAddress, message):
-		for i in range(len(message['bwList'])):
+		for i in range(len(message['FlowList'])):
 
-			my_match = of.ofp_match(dl_type = 0x800,nw_src=message['bwList'][i]['nw_src'],nw_dst=message['bwList'][i]['nw_dst'])
+			my_match = of.ofp_match(dl_type = 0x800,nw_src=message['FlowList'][i]['nw_src'],nw_dst=message['FlowList'][i]['nw_dst'])
 			msg = of.ofp_flow_mod()
 			msg.match = my_match
 			msg.priority=65535
-			msg.actions.append(of.ofp_action_enqueue(port=message['bwList'][i]['action'].split(':')[1], queue_id=message['bwList'][i]['numQueue']))
+			msg.actions.append(of.ofp_action_enqueue(port=message['FlowList'][i]['action'].split(':')[1], queue_id=message['QueueList'][i]['queueId']))
 
                 #toDo: Check a better way to do this
 		print "dpid parameter: " + str(dpid)
