@@ -173,7 +173,7 @@ class FlowMonitor:
 		
 		print "Initing queues for: " + str(interfaceName)
 		queuesList=[]
-		qosString='ovs-vsctl -- set Port ' + interfaceName + ' qos=@testqos -- --id=@testqos create QoS type=linux-htb'
+		qosString='ovs-vsctl -- set Port ' + interfaceName + ' qos=@fenceqos -- --id=@fenceqos create QoS type=linux-htb'
 		queuesString=''
 
 		for j in range(len(flowList)):
@@ -181,7 +181,7 @@ class FlowMonitor:
 			aQueueDict['queueId']=j+1
 			aQueueDict['nw_src']=flowList[j]['nw_src']
 			aQueueDict['nw_dst']=flowList[j]['nw_dst']
-			aQueue= ',' + str(aQueueDict['queueId']) +'=@queue' + tr(aQueueDict['queueId'])
+			aQueue= ',' + str(aQueueDict['queueId']) +'=@queue' + str(aQueueDict['queueId'])
 			queuesString=queuesString+aQueue
 			print "Created queue dict: " + str(aQueueDict)
 			queuesList.append(aQueueDict)
@@ -192,11 +192,14 @@ class FlowMonitor:
 		queuesCreation='-- --id=@queue0 create Queue other-config:max-rate=1000000000 '
 		#toDo: Check the numqueues handling
 
+		print "Queue List: " + str(queuesList)
+
 		for j in range(len(flowList)):
-			aCreation='-- --id=@queue' + str(aQueueDict['queueId']) + ' create Queue other-config:max-rate=1000000000 '
+			aCreation='-- --id=@queue' + str(queuesList[j]['queueId']) + ' create Queue other-config:max-rate=1000000000 '
 			queuesCreation=queuesCreation+aCreation
 
 		command=qosString + ' ' + queuesString + ' ' + queuesCreation
+		print "Queue command: \n " + str(command)
 		subprocess.check_output(command, shell=True)
 
 		for j in range(len(flowList)):
@@ -204,7 +207,7 @@ class FlowMonitor:
 			awk="{print $" + str(k) + ";}'"
 			awkString="awk '" + awk
 			auxString=subprocess.check_output('ovs-vsctl list qos | grep queues | ' + awkString, shell=True).split('=')[1]
-			queuesList[j]['queueuuid']={'id':i,'uuid':auxString[:len(auxString)-2]}
+			queuesList[j]['queueuuid']={'id':j,'uuid':auxString[:len(auxString)-2]}
 			#self.queues_uuid.append({'id':i,'uuid':auxString[:len(auxString)-2]})
 
 			#subprocess.check_output('ovs-ofctl add-flow ' + self.interface + 'br in_port=LOCAL,priority=0,actions=enqueue:1:0', shell=True)		
