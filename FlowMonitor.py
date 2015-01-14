@@ -14,9 +14,9 @@ class FlowMonitor:
         def resetQueues(self):
 
             for i in range(len(self.completeInterfaceList)):                
+            	subprocess.check_output('ovs-ofctl del-flows ' + self.completeInterfaceList[i]['name'], shell=True)
                 subprocess.check_output('./clear_queues.sh ' + self.completeInterfaceList[i]['name'], shell=True)
-                subprocess.check_output('ovs-ofctl del-flows ' + self.completeInterfaceList[i]['name'], shell=True)
-
+                
         def __init__(self, samples=10, period=3, intervalTime=1.0, upperLimit=10*0.8, lowerLimit=10*0.6):
 
 		# SOME DATA LIKE INTERFACES NAME AND ETC, SHOULD BE OBTAINED USING SWITCH CHARACTERISTICS!!
@@ -183,6 +183,7 @@ class FlowMonitor:
 			aQueueDict['nw_dst']=flowList[j]['nw_dst']
 			aQueue= ',' + str(aQueueDict['queueId']) +'=@queue' + tr(aQueueDict['queueId'])
 			queuesString=queuesString+aQueue
+			print "Created queue dict: " + str(aQueueDict)
 			queuesList.append(aQueueDict)
 
 		queuesString='queues=0=@queue0'+queuesString

@@ -1,0 +1,6 @@
+# NASTY BUGS:
+
+- Application Switch
+ 	* In congestionDetected, if the control variable "controlInProccess" is left = 0 (sending multiple messages to the controller) the interfaceDict 		  received gets corrupted, not taking all the dictionary fields
+
+- 

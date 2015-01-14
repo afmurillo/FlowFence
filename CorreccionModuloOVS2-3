@@ -1,0 +1,10 @@
+Después de instalar correctamente la versión 2.3 o 2.4,
+el módulo del kernel de openvswitch puede no cargarse adecuadamente, esto puede verificarse usando
+
+service openvswitch-swtich status
+
+en caso que algún componente no esté iniciado, puede solucionarse el problema usando:
+
+depmod
+modprobe openvswitch_mod
+service openvswitch-switch start
