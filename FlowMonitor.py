@@ -141,7 +141,8 @@ class FlowMonitor:
 				
 				print "Complete Interface List: " + str(self.completeInterfaceList)				
 				for j in range(len(self.completeInterfaceList)):
-					print "Initing queues for: " + str(self.completeInterfaceList[j]['name'])
+					
+					print "Actual FlowList: " + str(self.completeFlowList[j]['flowList'])
 					self.completeInterfaceList[j]['queueList']=self.initQueues(self.completeInterfaceList[j]['name'],self.completeFlowList[j]['flowList'])
 					print "Created queues: " + str(self.completeInterfaceList[j]['queueList'])
 					#print "Interface statistics: " + str(self.completeInterfaceList[j]['currentEma']) + " Threshold: " + str(self.completeInterfaceList[j]['threshold'])
@@ -170,7 +171,7 @@ class FlowMonitor:
 
 	def initQueues(self, interfaceName, flowList):
 		
-		subprocess.check_output('./clear_queues.sh ' + interfaceName, shell=True)
+		print "Initing queues for: " + str(interfaceName)
 		queuesList=[]
 		qosString='ovs-vsctl -- set Port ' + interfaceName + ' qos=@testqos -- --id=@testqos create QoS type=linux-htb'
 		queuesString=''

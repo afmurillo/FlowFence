@@ -1,0 +1,57 @@
+#!/bin/bash
+
+# Queues and qos must be explicitly deleted, this script performs that.
+# WARNING! The flows associated to the qos bridge are also deletted!!!
+set -e
+
+echo "Tomando id de qos"
+qosid=$(ovs-vsctl list qos | grep _uuid |  awk '{print $3;}')
+
+echo "QoS id: " $qosid
+
+
+for i  in `echo $qosid` 
+
+do
+	echo "Una id: " $i
+	echo "Limpiando queues"
+	ovs-vsctl clear qos $qosid queues
+
+done
+
+#if ! [ -z "$qosid" ]; then
+#	echo "Limpiando queues"
+#	ovs-vsctl clear qos $qosid queues
+
+#else
+#	echo "No hay entradas de QoS"
+
+#fi
+
+echo "Done with clearing qos queues"
+
+queueid=$(ovs-vsctl list queue | grep _uuid |  awk '{print $3;}')
+
+if ! [ -z "$qosid" ]; then
+        echo "Limpiando queues"
+        ovs-vsctl destroy queue $queueid
+
+else
+        echo "No hay entradas de queues"
+
+fi
+
+
+echo "Limpias queues"
+
+ovs-vsctl clear Port $1 qos
+echo "Removida entrada QoS en tabla " $1
+
+if ! [ -z "$qosid" ]; then
+        echo "Destruyendo qos"
+        ovs-vsctl destroy qos $qosid
+
+else
+        echo "No hay entradas de qos"
+
+fi
