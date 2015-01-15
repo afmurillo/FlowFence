@@ -151,7 +151,7 @@ class FlowMonitor:
 					print "current threshold: " + str(self.completeInterfaceList[j]['threshold'])
 					if (self.completeInterfaceList[j]['isCongested'] == 0) and (self.completeInterfaceList[j]['currentEma'] >= self.completeInterfaceList[j]['threshold']):
 						print "Congested"
-						self.completeInterfaceList[j]['isCongested']=1
+						#self.completeInterfaceList[j]['isCongested']=1
 						self.completeInterfaceList[j]['threshold']=self.completeInterfaceList[j]['lowerLimit']
 						#self.calculateControls(j)
 						if len(self.completeFlowList[j]['flowList']) > 0:
@@ -163,11 +163,6 @@ class FlowMonitor:
 						self.completeInterfaceList[j]['threshold']=self.completeInterfaceList[j]['upperLimit']
 						print "Congestion ceased"
 						self.reportObject.congestionCeased(self.completeInterfaceList[j]['dpid'])
-
-					if (self.completeInterfaceList[j]['isCongested'] == 1) and (self.completeInterfaceList[j]['currentEma'] >= self.completeInterfaceList[j]['lowerLimit']):
-						#toDo: Check if this case is still neccessary
-						#Decrement delta
-						print 'Decrementing..'
 
 			except KeyboardInterrupt:
 				print " \n *** So long and thanks for all the fish! *** "
@@ -226,12 +221,11 @@ class FlowMonitor:
 		print "Queue List: " + str(queuesList)
 		return queuesList
 
-		def setQueuesBw(self, queuesList, flowBwList):
+	def setQueuesBw(self, queuesList, flowBwList):
 
-			for i in range(queuesList)-1: 
-				subprocess.check_output("ovs-vsctl set queue " + queuesList[i+1]['queueuuid']['uuid'] + " other-config:max-rate="+str(flowBwList[i]['bw']), shell=True)
-				#flows=subprocess.check_output("ovs-ofctl dump-flows eth0br", shell=True)
-
+		for i in range(len(queuesList)-1): 
+			subprocess.check_output("ovs-vsctl set queue " + queuesList[i+1]['queueuuid']['uuid'] + " other-config:max-rate="+str(flowBwList[i]['bw']), shell=True)
+			#flows=subprocess.check_output("ovs-ofctl dump-flows eth0br", shell=True)
 		print "Queues Ready!"			
 
 	def getUuid(self):
