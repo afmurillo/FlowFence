@@ -139,14 +139,18 @@ class FlowMonitor:
 			try:
 				self.updateWindow()
 				
-				print "Complete Interface List: " + str(self.completeInterfaceList)				
+				#print "Complete Interface List: " + str(self.completeInterfaceList)				
 				for j in range(len(self.completeInterfaceList)):
 					
-					print "Actual FlowList: " + str(self.completeFlowList[j]['flowList'])
-					self.completeInterfaceList[j]['queueList']=self.initQueues(self.completeInterfaceList[j]['name'],self.completeFlowList[j]['flowList'])
-					print "Returned created queues: " + str(self.completeInterfaceList[j]['queueList'])
+					#print "Actual FlowList: " + str(self.completeFlowList[j]['flowList'])
+					#self.completeInterfaceList[j]['queueList']=self.initQueues(self.completeInterfaceList[j]['name'],self.completeFlowList[j]['flowList'])
+					#print "Interface: " + str(self.completeInterfaceList[j]['name'])
+					#print "Returned created queues: " + str(self.completeInterfaceList[j]['queueList'])
 					#print "Interface statistics: " + str(self.completeInterfaceList[j]['currentEma']) + " Threshold: " + str(self.completeInterfaceList[j]['threshold'])
+					print "update, ema: " + str(self.completeInterfaceList[j]['currentEma'])
+					print "current threshold: " + str(self.completeInterfaceList[j]['threshold'])
 					if (self.completeInterfaceList[j]['isCongested'] == 0) and (self.completeInterfaceList[j]['currentEma'] >= self.completeInterfaceList[j]['threshold']):
+						print "Congested"
 						self.completeInterfaceList[j]['isCongested']=1
 						self.completeInterfaceList[j]['threshold']=self.completeInterfaceList[j]['lowerLimit']
 						#self.calculateControls(j)
@@ -154,10 +158,11 @@ class FlowMonitor:
 							self.reportObject.congestionDetected(self.completeInterfaceList[j], self.completeFlowList[j]['flowList'])
 						#toDo: After of reporting, it should init the queues and wait for further actions from the controller
 
-					elif (self.completeInterfaceList[j]['isCongested'] == 1) and (self.completeInterfaceList[j]['currentEma'] <= self.completeInterfaceList[j]['threshold']):
+					elif (self.completeInterfaceList[j]['isCongested'] == 1) and (self.completeInterfaceList[j]['currentEma'] <= self.completeInterfaceList[j]['threshold']):										
 						self.completeInterfaceList[j]['isCongested']=0
 						self.completeInterfaceList[j]['threshold']=self.completeInterfaceList[j]['upperLimit']
-						self.reportObject.congestionDetected(self.completeInterfaceList[j]['dpid'], self.completeFlowList[j]['flowList'])
+						print "Congestion ceased"
+						self.reportObject.congestionCeased(self.completeInterfaceList[j]['dpid'])
 
 					if (self.completeInterfaceList[j]['isCongested'] == 1) and (self.completeInterfaceList[j]['currentEma'] >= self.completeInterfaceList[j]['lowerLimit']):
 						#toDo: Check if this case is still neccessary
@@ -214,7 +219,7 @@ class FlowMonitor:
 			awk="{print $" + str(k) + ";}'"
 			awkString="awk '" + awk
 			auxString=subprocess.check_output('ovs-vsctl list qos | grep queues | ' + awkString, shell=True).split('=')[1]
-			queuesList[j]['queueuuid']={'id':j,'uuid':auxString[:len(auxString)-2]}
+			queuesList[j]['queueuuid']={'id':j+1,'uuid':auxString[:len(auxString)-2]}
 			#self.queues_uuid.append({'id':i,'uuid':auxString[:len(auxString)-2]})
 
 			#subprocess.check_output('ovs-ofctl add-flow ' + self.interface + 'br in_port=LOCAL,priority=0,actions=enqueue:1:0', shell=True)		
@@ -223,8 +228,8 @@ class FlowMonitor:
 
 		def setQueuesBw(self, queuesList, flowBwList):
 
-			for i in range(queuesList): 
-				subprocess.check_output("ovs-vsctl set queue " + queuesList[i]['queueuuid']['uuid'] + " other-config:max-rate="+str(flowBwList[i]['bw']), shell=True)
+			for i in range(queuesList)-1: 
+				subprocess.check_output("ovs-vsctl set queue " + queuesList[i+1]['queueuuid']['uuid'] + " other-config:max-rate="+str(flowBwList[i]['bw']), shell=True)
 				#flows=subprocess.check_output("ovs-ofctl dump-flows eth0br", shell=True)
 
 		print "Queues Ready!"			
@@ -453,10 +458,11 @@ class FlowMonitor:
 		sleep(intervalTime)
 
 		for j in range(len(self.completeInterfaceList)):
+
 			b.append((float(subprocess.check_output("cat /proc/net/dev | grep " + self.completeInterfaceList[j]['name'] + " | awk '{print $10;}'", shell=True).split('\n')[0])))
 			samplesList[j]['name'] = self.completeInterfaceList[j]['name']
-			samplesList[j]['sample']=((b[j]-a[j])/1048576)
-
+			#samplesList[j]['sample']=((b[j]-a[j])/1048576) In MBytes
+			samplesList[j]['sample']=b[j]-a[j]
 		return samplesList
 
 if __name__=="__main__":

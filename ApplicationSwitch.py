@@ -86,8 +86,8 @@ class ApplicationSwitch:
                         self.samples=10
                         self.period=3
                         self.intervalTime=1.0
-                        self.upperLimit=0.4
-                        self.lowerLimit=0.1
+                        self.upperLimit=10
+                        self.lowerLimit=5
 
                         awk="{print $3;}'"
                         awkString="awk '" + awk
@@ -171,7 +171,7 @@ class ApplicationSwitch:
 
 		def messageFromController(self,message,srcAddress):
 			print "Message Received: " + str(message)
-                        # En caso que el mensaje sea una indicación de congestion, debemos preparar las filas y reportar que han sido inicializadas exitosamente
+                        # En caso que el mensaje sea una indicacion de congestion, debemos preparar las filas y reportar que han sido inicializadas exitosamente
                         # Luego recibiremos un flowmod enviando los flujos a las filas respectivas
                         if message['Response'] == "Decrement":
                                 self.linkState.createQueues(message)
@@ -188,4 +188,6 @@ if __name__=="__main__":
         code.listenSocket.start()
 
 	code.linkState=FlowMonitor(code.samples, code.period, code.intervalTime, code.upperLimit, code.lowerLimit)
+	# Here we could put the MAGI event :D
+	print "Init Finished"
 	code.linkState.startMonitoring()
