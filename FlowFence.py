@@ -89,7 +89,7 @@ class handle_message(Thread):
 		elif message['Notification'] == 'Uncongestion':
 			self.handleUncongestionNotification(message, self.srcAddress)
 		elif message['Notification'] == 'QueuesDone':
-			self.handleFlowsRedirection(message['Interface']['dpid'],connections, self.srcAddress, message)
+			self.handleFlowsRedirection(message['Interface']['dpid'],self.myconnections, self.srcAddress, message)
 
 	def handleCongestionNotification(self, notificationMessage, switchAddres):
 		# Algorithm: Classify good and bad flows, assign bandwidth fo good flows, assign band fo bad flows, assign remaining band
@@ -171,25 +171,30 @@ class handle_message(Thread):
 
 	
 	def handleFlowsRedirection(self, dpid, connections, switchAddress, message):
-		for i in range(len(message['FlowList'])):
+		# LAST ERROR WAS INDEX OUT OF RANGE, CHECK FLOWLIST AND QUEUELIST SIZES
+		print "message to be used for redirection" + str(message)
+		for i in range(len(message['Flowlist'])):
 
-			my_match = of.ofp_match(dl_type = 0x800,nw_src=message['FlowList'][i]['nw_src'],nw_dst=message['FlowList'][i]['nw_dst'])
+			my_match = of.ofp_match(dl_type = 0x800,nw_src=message['Flowlist'][i]['nw_src'],nw_dst=message['Flowlist'][i]['nw_dst'])
+			print "Flow Match: " + str(my_match)
 			msg = of.ofp_flow_mod()
 			msg.match = my_match
 			msg.priority=65535
-			msg.actions.append(of.ofp_action_enqueue(port=message['FlowList'][i]['action'].split(':')[1], queue_id=message['QueueList'][i]['queueId']))
+			msg.actions.append(of.ofp_action_enqueue(port=message['Flowlist'][i]['action'].split(':')[1], queue_id=message['QueueList'][i]['queueId']))
+			
+			print "Flow mod message: " + str(msg)
 
                 #toDo: Check a better way to do this
-		print "dpid parameter: " + str(dpid)
-                for connection in connections:
-                	connectionDpid=connection.dpid
-			print "Connection dpid: " + str(connectionDpid)
-                	dpidStr=dpidToStr(connectionDpid)
-                	dpidStr=dpidStr.replace("-", "")
-                	print 'Real dpidStr: ' + dpidStr
-                	if dpid == dpidStr:
-                		connection.send(msg)
-				print 'Sent to: ' + str(connection)
+		#print "dpid parameter: " + str(dpid)
+                #for connection in connections:
+                #connectionDpid=connection.dpid
+		#print "Connection dpid: " + str(connectionDpid)
+                #dpidStr=dpidToStr(connectionDpid)
+                #dpidStr=dpidStr.replace("-", "")
+                #print 'Real dpidStr: ' + dpidStr
+                #if dpid == dpidStr:
+                #connection.send(msg)
+		#print 'Sent to: ' + str(connection)
 
 
 class connect_test(EventMixin):	
