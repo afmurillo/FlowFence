@@ -16,6 +16,11 @@ import string, sys, socket, json, subprocess
 import thread 
 import time
 import math
+
+"""
+DoS Mitigation - FlowFence component
+"""
+
 #######################################
 
 log = core.getLogger()
@@ -35,13 +40,13 @@ class server_socket(Thread):
 		self.sock = socket.socket()         				# Create a socket object
 		host = controllerIp									
 		port = 12345               							# Reserve a port for own communication btwn switches and controller
-		log.info("Binding to listen for switch messages")
+		#log.info("Binding to listen for switch messages")
+		print "Binding to listen for switch messages"
 		self.sock.bind((host, port))        				# Bind to the port
 		self.sock.listen(5)                	 				# Now wait for client connection.
 
 		while True:												
-			try:
-			
+			try:			
 				client, addr = self.sock.accept()				# Establish connection with client
 				data = client.recv(1024)						# Get data from the client 
 				print 'Message from', addr 						# Print a message confirming 
@@ -194,13 +199,14 @@ class connect_test(EventMixin):
 	def __init__(self):
 		self.listenTo(core.openflow)
 		log.debug("Received connection from switch")
+		print("Received connection from switch")
 		self.myconnections=[]		# a list of the connections
 		socket_server=server_socket(self.myconnections)	# send it to the socket with the connection 
 		socket_server.setDaemon(True)		# establish the thread as a deamond, this will make to close the thread with the main program
 		socket_server.start()				# starting the thread
 
 	def _handle_ConnectionUp (self, event):
-		print event.dpid #it prints the switch connection information, on the screen
+		print "switch dpid " + str(event.dpid) #it prints the switch connection information, on the screen
 		self.myconnections.append(event.connection)	# will pass as a reference to above
 
 #######################################
@@ -208,6 +214,7 @@ class connect_test(EventMixin):
 
 def launch ():
 	#core.openflow.addListenerByName("FlowStatsReceived", listarFluxosIp)
+	print "FlowFence launched"
 	core.registerNew(connect_test)
 
 
