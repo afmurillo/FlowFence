@@ -171,30 +171,46 @@ class handle_message(Thread):
 
 	
 	def handleFlowsRedirection(self, dpid, connections, switchAddress, message):
-		# LAST ERROR WAS INDEX OUT OF RANGE, CHECK FLOWLIST AND QUEUELIST SIZES
+
+		print 'message from ' + str(switchAddress)
+		print 'Connections ' + str(dir(connections))
+
+		dpid = dpid[:len(dpid)-1]
+		dpid = dpid[len(dpid)-12:]
+		print 'Received dpid: ' + str(dpid)
+
 		print "message to be used for redirection" + str(message)
 		for i in range(len(message['Flowlist'])):
 
-			my_match = of.ofp_match(dl_type = 0x800,nw_src=message['Flowlist'][i]['nw_src'],nw_dst=message['Flowlist'][i]['nw_dst'])
-			print "Flow Match: " + str(my_match)
-			msg = of.ofp_flow_mod()
-			msg.match = my_match
-			msg.priority=65535
-			msg.actions.append(of.ofp_action_enqueue(port=message['Flowlist'][i]['action'].split(':')[1], queue_id=message['QueueList'][i]['queueId']))
-			
-			print "Flow mod message: " + str(msg)
+			# We only want to redirect outgoing flows
+			if message['Flowlist'][i]['action'] != 'LOCAL':		
+				#my_match = of.ofp_match(nw_src=message['Flowlist'][i]['nw_src'],nw_dst=message['Flowlist'][i]['nw_dst'])
+				my_match = of.ofp_match(dl_type = 0x800,nw_src=message['Flowlist'][i]['nw_src'],nw_dst=message['Flowlist'][i]['nw_dst'])
 
-                #toDo: Check a better way to do this
-		#print "dpid parameter: " + str(dpid)
-                #for connection in connections:
-                #connectionDpid=connection.dpid
-		#print "Connection dpid: " + str(connectionDpid)
-                #dpidStr=dpidToStr(connectionDpid)
-                #dpidStr=dpidStr.replace("-", "")
-                #print 'Real dpidStr: ' + dpidStr
-                #if dpid == dpidStr:
-                #connection.send(msg)
-		#print 'Sent to: ' + str(connection)
+				print "Flow Match: " + str(my_match)
+				msg = of.ofp_flow_mod()
+				msg.match = my_match
+				msg.priority=65535
+		
+				# There is a bug here, the error it shows reads "can't convert argument to int" when try to send the message
+				# If the actions are omitted (aka we order to drop the packets with match, we get no error)
+				msg.actions.append(of.ofp_action_enqueue(port=message['Flowlist'][i]['action'].split(':')[1], queue_id=message['QueueList'][i]['queueId']))
+				
+				print "Flow mod message: " + str(msg)
+
+	  	              	#toDo: Check a better way to do this
+				print "dpid parameter: " + str(dpid)
+	                	for connection in connections:
+        	        		connectionDpid=connection.dpid
+					print "Connection dpid: " + str(connectionDpid)
+                			dpidStr=dpidToStr(connectionDpid)
+	                		dpidStr=dpidStr.replace("-", "")
+        	        		print 'Real dpidStr: ' + dpidStr
+
+	                		if dpid == dpidStr:
+        	        			connection.send(msg)
+						print 'Sent to: ' + str(connection)
+						print 'Well...done'	
 
 
 class connect_test(EventMixin):	
@@ -212,6 +228,7 @@ class connect_test(EventMixin):
 
 	def _handle_ConnectionUp (self, event):
 		print "switch dpid " + str(event.dpid) #it prints the switch connection information, on the screen
+		print "Hex dpid: " + str(dpidToStr(event.dpid))
 		self.myconnections.append(event.connection)	# will pass as a reference to above
 
 #######################################
