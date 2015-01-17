@@ -142,14 +142,15 @@ class ApplicationSwitch:
 
 			if self.controlInProcess == 1:			
 			
+				print "Congestion ceased"
 				#Congestion Detected, sent notification to controller			
-				self.actionDict['Notification']="Uncongestion"
+				#self.actionDict['Notification']="Uncongestion"
 
-				self.notificationMessage = json.dumps(str(self.actionDict) +str(interfaceDict) + str(flowList))
+				#self.notificationMessage = json.dumps(str(self.actionDict) +str(interfaceDict) + str(flowList))
 				
-				self.msgSender.sendMessage(self.feedbackMsg, self.controllerIp, self.flowFencePort)
-				self.msgSender.closeConnection()
-				self.controlInProcess = 0			
+				#self.msgSender.sendMessage(self.feedbackMsg, self.controllerIp, self.flowFencePort)
+				#self.msgSender.closeConnection()
+				#self.controlInProcess = 0			
 
                 def queuesReady(self, interfaceDict, flowList, queueList):
 
@@ -170,11 +171,12 @@ class ApplicationSwitch:
 
 
 		def messageFromController(self,message,srcAddress):
-			print "Message Received: " + str(message)
+			messageDict = eval(json.loads(message))
+			print "Message Received: " + str(messageDict)
                         # En caso que el mensaje sea una indicacion de congestion, debemos preparar las filas y reportar que han sido inicializadas exitosamente
                         # Luego recibiremos un flowmod enviando los flujos a las filas respectivas
-                        if message['Response'] == "Decrement":
-                                self.linkState.createQueues(message)
+                        if messageDict['Response'] == "Decrement":
+				self.linkState.createQueues(messageDict)
 
 		def getInstance(self):
 			return ApplicationSwitch()
