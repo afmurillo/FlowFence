@@ -194,7 +194,7 @@ class handle_message(Thread):
 		
 				# There is a bug here, the error it shows reads "can't convert argument to int" when try to send the message
 				# If the actions are omitted (aka we order to drop the packets with match, we get no error)
-				msg.actions.append(of.ofp_action_enqueue(port=message['Flowlist'][i]['action'].split(':')[1], queue_id=message['QueueList'][i]['queueId']))
+				msg.actions.append(of.ofp_action_enqueue(port=int(message['Flowlist'][i]['action'].split(':')[1]), queue_id=int(message['QueueList'][i]['queueId'])))
 				
 				print "Flow mod message: " + str(msg)
 
