@@ -6,7 +6,9 @@ class SwitchProperties:
         def getInterfaces(self):
 		interfacesList=[]
                 interfacesName=[]
-                interfacesString=subprocess.check_output("ovs-vsctl show | grep Bridge | awk '{print $2;}'",shell=True).split("\n")
+
+                #interfacesString=subprocess.check_output("ovs-vsctl show | grep Bridge | awk '{print $2;}'",shell=True).split("\n")
+                interfacesString=subprocess.check_output("ovs-vsctl show | grep Bridge  | grep eth0br | awk '{print $2;}'",shell=True).split("\n") 
 
                 print "interfaces List: " + str(interfacesString)
                 for i in range(len(interfacesString)):
