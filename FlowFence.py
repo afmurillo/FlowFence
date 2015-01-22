@@ -111,6 +111,7 @@ class handle_message(Thread):
 
 			if flowBwDict['goodBehaved'] == True:
 				flowBwDict['bw']= notificationMessage['Flowlist'][i]['arrivalRate']
+				flowBwDict['bw'] = 300000
 				remainingBw = remainingBw - notificationMessage['Flowlist'][i]['arrivalRate']
 			else:
 				badFlows=badFlows+1
@@ -123,6 +124,7 @@ class handle_message(Thread):
 		for i in range(len(notificationMessage['Flowlist'])):
 			if flowBwDict['goodBehaved'] == False:
 				flowBwList[i]['bw']= self.assignBwToBadBehaved(bwForBadFlows, badFlows, notificationMessage['Interface']['capacity'], len(notificationMessage['Flowlist']), notificationMessage['Flowlist'][i]['arrivalRate'], self.alfa)
+				flowBwList[i]['bw'] = 300000
 				# Here we should check witch switches also handle the bad behaved flow to apply the same control, in the simplest topology (Dumb-bell), it is not neccesary
 				remainingBw = remainingBw - flowBwList[i]['bw']
 
@@ -130,6 +132,7 @@ class handle_message(Thread):
 		for i in range(len(notificationMessage['Flowlist'])):
 			if flowBwDict['goodBehaved'] == True:
 				flowBwList[i]['bw']= remainingBw/(len(notificationMessage['Flowlist']) - badFlows)
+				flowBwList[i]['bw'] = 300000
 		
 		print "Calculated Bandwidth: " + str(flowBwList)
 
@@ -167,7 +170,8 @@ class handle_message(Thread):
 			return True
 
 	def assignBwToBadBehaved(self, avaliableBw, numBadFlows, capacity, numTotalFlows, flowRate, alfa):		
-		return avaliableBw/numBadFlows - (1 - math.exp(-(flowRate-(capacity/numTotalFlows))))*alfa*flowRate
+		#return avaliableBw/numBadFlows - (1 - math.exp(-(flowRate-(capacity/numTotalFlows))))*alfa*flowRate
+		return 300000
 
 	
 	def handleFlowsRedirection(self, dpid, connections, switchAddress, message):
