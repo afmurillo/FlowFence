@@ -225,6 +225,7 @@ class FlowMonitor:
 
 		for i in range(len(queuesList)-1): 
 			subprocess.check_output("ovs-vsctl set queue " + queuesList[i+1]['queueuuid']['uuid'] + " other-config:max-rate="+str(flowBwList[i]['bw']), shell=True)
+		
 			#flows=subprocess.check_output("ovs-ofctl dump-flows eth0br", shell=True)
 		print "Queues Ready!"			
 
