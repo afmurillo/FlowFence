@@ -1,0 +1,15 @@
+PING 10.1.2.2 (10.1.2.2) 56(84) bytes of data.
+64 bytes from 10.1.2.2: icmp_req=1 ttl=62 time=18.8 ms
+64 bytes from 10.1.2.2: icmp_req=2 ttl=62 time=38.7 ms
+64 bytes from 10.1.2.2: icmp_req=3 ttl=62 time=0.606 ms
+64 bytes from 10.1.2.2: icmp_req=4 ttl=62 time=9.93 ms
+64 bytes from 10.1.2.2: icmp_req=5 ttl=62 time=82.2 ms
+64 bytes from 10.1.2.2: icmp_req=6 ttl=62 time=15.7 ms
+64 bytes from 10.1.2.2: icmp_req=7 ttl=62 time=15.7 ms
+64 bytes from 10.1.2.2: icmp_req=8 ttl=62 time=19.4 ms
+64 bytes from 10.1.2.2: icmp_req=9 ttl=62 time=13.5 ms
+64 bytes from 10.1.2.2: icmp_req=10 ttl=62 time=72.1 ms
+
+--- 10.1.2.2 ping statistics ---
+10 packets transmitted, 10 received, 0% packet loss, time 9013ms
+rtt min/avg/max/mdev = 0.606/28.715/82.235/25.956 ms
