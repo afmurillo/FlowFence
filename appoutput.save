@@ -1,0 +1,70 @@
+interfaces List: ['"eth1br"', '"eth0br"', '']
+[{'capacity': 100000000, 'name': '"eth1br"', 'dpid': '"00000049d0b1217c"'}, {'capacity': 100000000, 'name': '"eth0br"', 'dpid': '"000000b6789f7bd2"'}]
+10.1.4.1
+12345
+interfaces List: ['"eth1br"', '"eth0br"', '']
+Init Finished
+interfaces List: ['"eth1br"', '"eth0br"', '']
+[{'capacity': 100000000, 'name': '"eth1br"', 'dpid': '"00000049d0b1217c"'}, {'capacity': 100000000, 'name': '"eth0br"', 'dpid': '"000000b6789f7bd2"'}]
+10.1.4.1
+12345
+update, ema: 98.0
+current threshold: 10
+Congested
+Interface Dict: {'capacity': 100000000, 'name': '"eth1br"', 'lowerLimit': 5, 'prevEma': 98.0, 'isCongested': 0, 'currentEma': 98.0, 'queueList': [], 'samples': [], 'dpid': '"00000049d0b1217c"', 'threshold': 5, 'monitoring': 0, 'useAverages': deque([98.0, 98.0, 98.0, 98.0, 98.0, 98.0, 98.0, 98.0, 98.0, 98.0], maxlen=10), 'prevema': 98.0, 'upperLimit': 10}
+flow list: [{'nw_dst': '10.1.1.8', 'packets': 1, 'dl_src': '00:06:0d:a0:10:05', 'length': 98, 'arrivalRate': 60.444876624598805, 'action': 'LOCAL', 'goodBehaved': None, 'dl_dst': '00:49:d0:b1:21:7c', 'nw_src': '10.1.1.3', 'oldArrivalRate': 118.42971628469581}, {'nw_dst': '10.1.1.3', 'packets': 1, 'dl_src': '00:49:d0:b1:21:7c', 'length': 98, 'arrivalRate': 60.444876624598805, 'action': 'output:1', 'goodBehaved': None, 'dl_dst': '00:06:0d:a0:10:05', 'nw_src': '10.1.1.8', 'oldArrivalRate': 118.42971628469581}]
+Message sent: "{'Flowlist': [{'nw_dst': '10.1.1.8', 'packets': 1, 'dl_src': '00:06:0d:a0:10:05', 'length': 98, 'arrivalRate': 60.444876624598805, 'action': 'LOCAL', 'goodBehaved': None, 'dl_dst': '00:49:d0:b1:21:7c', 'nw_src': '10.1.1.3', 'oldArrivalRate': 118.42971628469581}, {'nw_dst': '10.1.1.3', 'packets': 1, 'dl_src': '00:49:d0:b1:21:7c', 'length': 98, 'arrivalRate': 60.444876624598805, 'action': 'output:1', 'goodBehaved': None, 'dl_dst': '00:06:0d:a0:10:05', 'nw_src': '10.1.1.8', 'oldArrivalRate': 118.42971628469581}], 'Notification': 'Congestion', 'Interface': {'capacity': 100000000, 'name': '\"eth1br\"', 'dpid': '\"00000049d0b1217c\"'}}"
+update, ema: 0.0
+current threshold: 10
+Message from ('10.1.4.1', 49370)
+Message Received: {'Interface': '"eth1br"', 'Response': 'Decrement', 'bwList': [{'goodBehaved': True, 'bw': 44999939.555123374, 'nw_src': '10.1.1.8', 'nw_dst': '10.1.1.3'}, {'goodBehaved': True, 'bw': 44999939.555123374, 'nw_src': '10.1.1.8', 'nw_dst': '10.1.1.3'}]}
+Initing queues for: "eth1br"
+Created queue dict: {'queueId': 1, 'bw': None, 'nw_src': '10.1.1.3', 'queueuuid': None, 'nw_dst': '10.1.1.8'}
+Created queue dict: {'queueId': 2, 'bw': None, 'nw_src': '10.1.1.8', 'queueuuid': None, 'nw_dst': '10.1.1.3'}
+Queue command: 
+ ovs-vsctl -- set Port "eth1br" qos=@fenceqos -- --id=@fenceqos create QoS type=linux-htb queues=0=@queue0,1=@queue1,2=@queue2 -- --id=@queue0 create Queue other-config:max-rate=1000000000 -- --id=@queue1 create Queue other-config:max-rate=1000000000 -- --id=@queue2 create Queue other-config:max-rate=1000000000 
+Queue List: [{'queueId': 1, 'bw': None, 'nw_src': '10.1.1.3', 'queueuuid': {'id': 1, 'uuid': 'ec280996-6490-4c5b-855e-9c35de5d2daa'}, 'nw_dst': '10.1.1.8'}, {'queueId': 2, 'bw': None, 'nw_src': '10.1.1.8', 'queueuuid': {'id': 2, 'uuid': '4fda350c-5c4b-417e-a2f1-6fb4a1293954'}, 'nw_dst': '10.1.1.3'}]
+Queues Ready!
+Interface Dict: {'capacity': 100000000, 'name': '"eth1br"', 'lowerLimit': 5, 'prevEma': 98.0, 'isCongested': 0, 'currentEma': 98.0, 'queueList': [{'queueId': 1, 'bw': None, 'nw_src': '10.1.1.3', 'queueuuid': {'id': 1, 'uuid': 'ec280996-6490-4c5b-855e-9c35de5d2daa'}, 'nw_dst': '10.1.1.8'}, {'queueId': 2, 'bw': None, 'nw_src': '10.1.1.8', 'queueuuid': {'id': 2, 'uuid': '4fda350c-5c4b-417e-a2f1-6fb4a1293954'}, 'nw_dst': '10.1.1.3'}], 'samples': [], 'dpid': '"00000049d0b1217c"', 'threshold': 5, 'monitoring': 0, 'useAverages': deque([98.0, 98.0, 98.0, 98.0, 98.0, 98.0, 98.0, 98.0, 98.0, 98.0], maxlen=10), 'prevema': 98.0, 'upperLimit': 10}
+Message sent: "{'Flowlist': [{'nw_dst': '10.1.1.8', 'packets': 1, 'dl_src': '00:06:0d:a0:10:05', 
+'length': 98, 'arriva	lRate': 60.444876624598805, 'action': 'LOCAL', 'goodBehaved': None, 'dl_dst': '00:49:d0:b1:21:7c', 'nw_src': '10.1.1.3', 'oldArrivalRate': 118.42971628469581}, {'nw_dst': '10.1.1.3', 'packets': 1, 'dl_src': '00:49:d0:b1:21:7c', 'length': 98, 'arrivalRate': 60.444876624598805, 'action': 'output:1', 'goodBehaved': None, 'dl_dst': '00:06:0d:a0:10:05', 'nw_src': '10.1.1.8', 'oldArrivalRate': 118.42971628469581}], 'Notification': 'QueuesDone', 'Interface': {'capacity': 100000000, 'name': '\"eth1br\"', 'dpid': '\"00000049d0b1217c\"'}, 'QueueList': [{'queueId': 1, 'bw': None, 'nw_src': '10.1.1.3', 'queueuuid': {'id': 1, 'uuid': 'ec280996-6490-4c5b-855e-9c35de5d2daa'}, 'nw_dst': '10.1.1.8'}, {'queueId': 2, 'bw': None, 'nw_src': '10.1.1.8', 'queueuuid': {'id': 2, 'uuid': '4fda350c-5c4b-417e-a2f1-6fb4a1293954'}, 'nw_dst': '10.1.1.3'}]}"
+update, ema: 98.0
+current threshold: 5
+Congested
+update, ema: 0.0
+current threshold: 10
+update, ema: 104.72
+current threshold: 5
+Congested
+update, ema: 0.0
+current threshold: 10
+update, ema: 98.0004181333
+current threshold: 5
+Congested
+update, ema: 0.0
+current threshold: 10
+update, ema: 98.0
+current threshold: 5
+Congested
+update, ema: 0.0
+current threshold: 10
+update, ema: 98.0
+current threshold: 5
+Congested
+update, ema: 0.0
+current threshold: 10
+update, ema: 98.0025685333
+current threshold: 5
+Congested
+update, ema: 0.0
+current threshold: 10
+update, ema: 98.0
+current threshold: 5
+Congested
+update, ema: 0.0
+current threshold: 10
+update, ema: 98.0
+current threshold: 5
+Congested
+update, ema: 0.0
+current threshold: 10

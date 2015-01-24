@@ -170,12 +170,12 @@ class FlowMonitor:
 
 		for i in range(len(self.completeInterfaceList)):
 				if (self.completeInterfaceList[i]['name']) == controllerMessage['Interface']:					
-					self.completeInterfaceList[i]['queueList']=self.initQueues(self.completeInterfaceList[i]['name'],self.completeFlowList[i]['flowList'])
+					self.completeInterfaceList[i]['queueList']=self.initQueues(self.completeInterfaceList[i]['name'],self.completeFlowList[i]['flowList'], controllerMessage['bwList'])
 					self.setQueuesBw(self.completeInterfaceList[i]['queueList'], controllerMessage['bwList'])		
 					self.reportObject.queuesReady(self.completeInterfaceList[i],self.completeFlowList[i]['flowList'],self.completeInterfaceList[i]['queueList'])
 					break
 
-	def initQueues(self, interfaceName, flowList):
+	def initQueues(self, interfaceName, flowList, bwList):
 		
 		print "Initing queues for: " + str(interfaceName)
 		queuesList=[]
@@ -187,6 +187,7 @@ class FlowMonitor:
 			aQueueDict['queueId']=j+1
 			aQueueDict['nw_src']=flowList[j]['nw_src']
 			aQueueDict['nw_dst']=flowList[j]['nw_dst']
+			aQueueDict['bw'] = bwList[j]['bw']
 			aQueue= ',' + str(aQueueDict['queueId']) +'=@queue' + str(aQueueDict['queueId'])
 			queuesString=queuesString+aQueue
 			print "Created queue dict: " + str(aQueueDict)
@@ -206,25 +207,37 @@ class FlowMonitor:
 		print "Queue command: \n " + str(command)
 		subprocess.check_output(command, shell=True)
 
-		for j in range(len(flowList)):
-			k=j+3
-			awk="{print $" + str(k) + ";}'"
-			awkString="awk '" + awk
-			auxString=subprocess.check_output('ovs-vsctl list qos | grep queues | ' + awkString, shell=True).split('=')[1]
-			queuesList[j]['queueuuid']={'id':j+1,'uuid':auxString[:len(auxString)-2]}
-			#self.queues_uuid.append({'id':i,'uuid':auxString[:len(auxString)-2]})
+		print "Queues list " + str(queuesList) 
 
-			#subprocess.check_output('ovs-ofctl add-flow ' + self.interface + 'br in_port=LOCAL,priority=0,actions=enqueue:1:0', shell=True)		
+		# Getting uuid of each queue
+		queuesString = subprocess.check_output("ovs-vsctl list Queue", shell=True)
+		print "Queues Ready: " + str(queuesString)
+
+		allQueuesString = subprocess.check_output("ovs-vsctl list QoS  | grep queues", shell=True)
+	
+		for j in range(len(queuesList)):
+			#uuid[i] = queuesString.split(":")[1].split(",")[i].split("=")[1]
+			queuesList[j]['queueuuid']=allQueuesString.split(":")[1].split(",")[j+1].split("=")[1].split('}\n')[0]
+
+		#for j in range(len(flowList)):
+		#k=j+3
+		#awk="{print $" + str(k) + ";}'"
+		#awkString="awk '" + awk
+		#auxString=subprocess.check_output('ovs-vsctl list qos | grep queues | ' + awkString, shell=True).split('=')[1]
+		#queuesList[j]['queueuuid']={'id':j+1,'uuid':auxString[:len(auxString)-2]}
+		#self.queues_uuid.append({'id':i,'uuid':auxString[:len(auxString)-2]})
+
+		#subprocess.check_output('ovs-ofctl add-flow ' + self.interface + 'br in_port=LOCAL,priority=0,actions=enqueue:1:0', shell=True)		
 		print "Queue List: " + str(queuesList)
 		return queuesList
 
 	def setQueuesBw(self, queuesList, flowBwList):
 
-		for i in range(len(queuesList)-1): 
-			subprocess.check_output("ovs-vsctl set queue " + queuesList[i+1]['queueuuid']['uuid'] + " other-config:max-rate="+str(flowBwList[i]['bw']), shell=True)
-		
-			#flows=subprocess.check_output("ovs-ofctl dump-flows eth0br", shell=True)
-		print "Queues Ready!"			
+		for i in range(len(queuesList)): 
+			subprocess.check_output("ovs-vsctl set queue " + queuesList[i]['queueuuid'] + " other-config:max-rate="+str(flowBwList[i]['bw']), shell=True)		
+		#queuesString = subprocess.check_output("ovs-vsctl list Queue", shell=True)
+		#print "Queues Ready: " + str(queuesString)
+	
 
 	def getUuid(self):
 		uuid=subprocess.check_output("ovs-vsctl list qos | grep queues | awk '{print $4;}'", shell=True).split('=')[1].split('}')[0]
@@ -326,10 +339,15 @@ class FlowMonitor:
 			for i in range(numFlows):
 
 				flowDict=dict.fromkeys(['nw_src','nw_dst','packets','length','arrivalRate', 'oldArrivalRate','action','goodBehaved'])
+				flowDict['nw_dst']=interfacesFlowStringList[j]['string'].split('\n')[4].split('=')[1].split(' ')[i]
+
+				#Only checking flows destined to server
+				if str(flowDict['nw_dst']) != '10.1.2.2':
+					continue
+
 				flowDict['dl_src']=interfacesFlowStringList[j]['string'].split('\n')[1].split('=')[1].split(' ')[i]
 				flowDict['dl_dst']=interfacesFlowStringList[j]['string'].split('\n')[2].split('=')[1].split(' ')[i]
 				flowDict['nw_src']=interfacesFlowStringList[j]['string'].split('\n')[3].split('=')[1].split(' ')[i]
-				flowDict['nw_dst']=interfacesFlowStringList[j]['string'].split('\n')[4].split('=')[1].split(' ')[i]
 				flowDict['action']=interfacesFlowStringList[j]['string'].split('\n')[7].split('=')[1].split(' ')[i]
 
 				aux1 = interfacesFlowStringList[j]['string'].split('\n')[5].split('=')[1].split(' ')[i]

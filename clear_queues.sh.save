@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# Queues and qos must be explicitly deleted, this script performs that.
+# WARNING! The flows associated to the qos bridge are also deletted!!!
+set -e
+
+#ovs-vsctl clear port $1 qos
+#ovs-vsctl -- --all destroy Queue
+#ovs-vsctl -- --all destroy QoS
+
+ovs-vsctl -- --if-exists destroy QoS eht0br
+ovs-vsctl -- --if-exists destroy QoS eth1br
+
+ovs-vsctl -- clear Port --all qos
+#ovs-vsctl -- --all destroy Queue
+
+
