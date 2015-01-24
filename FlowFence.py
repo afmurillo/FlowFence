@@ -82,7 +82,7 @@ class handle_message(Thread):
 		except:
 			print "An error ocurred processing the incoming message"
 
-		print "Type of message " + str(message['Notification'])
+		#print "Type of message " + str(message['Notification'])
 	
 		if message['Notification'] == 'Congestion':
 			self.handleCongestionNotification(message, self.srcAddress)
@@ -96,7 +96,6 @@ class handle_message(Thread):
 		# Bad flows bw: assignedBw(j,i)=avaliableBw/badFlows - (1 -exp( - (rates(i)-capacityOverN) ) )*alfas(j)*rates(i);
 
 		flowBwList=[]
-		flowBwDict=dict.fromkeys(['nw_src','nw_dst','goodBehaved','bw'])
 		badFlows=0
 		bwForBadFlows=0
 
@@ -105,13 +104,14 @@ class handle_message(Thread):
 
 		# Good Flows
 		for i in range(len(notificationMessage['Flowlist'])):
+			flowBwDict=dict.fromkeys(['nw_src','nw_dst','goodBehaved','bw'])
 			flowBwDict['nw_src'] = notificationMessage['Flowlist'][i]['nw_src']
 			flowBwDict['nw_dst'] = notificationMessage['Flowlist'][i]['nw_dst']
 			flowBwDict['goodBehaved'] = self.classifyFlows(notificationMessage['Interface']['capacity'], notificationMessage['Flowlist'][i]['arrivalRate'],len(notificationMessage['Flowlist']))
 
-			if flowBwDict['goodBehaved'] == True:
+			if flowBwDict['goodBehaved'] == True:	
 				flowBwDict['bw']= notificationMessage['Flowlist'][i]['arrivalRate']
-				flowBwDict['bw'] = 300000
+				#flowBwDict['bw'] = 300000
 				remainingBw = remainingBw - notificationMessage['Flowlist'][i]['arrivalRate']
 			else:
 				badFlows=badFlows+1
@@ -124,15 +124,17 @@ class handle_message(Thread):
 		for i in range(len(notificationMessage['Flowlist'])):
 			if flowBwDict['goodBehaved'] == False:
 				flowBwList[i]['bw']= self.assignBwToBadBehaved(bwForBadFlows, badFlows, notificationMessage['Interface']['capacity'], len(notificationMessage['Flowlist']), notificationMessage['Flowlist'][i]['arrivalRate'], self.alfa)
-				flowBwList[i]['bw'] = 300000
+				#flowBwList[i]['bw'] = 300000
 				# Here we should check witch switches also handle the bad behaved flow to apply the same control, in the simplest topology (Dumb-bell), it is not neccesary
+				print "Bad behaved flow bw " +  str(flowBwDict['bw'])
 				remainingBw = remainingBw - flowBwList[i]['bw']
 
 		# Give remmaining bw between good flows
 		for i in range(len(notificationMessage['Flowlist'])):
 			if flowBwDict['goodBehaved'] == True:
 				flowBwList[i]['bw']= remainingBw/(len(notificationMessage['Flowlist']) - badFlows)
-				flowBwList[i]['bw'] = 300000
+				print "Good behaved flow bw: " + str(flowBwDict['bw'])
+				#flowBwList[i]['bw'] = 300000
 		
 		print "Calculated Bandwidth: " + str(flowBwList)
 
@@ -170,8 +172,8 @@ class handle_message(Thread):
 			return True
 
 	def assignBwToBadBehaved(self, avaliableBw, numBadFlows, capacity, numTotalFlows, flowRate, alfa):		
-		#return avaliableBw/numBadFlows - (1 - math.exp(-(flowRate-(capacity/numTotalFlows))))*alfa*flowRate
-		return 300000
+		return avaliableBw/numBadFlows - (1 - math.exp(-(flowRate-(capacity/numTotalFlows))))*alfa*flowRate
+		#return 300000
 
 	
 	def handleFlowsRedirection(self, dpid, connections, switchAddress, message):
