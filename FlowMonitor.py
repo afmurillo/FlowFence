@@ -76,8 +76,7 @@ class FlowMonitor:
                     self.completeInterfaceList[j]['useAverages'].append(lastSamples)                    
 
                 if i == 0:
-                    self.completeInterfaceList[j]['prevema'] = lastSamples
-                    #self.prevema = self.lastSamples
+                    self.completeInterfaceList[j]['prevema'] = lastSamples                    
 
             for j in range(len(self.completeInterfaceList)):       
                 for bar, close in enumerate(self.completeInterfaceList[j]['useAverages']):
@@ -86,12 +85,12 @@ class FlowMonitor:
 
 	def updateFlows(self):
 
-		while self.monitoring == 1:
-			try:			
-				# We get samples from all the flows in all interfaces								
+		while self.updatingFlows == 1:
+			try:							
 				self.getFlows()
 			except KeyboardInterrupt:
 				self.monitoring=0
+				self.updatingFlows=0
 				break
 
 	def updateWindow(self):
@@ -119,7 +118,8 @@ class FlowMonitor:
 
 		self.reportObject = ApplicationSwitch()
 		self.monitoring=1
-		
+		self.updatingFlows=1
+
 		self.threadsId.append(threading.Thread(name = 'updateFlows', target=self.updateFlows))
 		self.threadsId[0].start()
 
@@ -142,24 +142,21 @@ class FlowMonitor:
 				#print "Complete Interface List: " + str(self.completeInterfaceList)				
 				for j in range(len(self.completeInterfaceList)):
 					
-					#print "Actual FlowList: " + str(self.completeFlowList[j]['flowList'])
-					#self.completeInterfaceList[j]['queueList']=self.initQueues(self.completeInterfaceList[j]['name'],self.completeFlowList[j]['flowList'])
-					#print "Interface: " + str(self.completeInterfaceList[j]['name'])
-					#print "Returned created queues: " + str(self.completeInterfaceList[j]['queueList'])
-					#print "Interface statistics: " + str(self.completeInterfaceList[j]['currentEma']) + " Threshold: " + str(self.completeInterfaceList[j]['threshold'])
 					print "update, ema: " + str(self.completeInterfaceList[j]['currentEma'])
 					print "current threshold: " + str(self.completeInterfaceList[j]['threshold'])
 					if (self.completeInterfaceList[j]['isCongested'] == 0) and (self.completeInterfaceList[j]['currentEma'] >= self.completeInterfaceList[j]['threshold']):
 						print "Congested"
 						#self.completeInterfaceList[j]['isCongested']=1
+						self.updatingFlows = 0
 						self.completeInterfaceList[j]['threshold']=self.completeInterfaceList[j]['lowerLimit']
-						#self.calculateControls(j)
+						
 						if len(self.completeFlowList[j]['flowList']) > 0:
-							self.reportObject.congestionDetected(self.completeInterfaceList[j], self.completeFlowList[j]['flowList'])
-						#toDo: After of reporting, it should init the queues and wait for further actions from the controller
+							print "Reporting congestion"							
+							self.reportObject.congestionDetected(self.completeInterfaceList[j], self.completeFlowList[j]['flowList'])						
 
 					elif (self.completeInterfaceList[j]['isCongested'] == 1) and (self.completeInterfaceList[j]['currentEma'] <= self.completeInterfaceList[j]['threshold']):										
 						self.completeInterfaceList[j]['isCongested']=0
+						self.updatingFlows = 1
 						self.completeInterfaceList[j]['threshold']=self.completeInterfaceList[j]['upperLimit']
 						print "Congestion ceased"
 						self.reportObject.congestionCeased(self.completeInterfaceList[j]['dpid'])
@@ -172,7 +169,7 @@ class FlowMonitor:
 	def createQueues(self, controllerMessage):
 
 		for i in range(len(self.completeInterfaceList)):
-				if (self.completeInterfaceList[i]['name']) == controllerMessage['Interface']:
+				if (self.completeInterfaceList[i]['name']) == controllerMessage['Interface']:					
 					self.completeInterfaceList[i]['queueList']=self.initQueues(self.completeInterfaceList[i]['name'],self.completeFlowList[i]['flowList'])
 					self.setQueuesBw(self.completeInterfaceList[i]['queueList'], controllerMessage['bwList'])		
 					self.reportObject.queuesReady(self.completeInterfaceList[i],self.completeFlowList[i]['flowList'],self.completeInterfaceList[i]['queueList'])
@@ -322,15 +319,13 @@ class FlowMonitor:
 		for j in range(len(self.completeInterfaceList)):			
 			
 			prevNumFlows = int(interfacesFlowPrevStringList[j]['string'].split('\n')[0].split('=')[1])
-			numFlows=int(interfacesFlowStringList[j]['string'].split('\n')[0].split('=')[1])
-			#numFlows=int(flowString.split('\n')[0].split('=')[1])
+			numFlows=int(interfacesFlowStringList[j]['string'].split('\n')[0].split('=')[1])			
 			flowList=[]
 					
-
 			#this cycle runs over all the flows in the string
 			for i in range(numFlows):
 
-				flowDict=dict.fromkeys(['dl_src','dl_dst','nw_src','nw_dst','packets','length','arrivalRate', 'oldArrivalRate','action','goodBehaved'])
+				flowDict=dict.fromkeys(['nw_src','nw_dst','packets','length','arrivalRate', 'oldArrivalRate','action','goodBehaved'])
 				flowDict['dl_src']=interfacesFlowStringList[j]['string'].split('\n')[1].split('=')[1].split(' ')[i]
 				flowDict['dl_dst']=interfacesFlowStringList[j]['string'].split('\n')[2].split('=')[1].split(' ')[i]
 				flowDict['nw_src']=interfacesFlowStringList[j]['string'].split('\n')[3].split('=')[1].split(' ')[i]
@@ -379,11 +374,12 @@ class FlowMonitor:
 					self.completeFlowList[j]['flowList'][flowIndex] = flowDict								
 	
 				# Finally we should check if according to our last sample, a flow in flowList stopped existing							
-				for k in range(len(self.completeFlowList[j]['flowList'])):
-					if (self.checkIfFlowStopped(interfacesFlowStringList[j]['string'], flowDict)):
-						#splice
-						#self.completeFlowList[j]['flowList'].remove(k)
-						print "Should remove this flow"
+				# For now, we skip this test
+				#for k in range(len(self.completeFlowList[j]['flowList'])):
+				#if (self.checkIfFlowStopped(interfacesFlowStringList[j]['string'], flowDict)):
+				#splice
+				#self.completeFlowList[j]['flowList'].remove(k)
+				#print "Should remove this flow"
 
 				# Flowlist is empty, start filling it
 				if not self.completeFlowList[j]['flowList']:
@@ -396,7 +392,7 @@ class FlowMonitor:
 
 		# If dL_src exists, checks in that flow if dl_dst and other fields coincide, if true: Flow exists				
 		numFlows=int(aFlowString.split('\n')[0].split('=')[1])
-		dl_srcExists = 0
+		#dl_srcExists = 0
 		flowIndex = -1
 
 		for i in range(numFlows):
@@ -411,7 +407,7 @@ class FlowMonitor:
 			return True
 		else:
 			
-			if (aFlowDict['dl_dst'] == aFlowString.split('\n')[2].split('=')[1].split(' ')[flowIndex]) and (aFlowDict['nw_src'] == aFlowString.split('\n')[3].split('=')[1].split(' ')[flowIndex]) and (aFlowDict['dl_src'] == aFlowString.split('\n')[1].split('=')[1].split(' ')[flowIndex]):
+			if (aFlowDict['nw_src'] == aFlowString.split('\n')[3].split('=')[1].split(' ')[flowIndex]):
 				return False
 			else:
 				return True
@@ -420,7 +416,8 @@ class FlowMonitor:
 			#toDo: Comparation with "in values" does not work, we should make either a hash in correct order or a case case comparation
 			for i in range(len(self.completeFlowList[anInterfaceIndex]['flowList'])):
 
-				if (aFlowDict['dl_src'] == self.completeFlowList[anInterfaceIndex]['flowList'][i]['dl_src']) and (aFlowDict['dl_dst'] == self.completeFlowList[anInterfaceIndex]['flowList'][i]['dl_dst']) and (aFlowDict['nw_src'] == self.completeFlowList[anInterfaceIndex]['flowList'][i]['nw_src']) and (aFlowDict['nw_dst'] == self.completeFlowList[anInterfaceIndex]['flowList'][i]['nw_dst']):
+				#if (aFlowDict['dl_src'] == self.completeFlowList[anInterfaceIndex]['flowList'][i]['dl_src']) and (aFlowDict['dl_dst'] == self.completeFlowList[anInterfaceIndex]['flowList'][i]['dl_dst']) and (aFlowDict['nw_src'] == self.completeFlowList[anInterfaceIndex]['flowList'][i]['nw_src']) and (aFlowDict['nw_dst'] == self.completeFlowList[anInterfaceIndex]['flowList'][i]['nw_dst']):
+				if (aFlowDict['nw_src'] == self.completeFlowList[anInterfaceIndex]['flowList'][i]['nw_src']) and (aFlowDict['nw_dst'] == self.completeFlowList[anInterfaceIndex]['flowList'][i]['nw_dst']):
 					return i
 
 			return -1			
