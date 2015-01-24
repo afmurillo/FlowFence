@@ -86,8 +86,8 @@ class ApplicationSwitch:
                         self.samples=10
                         self.period=3
                         self.intervalTime=1.0
-                        self.upperLimit=10
-                        self.lowerLimit=5
+                        self.upperLimit=1000
+                        self.lowerLimit=100
 
                         awk="{print $3;}'"
                         awkString="awk '" + awk
