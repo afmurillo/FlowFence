@@ -1,5 +1,5 @@
 PING 10.1.2.2 (10.1.2.2) 56(84) bytes of data.
-64 bytes from 10.1.2.2: icmp_req=1 ttl=62 time=3.06 ms
+64 bytes from 10.1.2.2: icmp_req=1 ttl=62 time=3.55 ms
 64 bytes from 10.1.2.2: icmp_req=2 ttl=62 time=0.472 ms
 64 bytes from 10.1.2.2: icmp_req=3 ttl=62 time=0.467 ms
 64 bytes from 10.1.2.2: icmp_req=4 ttl=62 time=0.482 ms
