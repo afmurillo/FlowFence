@@ -31,8 +31,8 @@ set(findobj(gca,'Type','text'),'FontSize',20)
 set(txt(1:end),'VerticalAlignment', 'Middle');
 grid on
 
-ylabel(a,'Round Time Trip (ms)')
-title(b, 'Client Node RTT')
+ylabel(a,'Reply Time (ms)')
+title(b, 'Client HTTP Perf Reply Time')
 % meanUdp100=[meanTxUdpPkts_1' meanRoutedUdpPkts_1' meanRxUdpPkts_1'];
 % 
 % figure(2)
