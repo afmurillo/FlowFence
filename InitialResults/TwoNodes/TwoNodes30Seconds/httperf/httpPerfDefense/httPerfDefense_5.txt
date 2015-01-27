@@ -1,0 +1,23 @@
+httperf --hog --timeout=7 --client=0/1 --server=servernode --port=80 --uri=http://servernode/index.html --rate=100 --send-buffer=4096 --recv-buffer=16384 --num-conns=300 --num-calls=1
+Maximum connect burst length: 1
+
+Total: connections 300 requests 146 replies 145 test-duration 9.990 s
+
+Connection rate: 30.0 conn/s (33.3 ms/conn, <=247 concurrent connections)
+Connection time [ms]: min 968.9 avg 2846.3 max 6953.7 median 2358.5 stddev 1416.7
+Connection time [ms]: connect 2793.5
+Connection length [replies/conn]: 1.000
+
+Request rate: 14.6 req/s (68.4 ms/req)
+Request size [B]: 90.0
+
+Reply rate [replies/s]: min 20.2 avg 20.2 max 20.2 stddev 0.0 (1 samples)
+Reply time [ms]: response 37.5 transfer 0.0
+Reply size [B]: header 284.0 content 825.0 footer 0.0 (total 1109.0)
+Reply status: 1xx=0 2xx=145 3xx=0 4xx=0 5xx=0
+
+CPU time [s]: user 0.62 system 9.34 (user 6.2% system 93.5% total 99.7%)
+Net I/O: 17.0 KB/s (0.1*10^6 bps)
+
+Errors: total 155 client-timo 155 socket-timo 0 connrefused 0 connreset 0
+Errors: fd-unavail 0 addrunavail 0 ftab-full 0 other 0

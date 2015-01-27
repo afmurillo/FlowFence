@@ -130,9 +130,11 @@ class handle_message(Thread):
 				remainingBw = remainingBw - flowBwList[i]['bw']
 
 		# Give remmaining bw between good flows
+		extraBw = remainingBw/(len(notificationMessage['Flowlist']) - badFlows)
+
 		for i in range(len(notificationMessage['Flowlist'])):
 			if flowBwDict['goodBehaved'] == True:
-				flowBwList[i]['bw']= remainingBw/(len(notificationMessage['Flowlist']) - badFlows)
+				flowBwList[i]['bw']=  flowBwList[i]['bw'] + extraBw
 				print "Good behaved flow bw: " + str(flowBwDict['bw'])
 				#flowBwList[i]['bw'] = 300000
 		

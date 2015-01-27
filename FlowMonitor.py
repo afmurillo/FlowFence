@@ -21,7 +21,7 @@ class FlowMonitor:
 		self.interfacesList = self.switchProperties.getInterfaces()
 		self.completeInterfaceList=[]
 		self.completeFlowList=[]
-		self.k=1.0 #When k=0.4, actually, k is 0.6 in "CPU" time
+		self.k=0.4 
 		self.measuredK=0.2
 
 		for i in range(len(self.interfacesList)):
@@ -219,32 +219,19 @@ class FlowMonitor:
 			#uuid[i] = queuesString.split(":")[1].split(",")[i].split("=")[1]
 			queuesList[j]['queueuuid']=allQueuesString.split(":")[1].split(",")[j+1].split("=")[1].split('}\n')[0]
 
-		#for j in range(len(flowList)):
-		#k=j+3
-		#awk="{print $" + str(k) + ";}'"
-		#awkString="awk '" + awk
-		#auxString=subprocess.check_output('ovs-vsctl list qos | grep queues | ' + awkString, shell=True).split('=')[1]
-		#queuesList[j]['queueuuid']={'id':j+1,'uuid':auxString[:len(auxString)-2]}
-		#self.queues_uuid.append({'id':i,'uuid':auxString[:len(auxString)-2]})
-
-		#subprocess.check_output('ovs-ofctl add-flow ' + self.interface + 'br in_port=LOCAL,priority=0,actions=enqueue:1:0', shell=True)		
 		print "Queue List: " + str(queuesList)
 		return queuesList
 
 	def setQueuesBw(self, queuesList, flowBwList):
 
 		for i in range(len(queuesList)): 
-			subprocess.check_output("ovs-vsctl set queue " + queuesList[i]['queueuuid'] + " other-config:max-rate="+str(flowBwList[i]['bw']), shell=True)		
-		#queuesString = subprocess.check_output("ovs-vsctl list Queue", shell=True)
-		#print "Queues Ready: " + str(queuesString)
-	
+			subprocess.check_output("ovs-vsctl set queue " + queuesList[i]['queueuuid'] + " other-config:max-rate="+str(flowBwList[i]['bw']), shell=True)			
 
 	def getUuid(self):
 		uuid=subprocess.check_output("ovs-vsctl list qos | grep queues | awk '{print $4;}'", shell=True).split('=')[1].split('}')[0]
 		return uuid
 
         def getRate(self,uuid):
-		#uuid=subprocess.check_output("ovs-vsctl list qos | grep queues | awk '{print $4;}'", shell=True).split('=')[1].split('}')[0]
 		rate=float(subprocess.check_output("ovs-vsctl list queue " + uuid + " | grep other_config | awk '{print $3;}'", shell=True).split('=')[1].split('"')[1])
 		return rate
 	
@@ -305,10 +292,12 @@ class FlowMonitor:
 		# Dict estructure: dl_src, dl_dst, nw_src, nw_dst, length(bytes), action			
 
 		# We get samples from all the flows in all interfaces
-		time1=time()
+		
 		#interfacesFlowString=dict.fromkeys(['interfaceName','string'])
 		interfacesFlowPrevStringList=[]
 		interfacesFlowStringList=[]		
+
+		time1=time()
 
 		for i in range(len(self.completeInterfaceList)):			
 			interfacesFlowString=dict.fromkeys(['interfaceName','string'])
@@ -318,8 +307,7 @@ class FlowMonitor:
 			
 		# toDo: Check a better way of doing this, what happens with flows that die?		
 		sleep(self.k)
-		self.measuredK = time() - time1
-
+		
 		for i in range(len(self.completeInterfaceList)):
 
 			interfacesFlowString=dict.fromkeys(['interfaceName','string'])
@@ -328,6 +316,8 @@ class FlowMonitor:
 			interfacesFlowString['string']=subprocess.check_output('./flows.sh ' + interfacesFlowString['interfaceName'], shell=True)
 			interfacesFlowStringList.append(interfacesFlowString)
 
+		self.measuredK = time() - time1
+		print "Measured K: " + str(self.measuredK)
 
 		for j in range(len(self.completeInterfaceList)):			
 			
@@ -350,26 +340,31 @@ class FlowMonitor:
 				flowDict['nw_src']=interfacesFlowStringList[j]['string'].split('\n')[3].split('=')[1].split(' ')[i]
 				flowDict['action']=interfacesFlowStringList[j]['string'].split('\n')[7].split('=')[1].split(' ')[i]
 
+				# Packets
 				aux1 = interfacesFlowStringList[j]['string'].split('\n')[5].split('=')[1].split(' ')[i]
 
+				# Some flows stopped
 				if (numFlows <= prevNumFlows):
 					aux2 = interfacesFlowPrevStringList[j]['string'].split('\n')[5].split('=')[1].split(' ')[i]
 				else:	
 					aux2 = 0
 
-				#check if this is still necessary
+				# Check if this is still necessary
 				if (aux1 is not None) and (aux2 is not None):
 					flowDict['packets']=int(aux1) - int(aux2)
 				else:
 					flowDict['packets']=0
 				
+				# Bytes
 				aux1 = interfacesFlowStringList[j]['string'].split('\n')[6].split('=')[1].split(' ')[i]
 
+				# Bytes
 				if (numFlows <= prevNumFlows):					
 					aux2 = interfacesFlowPrevStringList[j]['string'].split('\n')[6].split('=')[1].split(' ')[i]
 				else:	
 					aux2 = 0
 
+				# Number of bytes sent by the flow
 				if (aux1 is not None) and (aux2 is not None):
 					flowDict['length']=int(aux1) - int(aux2)
 				else:
@@ -377,6 +372,9 @@ class FlowMonitor:
 
 				# Here we should validate if the flow exists, if not, append; if yes overwrite values and update Ri
 				flowIndex = self.checkIfFlowExists(j, flowDict)
+
+				print "Flow Bytes: " + str(flowDict['length'])
+				print "Simeple Flow Rate: " + str((flowDict['length']/self.measuredK))
 
 				#Flow does not exist
 				if flowIndex == -1:
@@ -406,6 +404,8 @@ class FlowMonitor:
 					flowDict['arrivalRate'] = self.calculateArrivalRate(flowDict['packets'], flowDict['length'], self.measuredK, 0.0 )
 					self.completeFlowList[j]['flowList'].append(flowDict)
 
+				print "Flow Arrival: " + str(flowDict['arrivalRate'] )		
+			
 	def checkIfFlowStopped(self, aFlowString, aFlowDict):
 
 		# If dL_src exists, checks in that flow if dl_dst and other fields coincide, if true: Flow exists				

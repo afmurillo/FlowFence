@@ -1,0 +1,35 @@
+PING 10.1.2.2 (10.1.2.2) 56(84) bytes of data.
+64 bytes from 10.1.2.2: icmp_req=1 ttl=62 time=67.1 ms
+64 bytes from 10.1.2.2: icmp_req=2 ttl=62 time=36.5 ms
+64 bytes from 10.1.2.2: icmp_req=3 ttl=62 time=0.852 ms
+64 bytes from 10.1.2.2: icmp_req=4 ttl=62 time=28.1 ms
+64 bytes from 10.1.2.2: icmp_req=5 ttl=62 time=8.66 ms
+64 bytes from 10.1.2.2: icmp_req=6 ttl=62 time=19.6 ms
+64 bytes from 10.1.2.2: icmp_req=7 ttl=62 time=4.57 ms
+64 bytes from 10.1.2.2: icmp_req=8 ttl=62 time=89.6 ms
+64 bytes from 10.1.2.2: icmp_req=9 ttl=62 time=54.2 ms
+64 bytes from 10.1.2.2: icmp_req=10 ttl=62 time=39.9 ms
+64 bytes from 10.1.2.2: icmp_req=11 ttl=62 time=59.6 ms
+64 bytes from 10.1.2.2: icmp_req=12 ttl=62 time=43.2 ms
+64 bytes from 10.1.2.2: icmp_req=13 ttl=62 time=8.75 ms
+64 bytes from 10.1.2.2: icmp_req=14 ttl=62 time=34.1 ms
+64 bytes from 10.1.2.2: icmp_req=15 ttl=62 time=2.45 ms
+64 bytes from 10.1.2.2: icmp_req=16 ttl=62 time=1.85 ms
+64 bytes from 10.1.2.2: icmp_req=17 ttl=62 time=76.9 ms
+64 bytes from 10.1.2.2: icmp_req=18 ttl=62 time=70.9 ms
+64 bytes from 10.1.2.2: icmp_req=19 ttl=62 time=60.2 ms
+64 bytes from 10.1.2.2: icmp_req=20 ttl=62 time=23.0 ms
+64 bytes from 10.1.2.2: icmp_req=21 ttl=62 time=71.3 ms
+64 bytes from 10.1.2.2: icmp_req=22 ttl=62 time=25.9 ms
+64 bytes from 10.1.2.2: icmp_req=23 ttl=62 time=20.4 ms
+64 bytes from 10.1.2.2: icmp_req=24 ttl=62 time=69.8 ms
+64 bytes from 10.1.2.2: icmp_req=25 ttl=62 time=20.9 ms
+64 bytes from 10.1.2.2: icmp_req=26 ttl=62 time=89.5 ms
+64 bytes from 10.1.2.2: icmp_req=27 ttl=62 time=16.6 ms
+64 bytes from 10.1.2.2: icmp_req=28 ttl=62 time=18.5 ms
+64 bytes from 10.1.2.2: icmp_req=29 ttl=62 time=67.8 ms
+64 bytes from 10.1.2.2: icmp_req=30 ttl=62 time=18.8 ms
+
+--- 10.1.2.2 ping statistics ---
+30 packets transmitted, 30 received, 0% packet loss, time 29041ms
+rtt min/avg/max/mdev = 0.852/38.363/89.613/27.356 ms
