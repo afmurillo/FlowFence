@@ -1,0 +1,181 @@
+interfaces List: ['"eth0br"', '']
+[{'capacity': 100000000, 'name': '"eth0br"', 'dpid': '"000000b6789f7bd2"'}]
+10.1.4.1
+12345
+interfaces List: ['"eth0br"', '']
+Init Finished
+interfaces List: ['"eth0br"', '']
+[{'capacity': 100000000, 'name': '"eth0br"', 'dpid': '"000000b6789f7bd2"'}]
+10.1.4.1
+12345
+Measured K: 0.504387140274
+Measured K: 0.497503042221
+Measured K: 0.516433954239
+Measured K: 0.501223087311
+Measured K: 0.515413999557
+Measured K: 0.498018980026
+Measured K: 0.504001140594
+Measured K: 0.49679517746
+Measured K: 0.497778892517
+Measured K: 0.497711896896
+Measured K: 0.498768091202
+Measured K: 0.502708911896
+Measured K: 0.497341871262
+Measured K: 0.498036146164
+Measured K: 0.498332023621
+Measured K: 0.496193885803
+Measured K: 0.495635986328
+Measured K: 0.496119976044
+Measured K: 0.496236801147
+Measured K: 0.495849132538
+update, ema: 0.0
+current threshold: 1000
+Measured K: 0.497198104858
+Measured K: 0.497950792313
+Measured K: 0.496870994568
+Measured K: 0.4974629879
+Measured K: 0.496450901031
+Measured K: 0.498286962509
+Measured K: 0.497745990753
+Measured K: 0.498840093613
+Measured K: 0.498471975327
+Measured K: 0.497847080231
+Measured K: 0.496662855148
+Measured K: 0.497806072235
+Measured K: 0.496977090836
+Measured K: 0.497208833694
+Measured K: 0.497750997543
+Measured K: 0.497349023819
+Measured K: 0.496273994446
+Measured K: 0.497214078903
+Measured K: 0.49759888649
+Measured K: 0.497616052628
+update, ema: 0.0
+current threshold: 1000
+Measured K: 0.496698856354
+Measured K: 0.498188018799
+Measured K: 0.4963722229
+Measured K: 0.497772932053
+Measured K: 0.512687921524
+Measured K: 0.497826099396
+Measured K: 0.512750148773
+Measured K: 0.497539043427
+Measured K: 0.503134012222
+Measured K: 0.506644964218
+Measured K: 0.501533985138
+Measured K: 0.524290084839
+Measured K: 0.504697084427
+Measured K: 0.515035152435
+Measured K: 0.497071027756
+Measured K: 0.511084794998
+Measured K: 0.49897313118
+Measured K: 0.497661828995
+Measured K: 0.496875047684
+Measured K: 0.49621796608
+Measured K: 0.496938943863
+update, ema: 0.0
+current threshold: 1000
+Measured K: 0.496943950653
+Measured K: 0.497513055801
+Measured K: 0.497418880463
+Measured K: 0.497055053711
+Measured K: 0.497873067856
+Measured K: 0.498342037201
+Measured K: 0.497057199478
+Measured K: 0.497261047363
+Measured K: 0.496029853821
+Measured K: 0.497377872467
+Measured K: 0.497156858444
+Measured K: 0.497154951096
+Measured K: 0.497282981873
+Measured K: 0.498719930649
+Measured K: 0.499267101288
+Measured K: 0.502318143845
+Measured K: 0.502602100372
+Measured K: 0.497228860855
+Measured K: 0.497934103012
+Measured K: 0.497301101685
+update, ema: 0.0
+current threshold: 1000
+Measured K: 0.498271942139
+Measured K: 0.497225999832
+Measured K: 0.498391151428
+Measured K: 0.501224994659
+Measured K: 0.500415086746
+Flow Bytes: 98
+Simeple Flow Rate: 195.837420964
+Flow Arrival: 139.787254845
+Measured K: 0.500400066376
+Flow Bytes: 0
+Simeple Flow Rate: 0.0
+Flow Arrival: 0.0
+Measured K: 0.504075050354
+Flow Bytes: 98
+Simeple Flow Rate: 194.415494144
+Flow Arrival: 139.279102401
+Measured K: 0.500608921051
+Flow Bytes: 0
+Simeple Flow Rate: 0.0
+Flow Arrival: 0.0
+Measured K: 0.499862194061
+Flow Bytes: 98
+Simeple Flow Rate: 196.054034821
+Flow Arrival: 139.864258523
+Measured K: 0.500200033188
+Flow Bytes: 0
+Simeple Flow Rate: 0.0
+Flow Arrival: 0.0
+Measured K: 0.501085996628
+Flow Bytes: 98
+Simeple Flow Rate: 195.575211959
+Flow Arrival: 139.693899021
+Measured K: 0.50096487999
+Flow Bytes: 0
+Simeple Flow Rate: 0.0
+Flow Arrival: 0.0
+Measured K: 0.501117944717
+Flow Bytes: 98
+Simeple Flow Rate: 195.562743328
+Flow Arrival: 139.689455818
+Measured K: 0.501940011978
+Flow Bytes: 0
+Simeple Flow Rate: 0.0
+Flow Arrival: 0.0
+Measured K: 0.50070810318
+Flow Bytes: 98
+Simeple Flow Rate: 195.722816103
+Flow Arrival: 139.746470766
+Measured K: 0.501948833466
+Flow Bytes: 0
+Simeple Flow Rate: 0.0
+Flow Arrival: 0.0
+Measured K: 0.500575065613
+Flow Bytes: 98
+Simeple Flow Rate: 195.774833251
+Flow Arrival: 139.764985674
+Measured K: 0.500684022903
+Flow Bytes: 0
+Simeple Flow Rate: 0.0
+Flow Arrival: 0.0
+Measured K: 0.501953125
+Flow Bytes: 98
+Simeple Flow Rate: 195.237354086
+Flow Arrival: 139.573377024
+Measured K: 0.513813972473
+Flow Bytes: 0
+Simeple Flow Rate: 0.0
+Flow Arrival: 0.0
+update, ema: 98.05376
+current threshold: 1000
+Measured K: 0.504019021988
+Flow Bytes: 98
+Simeple Flow Rate: 194.437105992
+Flow Arrival: 139.286860707
+Measured K: 0.503003120422
+Flow Bytes: 0
+Simeple Flow Rate: 0.0
+Flow Arrival: 0.0
+Measured K: 0.512250185013
+Flow Bytes: 98
+Simeple Flow Rate: 191.312766432
+Flow Arrival: 138.153940565
