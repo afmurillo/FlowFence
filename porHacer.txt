@@ -1,0 +1,10 @@
+En el controlador:
+
+- Revisar cálculo de ema, oldArrivalRate en qué reporta?
+		Probar con flooder 1 agente, generando una banda fija
+
+- Revisar repartición de banda libre a good behaveds
+  CHECKED! 
+	
+- Iniciar las pruebas con Flooder en modo rampa, no congestionar hasta que httpPerf no inice
+
