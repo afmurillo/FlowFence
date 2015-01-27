@@ -147,7 +147,7 @@ class FlowMonitor:
 					if (self.completeInterfaceList[j]['isCongested'] == 0) and (self.completeInterfaceList[j]['currentEma'] >= self.completeInterfaceList[j]['threshold']):
 						print "Congested"
 						#self.completeInterfaceList[j]['isCongested']=1
-						self.updatingFlows = 0
+						#self.updatingFlows = 0
 						self.completeInterfaceList[j]['threshold']=self.completeInterfaceList[j]['lowerLimit']
 						
 						if len(self.completeFlowList[j]['flowList']) > 0:
