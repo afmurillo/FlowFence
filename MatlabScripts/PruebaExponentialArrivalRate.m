@@ -1,0 +1,30 @@
+clc 
+clear all
+close all
+K=0.4;
+Ti=linspace(0.1,5);
+simpleArrival=100;
+
+exponentialArrival=(1-exp(-Ti/K))*simpleArrival;
+
+figure(1)
+plot(Ti,exponentialArrival)
+grid on
+
+xlabel('Sample period (s)')
+ylabel('Estimated Bw (bytes)')
+title('Bw consumption estimation')
+
+% Recursive calculation
+%oldArrival= (100)*rand(1,1)
+oldArrival= 1
+recursiveExponentialArrival=(1-exp(-Ti/K))*simpleArrival + exp(-Ti/K*oldArrival);
+oldArrival = recursiveExponentialArrival;
+
+figure(2)
+plot(Ti,recursiveExponentialArrival)
+grid on
+
+xlabel('Sample period (s)')
+ylabel('Recurvise estimated Bw (bytes)')
+title('Recursive BW consumption estimation')

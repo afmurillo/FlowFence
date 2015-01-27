@@ -1,0 +1,5 @@
+K=1;
+Ti=linspace(0.1,5);
+simpleArrival=100;
+
+exponentialArrival=(1-exp(-Ti/K))*simpleArrival
