@@ -1,0 +1,112 @@
+POX 0.2.0 (carp) / Copyright 2011-2013 James McCauley, et al.
+FlowFence launched
+Received connection from switch
+Binding to listen for switch messages
+switch dpid 783707765714
+Hex dpid: 00-b6-78-9f-7b-d2
+switch dpid 317033881980
+Hex dpid: 00-49-d0-b1-21-7c
+switch dpid 317034996094
+Hex dpid: 00-49-d0-c2-21-7e
+switch dpid 779328912337
+Hex dpid: 00-b5-73-9f-7b-d1
+Message from ('10.1.4.2', 57259)
+[<pox.openflow.of_01.Connection object at 0x7fdde6064a50>, <pox.openflow.of_01.Connection object at 0x7fdde6064ad0>, <pox.openflow.of_01.Connection object at 0x7fdde60922d0>, <pox.openflow.of_01.Connection object at 0x7fdde6ec10d0>]
+message from 10.1.4.2
+Message received {'Interface': {'capacity': 100000000, 'name': '"eth0br"', 'dpid': '"000000b6789f7bd2"'}, 'Notification': 'Congestion'}
+Received dpid: 00b6789f7bd2
+dpid parameter: 00b6789f7bd2
+Connection dpid: 783707765714
+Real dpidStr: 00b6789f7bd2
+Flow stats requets sent to: [00-b6-78-9f-7b-d2 1]
+Connection dpid: 317033881980
+Real dpidStr: 0049d0b1217c
+Connection dpid: 317034996094
+Real dpidStr: 0049d0c2217e
+Connection dpid: 779328912337
+Real dpidStr: 00b5739f7bd1
+Sending address 10.1.4.2
+Received flow <pox.openflow.libopenflow_01.ofp_flow_stats object at 0x7fdde6092410>
+Creating dict for flow
+Received flow <pox.openflow.libopenflow_01.ofp_flow_stats object at 0x7fdde6092b10>
+Creating dict for flow
+Received flow <pox.openflow.libopenflow_01.ofp_flow_stats object at 0x7fdde6092ed0>
+Received flow <pox.openflow.libopenflow_01.ofp_flow_stats object at 0x7fdde60929d0>
+Creating dict for flow
+Received flow <pox.openflow.libopenflow_01.ofp_flow_stats object at 0x7fdde6092450>
+Creating dict for flow
+Received flow <pox.openflow.libopenflow_01.ofp_flow_stats object at 0x7fdde60927d0>
+Creating dict for flow
+Received flow <pox.openflow.libopenflow_01.ofp_flow_stats object at 0x7fdde6092810>
+Received flow <pox.openflow.libopenflow_01.ofp_flow_stats object at 0x7fdde6092ad0>
+Creating dict for flow
+Received flow <pox.openflow.libopenflow_01.ofp_flow_stats object at 0x7fdde6083710>
+Creating dict for flow
+Received flow <pox.openflow.libopenflow_01.ofp_flow_stats object at 0x7fdde6083890>
+Received flow <pox.openflow.libopenflow_01.ofp_flow_stats object at 0x7fdde60830d0>
+Creating dict for flow
+Received flow <pox.openflow.libopenflow_01.ofp_flow_stats object at 0x7fdde6083e90>
+Creating dict for flow
+Received flow <pox.openflow.libopenflow_01.ofp_flow_stats object at 0x7fdde6083490>
+Creating dict for flow
+Received flow <pox.openflow.libopenflow_01.ofp_flow_stats object at 0x7fdde6083d90>
+Creating dict for flow
+Received flow <pox.openflow.libopenflow_01.ofp_flow_stats object at 0x7fdde6083ed0>
+Creating dict for flow
+Received flow <pox.openflow.libopenflow_01.ofp_flow_stats object at 0x7fdde60832d0>
+Received flow <pox.openflow.libopenflow_01.ofp_flow_stats object at 0x7fdde6064f90>
+Creating dict for flow
+Received flow <pox.openflow.libopenflow_01.ofp_flow_stats object at 0x7fdde6097910>
+Creating dict for flow
+Received flow <pox.openflow.libopenflow_01.ofp_flow_stats object at 0x7fdde6097490>
+Creating dict for flow
+Received flow <pox.openflow.libopenflow_01.ofp_flow_stats object at 0x7fdde6097650>
+Received flow <pox.openflow.libopenflow_01.ofp_flow_stats object at 0x7fdde6ec11d0>
+Creating dict for flow
+Received flow <pox.openflow.libopenflow_01.ofp_flow_stats object at 0x7fdde6ec1210>
+Creating dict for flow
+Received flow <pox.openflow.libopenflow_01.ofp_flow_stats object at 0x7fdde6ec1050>
+Creating dict for flow
+Flow list: [{'reportedBw': 52237198, 'nw_dst': '10.1.2.2', 'bw': None, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.1'}, {'reportedBw': 51428104, 'nw_dst': '10.1.2.2', 'bw': None, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.1'}, {'reportedBw': 51149878, 'nw_dst': '10.1.2.2', 'bw': None, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.4'}, {'reportedBw': 51318306, 'nw_dst': '10.1.2.2', 'bw': None, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.2'}, {'reportedBw': 51201046, 'nw_dst': '10.1.2.2', 'bw': None, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.4'}, {'reportedBw': 51144548, 'nw_dst': '10.1.2.2', 'bw': None, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.1'}, {'reportedBw': 51532572, 'nw_dst': '10.1.2.2', 'bw': None, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.1'}, {'reportedBw': 51440896, 'nw_dst': '10.1.2.2', 'bw': None, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.2'}, {'reportedBw': 51052872, 'nw_dst': '10.1.2.2', 'bw': None, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.1'}, {'reportedBw': 51140284, 'nw_dst': '10.1.2.2', 'bw': None, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.4'}, {'reportedBw': 51681812, 'nw_dst': '10.1.2.2', 'bw': None, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.2'}, {'reportedBw': 51393992, 'nw_dst': '10.1.2.2', 'bw': None, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.2'}, {'reportedBw': 51239422, 'nw_dst': '10.1.2.2', 'bw': None, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.2'}, {'reportedBw': 51488866, 'nw_dst': '10.1.2.2', 'bw': None, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.4'}, {'reportedBw': 51706330, 'nw_dst': '10.1.2.2', 'bw': None, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.2'}, {'reportedBw': 51381200, 'nw_dst': '10.1.2.2', 'bw': None, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.1'}, {'reportedBw': 51517648, 'nw_dst': '10.1.2.2', 'bw': None, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.4'}, {'reportedBw': 51955774, 'nw_dst': '10.1.2.2', 'bw': None, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.4'}]
+0
+Bad behaved flow bw -51737198.0
+1
+Bad behaved flow bw -50928104.0
+2
+Bad behaved flow bw -50649878.0
+3
+Bad behaved flow bw -50818306.0
+4
+Bad behaved flow bw -50701046.0
+5
+Bad behaved flow bw -50644548.0
+6
+Bad behaved flow bw -51032572.0
+7
+Bad behaved flow bw -50940896.0
+8
+Bad behaved flow bw -50552872.0
+9
+Bad behaved flow bw -50640284.0
+10
+Bad behaved flow bw -51181812.0
+11
+Bad behaved flow bw -50893992.0
+12
+Bad behaved flow bw -50739422.0
+13
+Bad behaved flow bw -50988866.0
+14
+Bad behaved flow bw -51206330.0
+15
+Bad behaved flow bw -50881200.0
+16
+Bad behaved flow bw -51017648.0
+17
+Bad behaved flow bw -51455774.0
+Calculated Bandwidth: [{'reportedBw': 52237198, 'nw_dst': '10.1.2.2', 'bw': -51737198.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.1'}, {'reportedBw': 51428104, 'nw_dst': '10.1.2.2', 'bw': -50928104.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.1'}, {'reportedBw': 51149878, 'nw_dst': '10.1.2.2', 'bw': -50649878.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.4'}, {'reportedBw': 51318306, 'nw_dst': '10.1.2.2', 'bw': -50818306.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.2'}, {'reportedBw': 51201046, 'nw_dst': '10.1.2.2', 'bw': -50701046.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.4'}, {'reportedBw': 51144548, 'nw_dst': '10.1.2.2', 'bw': -50644548.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.1'}, {'reportedBw': 51532572, 'nw_dst': '10.1.2.2', 'bw': -51032572.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.1'}, {'reportedBw': 51440896, 'nw_dst': '10.1.2.2', 'bw': -50940896.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.2'}, {'reportedBw': 51052872, 'nw_dst': '10.1.2.2', 'bw': -50552872.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.1'}, {'reportedBw': 51140284, 'nw_dst': '10.1.2.2', 'bw': -50640284.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.4'}, {'reportedBw': 51681812, 'nw_dst': '10.1.2.2', 'bw': -51181812.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.2'}, {'reportedBw': 51393992, 'nw_dst': '10.1.2.2', 'bw': -50893992.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.2'}, {'reportedBw': 51239422, 'nw_dst': '10.1.2.2', 'bw': -50739422.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.2'}, {'reportedBw': 51488866, 'nw_dst': '10.1.2.2', 'bw': -50988866.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.4'}, {'reportedBw': 51706330, 'nw_dst': '10.1.2.2', 'bw': -51206330.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.2'}, {'reportedBw': 51381200, 'nw_dst': '10.1.2.2', 'bw': -50881200.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.1'}, {'reportedBw': 51517648, 'nw_dst': '10.1.2.2', 'bw': -51017648.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.4'}, {'reportedBw': 51955774, 'nw_dst': '10.1.2.2', 'bw': -51455774.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.4'}]
+Response Message sent: "{'bwList': [{'reportedBw': 52237198, 'nw_dst': '10.1.2.2', 'bw': -51737198.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.1'}, {'reportedBw': 51428104, 'nw_dst': '10.1.2.2', 'bw': -50928104.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.1'}, {'reportedBw': 51149878, 'nw_dst': '10.1.2.2', 'bw': -50649878.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.4'}, {'reportedBw': 51318306, 'nw_dst': '10.1.2.2', 'bw': -50818306.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.2'}, {'reportedBw': 51201046, 'nw_dst': '10.1.2.2', 'bw': -50701046.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.4'}, {'reportedBw': 51144548, 'nw_dst': '10.1.2.2', 'bw': -50644548.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.1'}, {'reportedBw': 51532572, 'nw_dst': '10.1.2.2', 'bw': -51032572.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.1'}, {'reportedBw': 51440896, 'nw_dst': '10.1.2.2', 'bw': -50940896.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.2'}, {'reportedBw': 51052872, 'nw_dst': '10.1.2.2', 'bw': -50552872.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.1'}, {'reportedBw': 51140284, 'nw_dst': '10.1.2.2', 'bw': -50640284.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.4'}, {'reportedBw': 51681812, 'nw_dst': '10.1.2.2', 'bw': -51181812.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.2'}, {'reportedBw': 51393992, 'nw_dst': '10.1.2.2', 'bw': -50893992.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.2'}, {'reportedBw': 51239422, 'nw_dst': '10.1.2.2', 'bw': -50739422.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.2'}, {'reportedBw': 51488866, 'nw_dst': '10.1.2.2', 'bw': -50988866.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.4'}, {'reportedBw': 51706330, 'nw_dst': '10.1.2.2', 'bw': -51206330.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.2'}, {'reportedBw': 51381200, 'nw_dst': '10.1.2.2', 'bw': -50881200.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.1'}, {'reportedBw': 51517648, 'nw_dst': '10.1.2.2', 'bw': -51017648.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.4'}, {'reportedBw': 51955774, 'nw_dst': '10.1.2.2', 'bw': -51455774.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.4'}], 'Response': 'Decrement', 'dpid': 783707765714}"
+Message from ('10.1.4.2', 57260)
+[<pox.openflow.of_01.Connection object at 0x7fdde6064a50>, <pox.openflow.of_01.Connection object at 0x7fdde6064ad0>, <pox.openflow.of_01.Connection object at 0x7fdde60922d0>, <pox.openflow.of_01.Connection object at 0x7fdde6ec10d0>]
+message from 10.1.4.2
+An error ocurred processing the incoming message
