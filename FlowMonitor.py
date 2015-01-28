@@ -114,6 +114,7 @@ class FlowMonitor:
 	def monitor(self):
 
 		while self.monitoring == 1:
+
 			try:
 				self.updateWindow()
 							
@@ -142,12 +143,12 @@ class FlowMonitor:
 
 		for i in range(len(self.completeInterfaceList)):
 				if (self.completeInterfaceList[i]['name']) == controllerMessage['Interface']:					
-					self.completeInterfaceList[i]['queueList']=self.initQueues(self.completeInterfaceList[i]['name'],self.completeFlowList[i]['flowList'], controllerMessage['bwList'])
+					self.completeInterfaceList[i]['queueList']=self.initQueues(self.completeInterfaceList[i]['name'],controllerMessage['bwList'])
 					self.setQueuesBw(self.completeInterfaceList[i]['queueList'], controllerMessage['bwList'])		
-					self.reportObject.queuesReady(self.completeInterfaceList[i],self.completeFlowList[i]['flowList'],self.completeInterfaceList[i]['queueList'])
+					self.reportObject.queuesReady(self.completeInterfaceList[i],controllerMessage['bwList'],self.completeInterfaceList[i]['queueList'])
 					break
 
-	def initQueues(self, interfaceName, flowList, bwList):
+	def initQueues(self, interfaceName, bwList):
 		
 		print "Initing queues for: " + str(interfaceName)
 		queuesList=[]
@@ -157,8 +158,8 @@ class FlowMonitor:
 		for j in range(len(flowList)):
 			aQueueDict=dict.fromkeys(['queueId','queueuuid','nw_src','nw_dst','bw'])
 			aQueueDict['queueId']=j+1
-			aQueueDict['nw_src']=flowList[j]['nw_src']
-			aQueueDict['nw_dst']=flowList[j]['nw_dst']
+			aQueueDict['nw_src']=bwList[j]['nw_src']
+			aQueueDict['nw_dst']=bwList[j]['nw_dst']
 			aQueueDict['bw'] = bwList[j]['bw']
 			aQueue= ',' + str(aQueueDict['queueId']) +'=@queue' + str(aQueueDict['queueId'])
 			queuesString=queuesString+aQueue

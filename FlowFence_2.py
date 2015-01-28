@@ -122,12 +122,11 @@ class handle_message(Thread):
 		print 'Received dpid: ' + str(dpid)
 
 		print "message to be used for redirection" + str(message)
-		for i in range(len(message['Flowlist'])):
+		for i in range(len(message['bwList'])):
 
 			# We only want to redirect outgoing flows
-			if message['Flowlist'][i]['action'] != 'LOCAL':		
-				#my_match = of.ofp_match(nw_src=message['Flowlist'][i]['nw_src'],nw_dst=message['Flowlist'][i]['nw_dst'])
-				my_match = of.ofp_match(dl_type = 0x800,nw_src=message['Flowlist'][i]['nw_src'],nw_dst=message['Flowlist'][i]['nw_dst'])
+			if message['bwList'][i]['action'] != 'OFPP_LOCAL':		
+				my_match = of.ofp_match(dl_type = 0x800,nw_src=message['bwList'][i]['nw_src'],nw_dst=message['bwList'][i]['nw_dst'])
 
 				print "Flow Match: " + str(my_match)
 				msg = of.ofp_flow_mod()
@@ -136,7 +135,7 @@ class handle_message(Thread):
 		
 				# There is a bug here, the error it shows reads "can't convert argument to int" when try to send the message
 				# If the actions are omitted (aka we order to drop the packets with match, we get no error)
-				msg.actions.append(of.ofp_action_enqueue(port=int(message['Flowlist'][i]['action'].split(':')[1]), queue_id=int(message['QueueList'][i]['queueId'])))
+				msg.actions.append(of.ofp_action_enqueue(port=int(message['bwList'][i]['action'].split(':')[1]), queue_id=int(message['QueueList'][i]['queueId'])))
 				
 				print "Flow mod message: " + str(msg)
 
@@ -194,11 +193,16 @@ def _handle_flowstats_received (event):
 	responsePort = 23456
 
 	for f in event.stats:
-		flowBwDict=dict.fromkeys(['nw_src','nw_dst','reportedBw','goodBehaved','bw'])
+
+		if f.nw_dst != '10.1.2.2'
+			continue
+
+		flowBwDict=dict.fromkeys(['nw_src','nw_dst','reportedBw','goodBehaved','bw', 'action'])
 		flowBwDict['nw_src'] = f.nw_src
 		flowBwDict['nw_dst'] = f.nw_dst
 		flowBwDict['reportedBw'] = f.byte_count
-		flowBwDict['goodBehaved'] = classifyFlows(capacity, f.byte_count,numFlows)
+		flowBwDict['goodBehaved'] = classifyFlows(capacity, f.byte_count,numFlows)]
+		flowBwDict['action'] = f.actions.[0].port
 
 		if flowBwDict['goodBehaved'] == True:	
 			flowBwDict['bw']=  f.byte_count
@@ -224,8 +228,7 @@ def _handle_flowstats_received (event):
 	for i in range(numFlows):
 		if flowBwList[i]['goodBehaved'] == True:
 			flowBwList[i]['bw']=  flowBwList[i]['bw'] + extraBw
-			print "Good behaved flow bw: " + str(flowBwList[i]['bw'])
-			#flowBwList[i]['bw'] = 300000
+			print "Good behaved flow bw: " + str(flowBwList[i]['bw'])		
 
 	print "Calculated Bandwidth: " + str(flowBwList)	
 
@@ -265,23 +268,6 @@ def classifyFlows(self, capacity, estimatedBw, numFlows):
 
 def assignBwToBadBehaved(self, avaliableBw, numBadFlows, capacity, numTotalFlows, flowRate, alfa):		
 	return avaliableBw/numBadFlows - (1 - math.exp(-(flowRate-(capacity/numTotalFlows))))*alfa*flowRate
-
-
-
-#	stats = flow_stats_to_list(event.stats)
-#	print "FlowStatsReceived from " + str(dpidToStr(event.connection.dpid)) + "Stats: " + str(stats)
-#	#log.debug("FlowStatsReceived from %s: %s",dpidToStr(event.connection.dpid), stats)
-
-#	sbytes = 0
-#	sflows = 0
-#	spackets = 0
-
-#	for f in event.stats:
-#			sbytes += f.byte_count
-#			spackets += f.packet_count
-#			sflows += 1
-#			#'log.info("Web traffic from %s: %s bytes (%s packets) over %s flows",dpidToStr(event.connection.dpid), web_bytes, web_packet, web_flows)
-#			print "Traffic of switch: " + str(dpidToStr(event.connection.dpid)) + "Bytes: " + str(sbytes) + "Packets: " + str(spackets) + "Flows: " + str(sflows)
 	
 def launch ():
 	#core.openflow.addListenerByName("FlowStatsReceived", listarFluxosIp)
