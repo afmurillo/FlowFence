@@ -51,7 +51,7 @@ class handle_message(Thread):
         def run(self):
                 self.reportObject.messageFromController(self.received,self.srcAddress)
 
-class ApplicationSwitch:
+class ApplicationSwitch_2:
 
 		"""
 		Main class that runs in OpenFlow switches for FlowFence
@@ -175,7 +175,7 @@ class ApplicationSwitch:
 
 if __name__=="__main__":
 
-	code=ApplicationSwitch()
+	code=ApplicationSwitch_2()
 
         code.listenSocket = SwitchSocket(code, code.listenPort)
         code.listenSocket.setDaemon(True)
