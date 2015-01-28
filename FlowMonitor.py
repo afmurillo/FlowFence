@@ -12,17 +12,13 @@ from SwitchProperties import *
 class FlowMonitor:               
 
         def __init__(self, samples=10, period=3, intervalTime=1.0, upperLimit=10*0.8, lowerLimit=10*0.6):
-
-		# SOME DATA LIKE INTERFACES NAME AND ETC, SHOULD BE OBTAINED USING SWITCH CHARACTERISTICS!!
+	
 		self.nSamples=samples
 		self.period=period
 		self.intervalTime=intervalTime
 		self.switchProperties=SwitchProperties()
 		self.interfacesList = self.switchProperties.getInterfaces()
-		self.completeInterfaceList=[]
-		self.completeFlowList=[]
-		self.k=0.4 
-		self.measuredK=0.2
+		self.completeInterfaceList=[]		
 
 		for i in range(len(self.interfacesList)):
 			completeInterfaceDict = dict.fromkeys(['name','dpid','capacity', 'lowerLimit', 'upperLimit', 'threshold', 'samples','useAverages','monitoring','isCongested','queueList'])
@@ -40,11 +36,6 @@ class FlowMonitor:
 			completeInterfaceDict['isCongested'] = 0
 			completeInterfaceDict['queueList'] = []					
 			self.completeInterfaceList.append(completeInterfaceDict)
-	
-			flowIntDict = dict.fromkeys(['interfaceName'],['flowList'])
-			flowIntDict['interfaceName']= self.interfacesList[i]['name']
-			flowIntDict['flowList']=[]					
-			self.completeFlowList.append(flowIntDict)
 
 			for i in range(len(self.completeInterfaceList)):
 				self.completeInterfaceList[i]['useAverages'] = deque( maxlen=self.nSamples )
@@ -83,15 +74,6 @@ class FlowMonitor:
                     self.completeInterfaceList[j]['currentEma'] = self.ema(bar, self.completeInterfaceList[j]['useAverages'], self.period, self.completeInterfaceList[j]['prevEma'], smoothing=None)
                     self.completeInterfaceList[j]['prevEma'] = self.completeInterfaceList[j]['currentEma']
 
-	def updateFlows(self):
-
-		while self.updatingFlows == 1:
-			try:							
-				self.getFlows()
-			except KeyboardInterrupt:
-				self.monitoring=0
-				self.updatingFlows=0
-				break
 
 	def updateWindow(self):
 
@@ -117,14 +99,10 @@ class FlowMonitor:
         def startMonitoring(self):
 
 		self.reportObject = ApplicationSwitch()
-		self.monitoring=1
-		self.updatingFlows=1
-
-		self.threadsId.append(threading.Thread(name = 'updateFlows', target=self.updateFlows))
-		self.threadsId[0].start()
+		self.monitoring=1	
 
 		self.threadsId.append(threading.Thread(name = 'Monitor', target=self.monitor))
-		self.threadsId[1].start()
+		self.threadsId[0].start()
 
 	def stopMonitoring(self):
 		self.monitoring=0
@@ -138,25 +116,19 @@ class FlowMonitor:
 		while self.monitoring == 1:
 			try:
 				self.updateWindow()
-				
-				#print "Complete Interface List: " + str(self.completeInterfaceList)				
+							
 				for j in range(len(self.completeInterfaceList)):
 					
 					print "update, ema: " + str(self.completeInterfaceList[j]['currentEma'])
 					print "current threshold: " + str(self.completeInterfaceList[j]['threshold'])
 					if (self.completeInterfaceList[j]['isCongested'] == 0) and (self.completeInterfaceList[j]['currentEma'] >= self.completeInterfaceList[j]['threshold']):
 						print "Congested"
-						#self.completeInterfaceList[j]['isCongested']=1
-						#self.updatingFlows = 0
-						self.completeInterfaceList[j]['threshold']=self.completeInterfaceList[j]['lowerLimit']
-						
-						if len(self.completeFlowList[j]['flowList']) > 0:
-							print "Reporting congestion"							
-							self.reportObject.congestionDetected(self.completeInterfaceList[j], self.completeFlowList[j]['flowList'])						
+						self.completeInterfaceList[j]['threshold']=self.completeInterfaceList[j]['lowerLimit']			
+						print "Reporting congestion"							
+						self.reportObject.congestionDetected(self.completeInterfaceList[j])						
 
 					elif (self.completeInterfaceList[j]['isCongested'] == 1) and (self.completeInterfaceList[j]['currentEma'] <= self.completeInterfaceList[j]['threshold']):										
-						self.completeInterfaceList[j]['isCongested']=0
-						self.updatingFlows = 1
+						self.completeInterfaceList[j]['isCongested']=0						
 						self.completeInterfaceList[j]['threshold']=self.completeInterfaceList[j]['upperLimit']
 						print "Congestion ceased"
 						self.reportObject.congestionCeased(self.completeInterfaceList[j]['dpid'])
@@ -277,178 +249,6 @@ class FlowMonitor:
                  
             else:
                 return prevma + ((series[bar] - prevma) / (bar + 1.0))
-
-	def calculateControls(self, anInterfaceIndex):
-		self.classifyFlows(anInterfaceIndex)
-		
-
-	def classifyFlows(self, anInterfaceIndex):
-		for i in range(len(self.completeFlowList[anInterfaceIndex]['flowList'])):
-			if self.completeFlowList[anInterfaceIndex]['flowList'][i]['arrivalRate'] > (self.completeInterfaceList[anInterfaceIndex]['capacity']/len(self.completeFlowList[anInterfaceIndex]['flowList'])):
-				self.completeFlowList[anInterfaceIndex]['flowList'][i]['goodBehaved']=0
-
-	def getFlows(self):
-		# A list of dicts is created for each interface
-		# Dict estructure: dl_src, dl_dst, nw_src, nw_dst, length(bytes), action			
-
-		# We get samples from all the flows in all interfaces
-		
-		#interfacesFlowString=dict.fromkeys(['interfaceName','string'])
-		interfacesFlowPrevStringList=[]
-		interfacesFlowStringList=[]		
-
-		time1=time()
-
-		for i in range(len(self.completeInterfaceList)):			
-			interfacesFlowString=dict.fromkeys(['interfaceName','string'])
-			interfacesFlowString['interfaceName'] =  self.completeInterfaceList[i]['name']
-			interfacesFlowString['string']=subprocess.check_output('./flows.sh ' + self.completeInterfaceList[i]['name'], shell=True)			
-			interfacesFlowPrevStringList.append(interfacesFlowString)
-			
-		# toDo: Check a better way of doing this, what happens with flows that die?		
-		sleep(self.k)
-		
-		for i in range(len(self.completeInterfaceList)):
-
-			interfacesFlowString=dict.fromkeys(['interfaceName','string'])
-			interfacesFlowString['interfaceName'] =  self.completeInterfaceList[i]['name']
-
-			interfacesFlowString['string']=subprocess.check_output('./flows.sh ' + interfacesFlowString['interfaceName'], shell=True)
-			interfacesFlowStringList.append(interfacesFlowString)
-
-		self.measuredK = time() - time1
-		print "Measured K: " + str(self.measuredK)
-
-		for j in range(len(self.completeInterfaceList)):			
-			
-			prevNumFlows = int(interfacesFlowPrevStringList[j]['string'].split('\n')[0].split('=')[1])
-			numFlows=int(interfacesFlowStringList[j]['string'].split('\n')[0].split('=')[1])			
-			flowList=[]
-					
-			#this cycle runs over all the flows in the string
-			for i in range(numFlows):
-
-				flowDict=dict.fromkeys(['nw_src','nw_dst','packets','length','arrivalRate', 'oldArrivalRate','action','goodBehaved'])
-				flowDict['nw_dst']=interfacesFlowStringList[j]['string'].split('\n')[4].split('=')[1].split(' ')[i]
-
-				#Only checking flows destined to server
-				if str(flowDict['nw_dst']) != '10.1.2.2':
-					continue
-
-				flowDict['dl_src']=interfacesFlowStringList[j]['string'].split('\n')[1].split('=')[1].split(' ')[i]
-				flowDict['dl_dst']=interfacesFlowStringList[j]['string'].split('\n')[2].split('=')[1].split(' ')[i]
-				flowDict['nw_src']=interfacesFlowStringList[j]['string'].split('\n')[3].split('=')[1].split(' ')[i]
-				flowDict['action']=interfacesFlowStringList[j]['string'].split('\n')[7].split('=')[1].split(' ')[i]
-
-				# Packets
-				aux1 = interfacesFlowStringList[j]['string'].split('\n')[5].split('=')[1].split(' ')[i]
-
-				# Some flows stopped
-				if (numFlows <= prevNumFlows):
-					aux2 = interfacesFlowPrevStringList[j]['string'].split('\n')[5].split('=')[1].split(' ')[i]
-				else:	
-					aux2 = 0
-
-				# Check if this is still necessary
-				if (aux1 is not None) and (aux2 is not None):
-					flowDict['packets']=int(aux1) - int(aux2)
-				else:
-					flowDict['packets']=0
-				
-				# Bytes
-				aux1 = interfacesFlowStringList[j]['string'].split('\n')[6].split('=')[1].split(' ')[i]
-
-				# Bytes
-				if (numFlows <= prevNumFlows):					
-					aux2 = interfacesFlowPrevStringList[j]['string'].split('\n')[6].split('=')[1].split(' ')[i]
-				else:	
-					aux2 = 0
-
-				# Number of bytes sent by the flow
-				if (aux1 is not None) and (aux2 is not None):
-					flowDict['length']=int(aux1) - int(aux2)
-				else:
-					flowDict['length']=0
-
-				# Here we should validate if the flow exists, if not, append; if yes overwrite values and update Ri
-				flowIndex = self.checkIfFlowExists(j, flowDict)
-
-				print "Flow Bytes: " + str(flowDict['length'])
-				print "Simeple Flow Rate: " + str((flowDict['length']/self.measuredK))
-
-				#Flow does not exist
-				if flowIndex == -1:
-					flowDict['oldArrivalRate'] = 0.0
-					flowDict['goodBehaved'] = 0
-					flowDict['arrivalRate'] = self.calculateArrivalRate(flowDict['packets'], flowDict['length'], self.measuredK, 0.0 )
-					self.completeFlowList[j]['flowList'].append(flowDict)
-
-				else:
-					flowDict['oldArrivalRate'] = self.completeFlowList[j]['flowList'][flowIndex]['arrivalRate']
-					#flowDict['oldArrivalRate'] = flowDict['arrivalRate']
-					flowDict['arrivalRate'] = self.calculateArrivalRate(flowDict['packets'], flowDict['length'], self.measuredK, flowDict['oldArrivalRate'] )
-					self.completeFlowList[j]['flowList'][flowIndex] = flowDict								
-	
-				# Finally we should check if according to our last sample, a flow in flowList stopped existing							
-				# For now, we skip this test
-				#for k in range(len(self.completeFlowList[j]['flowList'])):
-				#if (self.checkIfFlowStopped(interfacesFlowStringList[j]['string'], flowDict)):
-				#splice
-				#self.completeFlowList[j]['flowList'].remove(k)
-				#print "Should remove this flow"
-
-				# Flowlist is empty, start filling it
-				if not self.completeFlowList[j]['flowList']:
-					flowDict['oldArrivalRate'] = 0.0
-					flowDict['goodBehaved'] = 0
-					flowDict['arrivalRate'] = self.calculateArrivalRate(flowDict['packets'], flowDict['length'], self.measuredK, 0.0 )
-					self.completeFlowList[j]['flowList'].append(flowDict)
-
-				print "Flow Arrival: " + str(flowDict['arrivalRate'] )		
-			
-	def checkIfFlowStopped(self, aFlowString, aFlowDict):
-
-		# If dL_src exists, checks in that flow if dl_dst and other fields coincide, if true: Flow exists				
-		numFlows=int(aFlowString.split('\n')[0].split('=')[1])
-		#dl_srcExists = 0
-		flowIndex = -1
-
-		for i in range(numFlows):
-			#now we are doing this ds_ip, we have to check if there's always a unique pair nw_dst and dl_src and dl_dst
-			if aFlowDict['nw_dst'] == aFlowString.split('\n')[4].split('=')[1].split(' ')[i]:
-																
-				dl_srcExists = 1
-				flowIndex = i
-				break
-
-		if dl_srcExists == 0:
-			return True
-		else:
-			
-			if (aFlowDict['nw_src'] == aFlowString.split('\n')[3].split('=')[1].split(' ')[flowIndex]):
-				return False
-			else:
-				return True
-
-	def checkIfFlowExists(self, anInterfaceIndex, aFlowDict):
-			#toDo: Comparation with "in values" does not work, we should make either a hash in correct order or a case case comparation
-			for i in range(len(self.completeFlowList[anInterfaceIndex]['flowList'])):
-
-				#if (aFlowDict['dl_src'] == self.completeFlowList[anInterfaceIndex]['flowList'][i]['dl_src']) and (aFlowDict['dl_dst'] == self.completeFlowList[anInterfaceIndex]['flowList'][i]['dl_dst']) and (aFlowDict['nw_src'] == self.completeFlowList[anInterfaceIndex]['flowList'][i]['nw_src']) and (aFlowDict['nw_dst'] == self.completeFlowList[anInterfaceIndex]['flowList'][i]['nw_dst']):
-				if (aFlowDict['nw_src'] == self.completeFlowList[anInterfaceIndex]['flowList'][i]['nw_src']) and (aFlowDict['nw_dst'] == self.completeFlowList[anInterfaceIndex]['flowList'][i]['nw_dst']):
-					return i
-
-			return -1			
-			
-	def calculateArrivalRate(self, packets, length, measuredK, oldArrivalRate):			
-
-		if packets <= 0:
-			return length/measuredK		
-
-		if oldArrivalRate <= 0:
-			return (1 - math.exp(-measuredK/self.k))*(length/measuredK)
-		else:
-			return (1 - math.exp(-measuredK/self.k))*(length/measuredK) + math.exp(-measuredK/(self.k*oldArrivalRate))
 
 	def getSample(self, intervalTime=1.0):
 		samplesList=[]
