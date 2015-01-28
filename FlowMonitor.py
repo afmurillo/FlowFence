@@ -142,11 +142,10 @@ class FlowMonitor:
 	def createQueues(self, controllerMessage):
 
 		for i in range(len(self.completeInterfaceList)):
-				if (self.completeInterfaceList[i]['name']) == controllerMessage['Interface']:					
-					self.completeInterfaceList[i]['queueList']=self.initQueues(self.completeInterfaceList[i]['name'],controllerMessage['bwList'])
-					self.setQueuesBw(self.completeInterfaceList[i]['queueList'], controllerMessage['bwList'])		
-					self.reportObject.queuesReady(self.completeInterfaceList[i],controllerMessage['bwList'],self.completeInterfaceList[i]['queueList'])
-					break
+			self.completeInterfaceList[i]['queueList']=self.initQueues(self.completeInterfaceList[i]['name'],controllerMessage['bwList'])
+			self.setQueuesBw(self.completeInterfaceList[i]['queueList'], controllerMessage['bwList'])		
+			self.reportObject.queuesReady(self.completeInterfaceList[i],controllerMessage['bwList'],self.completeInterfaceList[i]['queueList'])
+			break
 
 	def initQueues(self, interfaceName, bwList):
 		
@@ -155,7 +154,7 @@ class FlowMonitor:
 		qosString='ovs-vsctl -- set Port ' + interfaceName + ' qos=@fenceqos -- --id=@fenceqos create QoS type=linux-htb'
 		queuesString=''
 
-		for j in range(len(flowList)):
+		for j in range(len(bwList)):
 			aQueueDict=dict.fromkeys(['queueId','queueuuid','nw_src','nw_dst','bw'])
 			aQueueDict['queueId']=j+1
 			aQueueDict['nw_src']=bwList[j]['nw_src']
@@ -172,7 +171,7 @@ class FlowMonitor:
 		queuesCreation='-- --id=@queue0 create Queue other-config:max-rate=1000000000 '
 		#toDo: Check the numqueues handling
 
-		for j in range(len(flowList)):
+		for j in range(len(bwList)):
 			aCreation='-- --id=@queue' + str(queuesList[j]['queueId']) + ' create Queue other-config:max-rate=1000000000 '
 			queuesCreation=queuesCreation+aCreation
 

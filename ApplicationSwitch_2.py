@@ -27,7 +27,7 @@ class SwitchSocket(Thread):
                 while True:
                         try:
                                 client, addr = self.sock.accept()                               # Establish connection with client
-                                data = client.recv(1024)                                                # Get data from the client
+                                data = client.recv(4096)                                                # Get data from the client
                                 print 'Message from', addr                                              # Print a message confirming
                                 data_treatment = handle_message(self.reportObject, data, addr)    # Call the thread to work with the data received
                                 data_treatment.setDaemon(True)                                  # Set the thread as a demond
@@ -86,8 +86,8 @@ class ApplicationSwitch_2:
                         self.samples=10
                         self.period=3
                         self.intervalTime=1.0
-                        self.upperLimit=1000
-                        self.lowerLimit=100
+                        self.upperLimit=100
+                        self.lowerLimit=50
 
                         awk="{print $3;}'"
                         awkString="awk '" + awk
@@ -163,7 +163,10 @@ class ApplicationSwitch_2:
 
 
 		def messageFromController(self,message,srcAddress):
+
+			print "Raw message received: " + str(message)
 			messageDict = eval(json.loads(message))
+
 			print "Message Received: " + str(messageDict)
                         # En caso que el mensaje sea una indicacion de congestion, debemos preparar las filas y reportar que han sido inicializadas exitosamente
                         # Luego recibiremos un flowmod enviando los flujos a las filas respectivas
