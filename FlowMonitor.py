@@ -5,7 +5,7 @@ from collections import deque
 import threading
 import math
 
-from ApplicationSwitch import *
+from ApplicationSwitch_2 import *
 from SwitchProperties import *
 
 
@@ -98,7 +98,7 @@ class FlowMonitor:
 		
         def startMonitoring(self):
 
-		self.reportObject = ApplicationSwitch()
+		self.reportObject = ApplicationSwitch_2()
 		self.monitoring=1	
 
 		self.threadsId.append(threading.Thread(name = 'Monitor', target=self.monitor))
