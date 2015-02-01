@@ -1,0 +1,536 @@
+POX 0.2.0 (carp) / Copyright 2011-2013 James McCauley, et al.
+FlowFence launched
+Received connection from switch
+Binding to listen for switch messages
+switch dpid 317034996094
+Hex dpid: 00-49-d0-c2-21-7e
+switch dpid 779328912337
+Hex dpid: 00-b5-73-9f-7b-d1
+switch dpid 317033881980
+Hex dpid: 00-49-d0-b1-21-7c
+switch dpid 783707765714
+Hex dpid: 00-b6-78-9f-7b-d2
+Message from ('10.1.4.2', 50604)
+[<pox.openflow.of_01.Connection object at 0x7f731beca9d0>, <pox.openflow.of_01.Connection object at 0x7f731becaa90>, <pox.openflow.of_01.Connection object at 0x7f731becac90>, <pox.openflow.of_01.Connection object at 0x7f731becae90>]
+message from 10.1.4.2
+Message received {'Interface': {'capacity': 100000000, 'name': '"eth0br"', 'dpid': '"000000b6789f7bd2"'}, 'Notification': 'Congestion'}
+Received dpid: 00b6789f7bd2
+dpid parameter: 00b6789f7bd2
+Connection dpid: 317034996094
+Real dpidStr: 0049d0c2217e
+Connection dpid: 779328912337
+Real dpidStr: 00b5739f7bd1
+Connection dpid: 317033881980
+Real dpidStr: 0049d0b1217c
+Connection dpid: 783707765714
+Real dpidStr: 00b6789f7bd2
+Flow stats requets sent to: [00-b6-78-9f-7b-d2 3]
+Flow List: [{'packet_count': 5109, 'hard_timeout': 30, 'byte_count': 5446194, 'duration_sec': 5, 'actions': [{'max_len': 0, 'type': 'OFPAT_OUTPUT', 'port': 1}], 'duration_nsec': 745000000, 'priority': 65535, 'idle_timeout': 10, 'cookie': 0, 'table_id': 0, 'match': {'dl_type': 'IP', 'nw_dst': '10.1.2.2/32', 'dl_src': '00:b6:78:9f:7b:d2', 'nw_proto': 17, 'nw_tos': 224, 'tp_dst': 80, 'tp_src': 1004, 'dl_dst': '00:b5:73:9f:7b:d1', 'dl_vlan': 65535, 'nw_src': '10.1.1.3', 'in_port': 'OFPP_LOCAL'}}, {'packet_count': 4963, 'hard_timeout': 30, 'byte_count': 5290558, 'duration_sec': 5, 'actions': [{'max_len': 0, 'type': 'OFPAT_OUTPUT', 'port': 1}], 'duration_nsec': 742000000, 'priority': 65535, 'idle_timeout': 10, 'cookie': 0, 'table_id': 0, 'match': {'dl_type': 'IP', 'nw_dst': '10.1.2.2/32', 'dl_src': '00:b6:78:9f:7b:d2', 'nw_proto': 17, 'nw_tos': 224, 'tp_dst': 80, 'tp_src': 1000, 'dl_dst': '00:b5:73:9f:7b:d1', 'dl_vlan': 65535, 'nw_src': '10.1.1.3', 'in_port': 'OFPP_LOCAL'}}, {'packet_count': 5044, 'hard_timeout': 30, 'byte_count': 5376904, 'duration_sec': 5, 'actions': [{'max_len': 0, 'type': 'OFPAT_OUTPUT', 'port': 1}], 'duration_nsec': 732000000, 'priority': 65535, 'idle_timeout': 10, 'cookie': 0, 'table_id': 0, 'match': {'dl_type': 'IP', 'nw_dst': '10.1.2.2/32', 'dl_src': '00:b6:78:9f:7b:d2', 'nw_proto': 17, 'nw_tos': 224, 'tp_dst': 80, 'tp_src': 1006, 'dl_dst': '00:b5:73:9f:7b:d1', 'dl_vlan': 65535, 'nw_src': '10.1.1.3', 'in_port': 'OFPP_LOCAL'}}, {'packet_count': 5081, 'hard_timeout': 30, 'byte_count': 5416346, 'duration_sec': 5, 'actions': [{'max_len': 0, 'type': 'OFPAT_OUTPUT', 'port': 1}], 'duration_nsec': 734000000, 'priority': 65535, 'idle_timeout': 10, 'cookie': 0, 'table_id': 0, 'match': {'dl_type': 'IP', 'nw_dst': '10.1.2.2/32', 'dl_src': '00:b6:78:9f:7b:d2', 'nw_proto': 17, 'nw_tos': 224, 'tp_dst': 80, 'tp_src': 1009, 'dl_dst': '00:b5:73:9f:7b:d1', 'dl_vlan': 65535, 'nw_src': '10.1.1.3', 'in_port': 'OFPP_LOCAL'}}, {'packet_count': 4991, 'hard_timeout': 30, 'byte_count': 5320406, 'duration_sec': 5, 'actions': [{'max_len': 0, 'type': 'OFPAT_OUTPUT', 'port': 1}], 'duration_nsec': 735000000, 'priority': 65535, 'idle_timeout': 10, 'cookie': 0, 'table_id': 0, 'match': {'dl_type': 'IP', 'nw_dst': '10.1.2.2/32', 'dl_src': '00:b6:78:9f:7b:d2', 'nw_proto': 17, 'nw_tos': 224, 'tp_dst': 80, 'tp_src': 1010, 'dl_dst': '00:b5:73:9f:7b:d1', 'dl_vlan': 65535, 'nw_src': '10.1.1.3', 'in_port': 'OFPP_LOCAL'}}, {'packet_count': 5007, 'hard_timeout': 30, 'byte_count': 5337462, 'duration_sec': 5, 'actions': [{'max_len': 0, 'type': 'OFPAT_OUTPUT', 'port': 1}], 'duration_nsec': 749000000, 'priority': 65535, 'idle_timeout': 10, 'cookie': 0, 'table_id': 0, 'match': {'dl_type': 'IP', 'nw_dst': '10.1.2.2/32', 'dl_src': '00:b6:78:9f:7b:d2', 'nw_proto': 17, 'nw_tos': 224, 'tp_dst': 80, 'tp_src': 1003, 'dl_dst': '00:b5:73:9f:7b:d1', 'dl_vlan': 65535, 'nw_src': '10.1.1.3', 'in_port': 'OFPP_LOCAL'}}, {'packet_count': 5143, 'hard_timeout': 30, 'byte_count': 5482438, 'duration_sec': 5, 'actions': [{'max_len': 0, 'type': 'OFPAT_OUTPUT', 'port': 1}], 'duration_nsec': 738000000, 'priority': 65535, 'idle_timeout': 10, 'cookie': 0, 'table_id': 0, 'match': {'dl_type': 'IP', 'nw_dst': '10.1.2.2/32', 'dl_src': '00:b6:78:9f:7b:d2', 'nw_proto': 17, 'nw_tos': 224, 'tp_dst': 80, 'tp_src': 1007, 'dl_dst': '00:b5:73:9f:7b:d1', 'dl_vlan': 65535, 'nw_src': '10.1.1.3', 'in_port': 'OFPP_LOCAL'}}, {'packet_count': 4879, 'hard_timeout': 30, 'byte_count': 5201014, 'duration_sec': 5, 'actions': [{'max_len': 0, 'type': 'OFPAT_OUTPUT', 'port': 1}], 'duration_nsec': 755000000, 'priority': 65535, 'idle_timeout': 10, 'cookie': 0, 'table_id': 0, 'match': {'dl_type': 'IP', 'nw_dst': '10.1.2.2/32', 'dl_src': '00:b6:78:9f:7b:d2', 'nw_proto': 17, 'nw_tos': 224, 'tp_dst': 80, 'tp_src': 1005, 'dl_dst': '00:b5:73:9f:7b:d1', 'dl_vlan': 65535, 'nw_src': '10.1.1.3', 'in_port': 'OFPP_LOCAL'}}, {'packet_count': 5001, 'hard_timeout': 30, 'byte_count': 5331066, 'duration_sec': 5, 'actions': [{'max_len': 0, 'type': 'OFPAT_OUTPUT', 'port': 1}], 'duration_nsec': 748000000, 'priority': 65535, 'idle_timeout': 10, 'cookie': 0, 'table_id': 0, 'match': {'dl_type': 'IP', 'nw_dst': '10.1.2.2/32', 'dl_src': '00:b6:78:9f:7b:d2', 'nw_proto': 17, 'nw_tos': 224, 'tp_dst': 80, 'tp_src': 1002, 'dl_dst': '00:b5:73:9f:7b:d1', 'dl_vlan': 65535, 'nw_src': '10.1.1.3', 'in_port': 'OFPP_LOCAL'}}, {'packet_count': 4988, 'hard_timeout': 30, 'byte_count': 5317208, 'duration_sec': 5, 'actions': [{'max_len': 0, 'type': 'OFPAT_OUTPUT', 'port': 1}], 'duration_nsec': 740000000, 'priority': 65535, 'idle_timeout': 10, 'cookie': 0, 'table_id': 0, 'match': {'dl_type': 'IP', 'nw_dst': '10.1.2.2/32', 'dl_src': '00:b6:78:9f:7b:d2', 'nw_proto': 17, 'nw_tos': 224, 'tp_dst': 80, 'tp_src': 1001, 'dl_dst': '00:b5:73:9f:7b:d1', 'dl_vlan': 65535, 'nw_src': '10.1.1.3', 'in_port': 'OFPP_LOCAL'}}, {'packet_count': 6, 'hard_timeout': 30, 'byte_count': 3540, 'duration_sec': 5, 'actions': [{'max_len': 0, 'type': 'OFPAT_OUTPUT', 'port': 'OFPP_LOCAL'}], 'duration_nsec': 837000000, 'priority': 65535, 'idle_timeout': 10, 'cookie': 0, 'table_id': 0, 'match': {'dl_type': 'IP', 'nw_dst': '10.1.1.3/32', 'dl_src': '00:b5:73:9f:7b:d1', 'nw_proto': 1, 'nw_tos': 192, 'tp_dst': 3, 'tp_src': 3, 'dl_dst': '00:b6:78:9f:7b:d2', 'dl_vlan': 65535, 'nw_src': '10.1.2.2', 'in_port': 1}}, {'packet_count': 4991, 'hard_timeout': 30, 'byte_count': 5320406, 'duration_sec': 5, 'actions': [{'max_len': 0, 'type': 'OFPAT_OUTPUT', 'port': 1}], 'duration_nsec': 740000000, 'priority': 65535, 'idle_timeout': 10, 'cookie': 0, 'table_id': 0, 'match': {'dl_type': 'IP', 'nw_dst': '10.1.2.2/32', 'dl_src': '00:b6:78:9f:7b:d2', 'nw_proto': 17, 'nw_tos': 224, 'tp_dst': 80, 'tp_src': 1008, 'dl_dst': '00:b5:73:9f:7b:d1', 'dl_vlan': 65535, 'nw_src': '10.1.1.3', 'in_port': 'OFPP_LOCAL'}}]
+Sending address 10.1.4.2
+Received flow <pox.openflow.libopenflow_01.ofp_flow_stats object at 0x7f731bee9fd0>
+Creating dict for flow
+Flow src: 10.1.1.3
+Received flow <pox.openflow.libopenflow_01.ofp_flow_stats object at 0x7f731bee9650>
+Creating dict for flow
+Flow src: 10.1.1.3
+Received flow <pox.openflow.libopenflow_01.ofp_flow_stats object at 0x7f731bee9610>
+Creating dict for flow
+Flow src: 10.1.1.3
+Received flow <pox.openflow.libopenflow_01.ofp_flow_stats object at 0x7f731bee9e10>
+Creating dict for flow
+Flow src: 10.1.1.3
+Received flow <pox.openflow.libopenflow_01.ofp_flow_stats object at 0x7f731bee9c50>
+Creating dict for flow
+Flow src: 10.1.1.3
+Received flow <pox.openflow.libopenflow_01.ofp_flow_stats object at 0x7f731bee9a90>
+Creating dict for flow
+Flow src: 10.1.1.3
+Received flow <pox.openflow.libopenflow_01.ofp_flow_stats object at 0x7f731bc394d0>
+Creating dict for flow
+Flow src: 10.1.1.3
+Received flow <pox.openflow.libopenflow_01.ofp_flow_stats object at 0x7f731bc39c10>
+Creating dict for flow
+Flow src: 10.1.1.3
+Received flow <pox.openflow.libopenflow_01.ofp_flow_stats object at 0x7f731bc39850>
+Creating dict for flow
+Flow src: 10.1.1.3
+Received flow <pox.openflow.libopenflow_01.ofp_flow_stats object at 0x7f731bc39d50>
+Creating dict for flow
+Flow src: 10.1.1.3
+Received flow <pox.openflow.libopenflow_01.ofp_flow_stats object at 0x7f731bc39ed0>
+Received flow <pox.openflow.libopenflow_01.ofp_flow_stats object at 0x7f731bc39490>
+Creating dict for flow
+Flow src: 10.1.1.3
+Flow list: [{'reportedBw': 5446194, 'nw_dst': '10.1.2.2', 'bw': None, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.3'}, {'reportedBw': 5290558, 'nw_dst': '10.1.2.2', 'bw': None, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.3'}, {'reportedBw': 5376904, 'nw_dst': '10.1.2.2', 'bw': None, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.3'}, {'reportedBw': 5416346, 'nw_dst': '10.1.2.2', 'bw': None, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.3'}, {'reportedBw': 5320406, 'nw_dst': '10.1.2.2', 'bw': None, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.3'}, {'reportedBw': 5337462, 'nw_dst': '10.1.2.2', 'bw': None, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.3'}, {'reportedBw': 5482438, 'nw_dst': '10.1.2.2', 'bw': None, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.3'}, {'reportedBw': 5201014, 'nw_dst': '10.1.2.2', 'bw': None, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.3'}, {'reportedBw': 5331066, 'nw_dst': '10.1.2.2', 'bw': None, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.3'}, {'reportedBw': 5317208, 'nw_dst': '10.1.2.2', 'bw': None, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.3'}, {'reportedBw': 5320406, 'nw_dst': '10.1.2.2', 'bw': None, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.3'}]
+0
+Bad behaved flow bw -4628012.18182
+1
+Bad behaved flow bw -4472376.18182
+2
+Bad behaved flow bw -4558722.18182
+3
+Bad behaved flow bw -4598164.18182
+4
+Bad behaved flow bw -4502224.18182
+5
+Bad behaved flow bw -4519280.18182
+6
+Bad behaved flow bw -4664256.18182
+7
+Bad behaved flow bw -4382832.18182
+8
+Bad behaved flow bw -4512884.18182
+9
+Bad behaved flow bw -4499026.18182
+10
+Bad behaved flow bw -4502224.18182
+Calculated Bandwidth: [{'reportedBw': 5446194, 'nw_dst': '10.1.2.2', 'bw': -4628012.181818182, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.3'}, {'reportedBw': 5290558, 'nw_dst': '10.1.2.2', 'bw': -4472376.181818182, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.3'}, {'reportedBw': 5376904, 'nw_dst': '10.1.2.2', 'bw': -4558722.181818182, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.3'}, {'reportedBw': 5416346, 'nw_dst': '10.1.2.2', 'bw': -4598164.181818182, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.3'}, {'reportedBw': 5320406, 'nw_dst': '10.1.2.2', 'bw': -4502224.181818182, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.3'}, {'reportedBw': 5337462, 'nw_dst': '10.1.2.2', 'bw': -4519280.181818182, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.3'}, {'reportedBw': 5482438, 'nw_dst': '10.1.2.2', 'bw': -4664256.181818182, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.3'}, {'reportedBw': 5201014, 'nw_dst': '10.1.2.2', 'bw': -4382832.181818182, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.3'}, {'reportedBw': 5331066, 'nw_dst': '10.1.2.2', 'bw': -4512884.181818182, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.3'}, {'reportedBw': 5317208, 'nw_dst': '10.1.2.2', 'bw': -4499026.181818182, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.3'}, {'reportedBw': 5320406, 'nw_dst': '10.1.2.2', 'bw': -4502224.181818182, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.3'}]
+Response Message sent: "{'bwList': [{'reportedBw': 5446194, 'nw_dst': '10.1.2.2', 'bw': -4628012.181818182, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.3'}, {'reportedBw': 5290558, 'nw_dst': '10.1.2.2', 'bw': -4472376.181818182, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.3'}, {'reportedBw': 5376904, 'nw_dst': '10.1.2.2', 'bw': -4558722.181818182, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.3'}, {'reportedBw': 5416346, 'nw_dst': '10.1.2.2', 'bw': -4598164.181818182, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.3'}, {'reportedBw': 5320406, 'nw_dst': '10.1.2.2', 'bw': -4502224.181818182, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.3'}, {'reportedBw': 5337462, 'nw_dst': '10.1.2.2', 'bw': -4519280.181818182, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.3'}, {'reportedBw': 5482438, 'nw_dst': '10.1.2.2', 'bw': -4664256.181818182, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.3'}, {'reportedBw': 5201014, 'nw_dst': '10.1.2.2', 'bw': -4382832.181818182, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.3'}, {'reportedBw': 5331066, 'nw_dst': '10.1.2.2', 'bw': -4512884.181818182, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.3'}, {'reportedBw': 5317208, 'nw_dst': '10.1.2.2', 'bw': -4499026.181818182, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.3'}, {'reportedBw': 5320406, 'nw_dst': '10.1.2.2', 'bw': -4502224.181818182, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.3'}], 'Response': 'Decrement', 'dpid': 783707765714}"
+Message from ('10.1.4.2', 50605)
+[<pox.openflow.of_01.Connection object at 0x7f731beca9d0>, <pox.openflow.of_01.Connection object at 0x7f731becaa90>, <pox.openflow.of_01.Connection object at 0x7f731becac90>, <pox.openflow.of_01.Connection object at 0x7f731becae90>]
+message from 10.1.4.2
+Message received {'Interface': {'capacity': 100000000, 'name': '"eth0br"', 'dpid': '"000000b6789f7bd2"'}, 'Notification': 'QueuesDone', 'QueueList': [{'queueId': 1, 'bw': -4628012.181818182, 'nw_src': '10.1.1.3', 'queueuuid': '1827815e-538f-4281-97c3-4777d9acb994', 'nw_dst': '10.1.2.2'}, {'queueId': 2, 'bw': -4472376.181818182, 'nw_src': '10.1.1.3', 'queueuuid': 'eb5d0014-e6a8-4727-ab4e-830870b1ff40', 'nw_dst': '10.1.2.2'}, {'queueId': 3, 'bw': -4558722.181818182, 'nw_src': '10.1.1.3', 'queueuuid': '1139c260-437d-4028-a194-1d830b5fb7a6', 'nw_dst': '10.1.2.2'}, {'queueId': 4, 'bw': -4598164.181818182, 'nw_src': '10.1.1.3', 'queueuuid': '3a3f9f49-ff20-43a8-947f-3b1454f11c6a', 'nw_dst': '10.1.2.2'}, {'queueId': 5, 'bw': -4502224.181818182, 'nw_src': '10.1.1.3', 'queueuuid': '1a12d9e1-5cf2-4fe4-84e5-213a60ee7014', 'nw_dst': '10.1.2.2'}, {'queueId': 6, 'bw': -4519280.181818182, 'nw_src': '10.1.1.3', 'queueuuid': '5fcd9042-7b90-4b55-9e61-cdccb21f5f0f', 'nw_dst': '10.1.2.2'}, {'queueId': 7, 'bw': -4664256.181818182, 'nw_src': '10.1.1.3', 'queueuuid': 'c76ffcae-102e-4241-9bc4-728e6ea8746e', 'nw_dst': '10.1.2.2'}, {'queueId': 8, 'bw': -4382832.181818182, 'nw_src': '10.1.1.3', 'queueuuid': '8c178960-4d90-4dff-9090-63156d35583f', 'nw_dst': '10.1.2.2'}, {'queueId': 9, 'bw': -4512884.181818182, 'nw_src': '10.1.1.3', 'queueuuid': '320c1183-4f4c-49d0-9b62-17ca215e9738', 'nw_dst': '10.1.2.2'}, {'queueId': 10, 'bw': -4499026.181818182, 'nw_src': '10.1.1.3', 'queueuuid': 'afab73f6-39ab-435d-ac82-1cdbbb1aa3ac', 'nw_dst': '10.1.2.2'}, {'queueId': 11, 'bw': -4502224.181818182, 'nw_src': '10.1.1.3', 'queueuuid': '52aa9927-f76d-487e-a127-f7c31c10f9f9', 'nw_dst': '10.1.2.2'}], 'bwList': [{'reportedBw': 5446194, 'nw_dst': '10.1.2.2', 'bw': -4628012.181818182, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.3'}, {'reportedBw': 5290558, 'nw_dst': '10.1.2.2', 'bw': -4472376.181818182, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.3'}, {'reportedBw': 5376904, 'nw_dst': '10.1.2.2', 'bw': -4558722.181818182, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.3'}, {'reportedBw': 5416346, 'nw_dst': '10.1.2.2', 'bw': -4598164.181818182, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.3'}, {'reportedBw': 5320406, 'nw_dst': '10.1.2.2', 'bw': -4502224.181818182, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.3'}, {'reportedBw': 5337462, 'nw_dst': '10.1.2.2', 'bw': -4519280.181818182, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.3'}, {'reportedBw': 5482438, 'nw_dst': '10.1.2.2', 'bw': -4664256.181818182, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.3'}, {'reportedBw': 5201014, 'nw_dst': '10.1.2.2', 'bw': -4382832.181818182, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.3'}, {'reportedBw': 5331066, 'nw_dst': '10.1.2.2', 'bw': -4512884.181818182, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.3'}, {'reportedBw': 5317208, 'nw_dst': '10.1.2.2', 'bw': -4499026.181818182, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.3'}, {'reportedBw': 5320406, 'nw_dst': '10.1.2.2', 'bw': -4502224.181818182, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.3'}]}
+message from 10.1.4.2
+Connections ['__add__', '__class__', '__contains__', '__delattr__', '__delitem__', '__delslice__', '__doc__', '__eq__', '__format__', '__ge__', '__getattribute__', '__getitem__', '__getslice__', '__gt__', '__hash__', '__iadd__', '__imul__', '__init__', '__iter__', '__le__', '__len__', '__lt__', '__mul__', '__ne__', '__new__', '__reduce__', '__reduce_ex__', '__repr__', '__reversed__', '__rmul__', '__setattr__', '__setitem__', '__setslice__', '__sizeof__', '__str__', '__subclasshook__', 'append', 'count', 'extend', 'index', 'insert', 'pop', 'remove', 'reverse', 'sort']
+Received dpid: 00b6789f7bd2
+message to be used for redirection{'Interface': {'capacity': 100000000, 'name': '"eth0br"', 'dpid': '"000000b6789f7bd2"'}, 'Notification': 'QueuesDone', 'QueueList': [{'queueId': 1, 'bw': -4628012.181818182, 'nw_src': '10.1.1.3', 'queueuuid': '1827815e-538f-4281-97c3-4777d9acb994', 'nw_dst': '10.1.2.2'}, {'queueId': 2, 'bw': -4472376.181818182, 'nw_src': '10.1.1.3', 'queueuuid': 'eb5d0014-e6a8-4727-ab4e-830870b1ff40', 'nw_dst': '10.1.2.2'}, {'queueId': 3, 'bw': -4558722.181818182, 'nw_src': '10.1.1.3', 'queueuuid': '1139c260-437d-4028-a194-1d830b5fb7a6', 'nw_dst': '10.1.2.2'}, {'queueId': 4, 'bw': -4598164.181818182, 'nw_src': '10.1.1.3', 'queueuuid': '3a3f9f49-ff20-43a8-947f-3b1454f11c6a', 'nw_dst': '10.1.2.2'}, {'queueId': 5, 'bw': -4502224.181818182, 'nw_src': '10.1.1.3', 'queueuuid': '1a12d9e1-5cf2-4fe4-84e5-213a60ee7014', 'nw_dst': '10.1.2.2'}, {'queueId': 6, 'bw': -4519280.181818182, 'nw_src': '10.1.1.3', 'queueuuid': '5fcd9042-7b90-4b55-9e61-cdccb21f5f0f', 'nw_dst': '10.1.2.2'}, {'queueId': 7, 'bw': -4664256.181818182, 'nw_src': '10.1.1.3', 'queueuuid': 'c76ffcae-102e-4241-9bc4-728e6ea8746e', 'nw_dst': '10.1.2.2'}, {'queueId': 8, 'bw': -4382832.181818182, 'nw_src': '10.1.1.3', 'queueuuid': '8c178960-4d90-4dff-9090-63156d35583f', 'nw_dst': '10.1.2.2'}, {'queueId': 9, 'bw': -4512884.181818182, 'nw_src': '10.1.1.3', 'queueuuid': '320c1183-4f4c-49d0-9b62-17ca215e9738', 'nw_dst': '10.1.2.2'}, {'queueId': 10, 'bw': -4499026.181818182, 'nw_src': '10.1.1.3', 'queueuuid': 'afab73f6-39ab-435d-ac82-1cdbbb1aa3ac', 'nw_dst': '10.1.2.2'}, {'queueId': 11, 'bw': -4502224.181818182, 'nw_src': '10.1.1.3', 'queueuuid': '52aa9927-f76d-487e-a127-f7c31c10f9f9', 'nw_dst': '10.1.2.2'}], 'bwList': [{'reportedBw': 5446194, 'nw_dst': '10.1.2.2', 'bw': -4628012.181818182, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.3'}, {'reportedBw': 5290558, 'nw_dst': '10.1.2.2', 'bw': -4472376.181818182, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.3'}, {'reportedBw': 5376904, 'nw_dst': '10.1.2.2', 'bw': -4558722.181818182, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.3'}, {'reportedBw': 5416346, 'nw_dst': '10.1.2.2', 'bw': -4598164.181818182, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.3'}, {'reportedBw': 5320406, 'nw_dst': '10.1.2.2', 'bw': -4502224.181818182, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.3'}, {'reportedBw': 5337462, 'nw_dst': '10.1.2.2', 'bw': -4519280.181818182, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.3'}, {'reportedBw': 5482438, 'nw_dst': '10.1.2.2', 'bw': -4664256.181818182, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.3'}, {'reportedBw': 5201014, 'nw_dst': '10.1.2.2', 'bw': -4382832.181818182, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.3'}, {'reportedBw': 5331066, 'nw_dst': '10.1.2.2', 'bw': -4512884.181818182, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.3'}, {'reportedBw': 5317208, 'nw_dst': '10.1.2.2', 'bw': -4499026.181818182, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.3'}, {'reportedBw': 5320406, 'nw_dst': '10.1.2.2', 'bw': -4502224.181818182, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.3'}]}
+Flow Match: ofp_match
+  wildcards: nw_tos|tp_dst|dl_dst|dl_src|in_port|dl_vlan_pcp|nw_proto|dl_vlan|tp_src (1100000000000011101111 = 3000ef)
+  dl_type: 0x800
+  nw_src: 10.1.1.3
+  nw_dst: 10.1.2.2
+Flow mod message: ofp_flow_mod
+  header: 
+    version: 1
+    type:    14 (OFPT_FLOW_MOD)
+    length:  88
+    xid:     5821
+  match: 
+    wildcards: nw_tos|tp_dst|dl_dst|dl_src|in_port|dl_vlan_pcp|nw_proto|dl_vlan|tp_src (1100000000000011101111 = 3000ef)
+    dl_type: 0x800
+    nw_src: 10.1.1.3
+    nw_dst: 10.1.2.2
+  cookie: 0
+  command: 0
+  idle_timeout: 0
+  hard_timeout: 0
+  priority: 65535
+  buffer_id: None
+  out_port: 65535
+  flags: 0
+  actions: 
+    type: 11
+    len: 16
+    port: 1
+    queue_id: 1
+dpid parameter: 00b6789f7bd2
+Connection dpid: 317034996094
+Real dpidStr: 0049d0c2217e
+Connection dpid: 779328912337
+Real dpidStr: 00b5739f7bd1
+Connection dpid: 317033881980
+Real dpidStr: 0049d0b1217c
+Connection dpid: 783707765714
+Real dpidStr: 00b6789f7bd2
+Sent to: [00-b6-78-9f-7b-d2 3]
+Well...done
+Flow Match: ofp_match
+  wildcards: nw_tos|tp_dst|dl_dst|dl_src|in_port|dl_vlan_pcp|nw_proto|dl_vlan|tp_src (1100000000000011101111 = 3000ef)
+  dl_type: 0x800
+  nw_src: 10.1.1.3
+  nw_dst: 10.1.2.2
+Flow mod message: ofp_flow_mod
+  header: 
+    version: 1
+    type:    14 (OFPT_FLOW_MOD)
+    length:  88
+    xid:     5822
+  match: 
+    wildcards: nw_tos|tp_dst|dl_dst|dl_src|in_port|dl_vlan_pcp|nw_proto|dl_vlan|tp_src (1100000000000011101111 = 3000ef)
+    dl_type: 0x800
+    nw_src: 10.1.1.3
+    nw_dst: 10.1.2.2
+  cookie: 0
+  command: 0
+  idle_timeout: 0
+  hard_timeout: 0
+  priority: 65535
+  buffer_id: None
+  out_port: 65535
+  flags: 0
+  actions: 
+    type: 11
+    len: 16
+    port: 1
+    queue_id: 2
+dpid parameter: 00b6789f7bd2
+Connection dpid: 317034996094
+Real dpidStr: 0049d0c2217e
+Connection dpid: 779328912337
+Real dpidStr: 00b5739f7bd1
+Connection dpid: 317033881980
+Real dpidStr: 0049d0b1217c
+Connection dpid: 783707765714
+Real dpidStr: 00b6789f7bd2
+Sent to: [00-b6-78-9f-7b-d2 3]
+Well...done
+Flow Match: ofp_match
+  wildcards: nw_tos|tp_dst|dl_dst|dl_src|in_port|dl_vlan_pcp|nw_proto|dl_vlan|tp_src (1100000000000011101111 = 3000ef)
+  dl_type: 0x800
+  nw_src: 10.1.1.3
+  nw_dst: 10.1.2.2
+Flow mod message: ofp_flow_mod
+  header: 
+    version: 1
+    type:    14 (OFPT_FLOW_MOD)
+    length:  88
+    xid:     5823
+  match: 
+    wildcards: nw_tos|tp_dst|dl_dst|dl_src|in_port|dl_vlan_pcp|nw_proto|dl_vlan|tp_src (1100000000000011101111 = 3000ef)
+    dl_type: 0x800
+    nw_src: 10.1.1.3
+    nw_dst: 10.1.2.2
+  cookie: 0
+  command: 0
+  idle_timeout: 0
+  hard_timeout: 0
+  priority: 65535
+  buffer_id: None
+  out_port: 65535
+  flags: 0
+  actions: 
+    type: 11
+    len: 16
+    port: 1
+    queue_id: 3
+dpid parameter: 00b6789f7bd2
+Connection dpid: 317034996094
+Real dpidStr: 0049d0c2217e
+Connection dpid: 779328912337
+Real dpidStr: 00b5739f7bd1
+Connection dpid: 317033881980
+Real dpidStr: 0049d0b1217c
+Connection dpid: 783707765714
+Real dpidStr: 00b6789f7bd2
+Sent to: [00-b6-78-9f-7b-d2 3]
+Well...done
+Flow Match: ofp_match
+  wildcards: nw_tos|tp_dst|dl_dst|dl_src|in_port|dl_vlan_pcp|nw_proto|dl_vlan|tp_src (1100000000000011101111 = 3000ef)
+  dl_type: 0x800
+  nw_src: 10.1.1.3
+  nw_dst: 10.1.2.2
+Flow mod message: ofp_flow_mod
+  header: 
+    version: 1
+    type:    14 (OFPT_FLOW_MOD)
+    length:  88
+    xid:     5824
+  match: 
+    wildcards: nw_tos|tp_dst|dl_dst|dl_src|in_port|dl_vlan_pcp|nw_proto|dl_vlan|tp_src (1100000000000011101111 = 3000ef)
+    dl_type: 0x800
+    nw_src: 10.1.1.3
+    nw_dst: 10.1.2.2
+  cookie: 0
+  command: 0
+  idle_timeout: 0
+  hard_timeout: 0
+  priority: 65535
+  buffer_id: None
+  out_port: 65535
+  flags: 0
+  actions: 
+    type: 11
+    len: 16
+    port: 1
+    queue_id: 4
+dpid parameter: 00b6789f7bd2
+Connection dpid: 317034996094
+Real dpidStr: 0049d0c2217e
+Connection dpid: 779328912337
+Real dpidStr: 00b5739f7bd1
+Connection dpid: 317033881980
+Real dpidStr: 0049d0b1217c
+Connection dpid: 783707765714
+Real dpidStr: 00b6789f7bd2
+Sent to: [00-b6-78-9f-7b-d2 3]
+Well...done
+Flow Match: ofp_match
+  wildcards: nw_tos|tp_dst|dl_dst|dl_src|in_port|dl_vlan_pcp|nw_proto|dl_vlan|tp_src (1100000000000011101111 = 3000ef)
+  dl_type: 0x800
+  nw_src: 10.1.1.3
+  nw_dst: 10.1.2.2
+Flow mod message: ofp_flow_mod
+  header: 
+    version: 1
+    type:    14 (OFPT_FLOW_MOD)
+    length:  88
+    xid:     5825
+  match: 
+    wildcards: nw_tos|tp_dst|dl_dst|dl_src|in_port|dl_vlan_pcp|nw_proto|dl_vlan|tp_src (1100000000000011101111 = 3000ef)
+    dl_type: 0x800
+    nw_src: 10.1.1.3
+    nw_dst: 10.1.2.2
+  cookie: 0
+  command: 0
+  idle_timeout: 0
+  hard_timeout: 0
+  priority: 65535
+  buffer_id: None
+  out_port: 65535
+  flags: 0
+  actions: 
+    type: 11
+    len: 16
+    port: 1
+    queue_id: 5
+dpid parameter: 00b6789f7bd2
+Connection dpid: 317034996094
+Real dpidStr: 0049d0c2217e
+Connection dpid: 779328912337
+Real dpidStr: 00b5739f7bd1
+Connection dpid: 317033881980
+Real dpidStr: 0049d0b1217c
+Connection dpid: 783707765714
+Real dpidStr: 00b6789f7bd2
+Sent to: [00-b6-78-9f-7b-d2 3]
+Well...done
+Flow Match: ofp_match
+  wildcards: nw_tos|tp_dst|dl_dst|dl_src|in_port|dl_vlan_pcp|nw_proto|dl_vlan|tp_src (1100000000000011101111 = 3000ef)
+  dl_type: 0x800
+  nw_src: 10.1.1.3
+  nw_dst: 10.1.2.2
+Flow mod message: ofp_flow_mod
+  header: 
+    version: 1
+    type:    14 (OFPT_FLOW_MOD)
+    length:  88
+    xid:     5826
+  match: 
+    wildcards: nw_tos|tp_dst|dl_dst|dl_src|in_port|dl_vlan_pcp|nw_proto|dl_vlan|tp_src (1100000000000011101111 = 3000ef)
+    dl_type: 0x800
+    nw_src: 10.1.1.3
+    nw_dst: 10.1.2.2
+  cookie: 0
+  command: 0
+  idle_timeout: 0
+  hard_timeout: 0
+  priority: 65535
+  buffer_id: None
+  out_port: 65535
+  flags: 0
+  actions: 
+    type: 11
+    len: 16
+    port: 1
+    queue_id: 6
+dpid parameter: 00b6789f7bd2
+Connection dpid: 317034996094
+Real dpidStr: 0049d0c2217e
+Connection dpid: 779328912337
+Real dpidStr: 00b5739f7bd1
+Connection dpid: 317033881980
+Real dpidStr: 0049d0b1217c
+Connection dpid: 783707765714
+Real dpidStr: 00b6789f7bd2
+Sent to: [00-b6-78-9f-7b-d2 3]
+Well...done
+Flow Match: ofp_match
+  wildcards: nw_tos|tp_dst|dl_dst|dl_src|in_port|dl_vlan_pcp|nw_proto|dl_vlan|tp_src (1100000000000011101111 = 3000ef)
+  dl_type: 0x800
+  nw_src: 10.1.1.3
+  nw_dst: 10.1.2.2
+Flow mod message: ofp_flow_mod
+  header: 
+    version: 1
+    type:    14 (OFPT_FLOW_MOD)
+    length:  88
+    xid:     5827
+  match: 
+    wildcards: nw_tos|tp_dst|dl_dst|dl_src|in_port|dl_vlan_pcp|nw_proto|dl_vlan|tp_src (1100000000000011101111 = 3000ef)
+    dl_type: 0x800
+    nw_src: 10.1.1.3
+    nw_dst: 10.1.2.2
+  cookie: 0
+  command: 0
+  idle_timeout: 0
+  hard_timeout: 0
+  priority: 65535
+  buffer_id: None
+  out_port: 65535
+  flags: 0
+  actions: 
+    type: 11
+    len: 16
+    port: 1
+    queue_id: 7
+dpid parameter: 00b6789f7bd2
+Connection dpid: 317034996094
+Real dpidStr: 0049d0c2217e
+Connection dpid: 779328912337
+Real dpidStr: 00b5739f7bd1
+Connection dpid: 317033881980
+Real dpidStr: 0049d0b1217c
+Connection dpid: 783707765714
+Real dpidStr: 00b6789f7bd2
+Sent to: [00-b6-78-9f-7b-d2 3]
+Well...done
+Flow Match: ofp_match
+  wildcards: nw_tos|tp_dst|dl_dst|dl_src|in_port|dl_vlan_pcp|nw_proto|dl_vlan|tp_src (1100000000000011101111 = 3000ef)
+  dl_type: 0x800
+  nw_src: 10.1.1.3
+  nw_dst: 10.1.2.2
+Flow mod message: ofp_flow_mod
+  header: 
+    version: 1
+    type:    14 (OFPT_FLOW_MOD)
+    length:  88
+    xid:     5828
+  match: 
+    wildcards: nw_tos|tp_dst|dl_dst|dl_src|in_port|dl_vlan_pcp|nw_proto|dl_vlan|tp_src (1100000000000011101111 = 3000ef)
+    dl_type: 0x800
+    nw_src: 10.1.1.3
+    nw_dst: 10.1.2.2
+  cookie: 0
+  command: 0
+  idle_timeout: 0
+  hard_timeout: 0
+  priority: 65535
+  buffer_id: None
+  out_port: 65535
+  flags: 0
+  actions: 
+    type: 11
+    len: 16
+    port: 1
+    queue_id: 8
+dpid parameter: 00b6789f7bd2
+Connection dpid: 317034996094
+Real dpidStr: 0049d0c2217e
+Connection dpid: 779328912337
+Real dpidStr: 00b5739f7bd1
+Connection dpid: 317033881980
+Real dpidStr: 0049d0b1217c
+Connection dpid: 783707765714
+Real dpidStr: 00b6789f7bd2
+Sent to: [00-b6-78-9f-7b-d2 3]
+Well...done
+Flow Match: ofp_match
+  wildcards: nw_tos|tp_dst|dl_dst|dl_src|in_port|dl_vlan_pcp|nw_proto|dl_vlan|tp_src (1100000000000011101111 = 3000ef)
+  dl_type: 0x800
+  nw_src: 10.1.1.3
+  nw_dst: 10.1.2.2
+Flow mod message: ofp_flow_mod
+  header: 
+    version: 1
+    type:    14 (OFPT_FLOW_MOD)
+    length:  88
+    xid:     5829
+  match: 
+    wildcards: nw_tos|tp_dst|dl_dst|dl_src|in_port|dl_vlan_pcp|nw_proto|dl_vlan|tp_src (1100000000000011101111 = 3000ef)
+    dl_type: 0x800
+    nw_src: 10.1.1.3
+    nw_dst: 10.1.2.2
+  cookie: 0
+  command: 0
+  idle_timeout: 0
+  hard_timeout: 0
+  priority: 65535
+  buffer_id: None
+  out_port: 65535
+  flags: 0
+  actions: 
+    type: 11
+    len: 16
+    port: 1
+    queue_id: 9
+dpid parameter: 00b6789f7bd2
+Connection dpid: 317034996094
+Real dpidStr: 0049d0c2217e
+Connection dpid: 779328912337
+Real dpidStr: 00b5739f7bd1
+Connection dpid: 317033881980
+Real dpidStr: 0049d0b1217c
+Connection dpid: 783707765714
+Real dpidStr: 00b6789f7bd2
+Sent to: [00-b6-78-9f-7b-d2 3]
+Well...done
+Flow Match: ofp_match
+  wildcards: nw_tos|tp_dst|dl_dst|dl_src|in_port|dl_vlan_pcp|nw_proto|dl_vlan|tp_src (1100000000000011101111 = 3000ef)
+  dl_type: 0x800
+  nw_src: 10.1.1.3
+  nw_dst: 10.1.2.2
+Flow mod message: ofp_flow_mod
+  header: 
+    version: 1
+    type:    14 (OFPT_FLOW_MOD)
+    length:  88
+    xid:     5830
+  match: 
+    wildcards: nw_tos|tp_dst|dl_dst|dl_src|in_port|dl_vlan_pcp|nw_proto|dl_vlan|tp_src (1100000000000011101111 = 3000ef)
+    dl_type: 0x800
+    nw_src: 10.1.1.3
+    nw_dst: 10.1.2.2
+  cookie: 0
+  command: 0
+  idle_timeout: 0
+  hard_timeout: 0
+  priority: 65535
+  buffer_id: None
+  out_port: 65535
+  flags: 0
+  actions: 
+    type: 11
+    len: 16
+    port: 1
+    queue_id: 10
+dpid parameter: 00b6789f7bd2
+Connection dpid: 317034996094
+Real dpidStr: 0049d0c2217e
+Connection dpid: 779328912337
+Real dpidStr: 00b5739f7bd1
+Connection dpid: 317033881980
+Real dpidStr: 0049d0b1217c
+Connection dpid: 783707765714
+Real dpidStr: 00b6789f7bd2
+Sent to: [00-b6-78-9f-7b-d2 3]
+Well...done
+Flow Match: ofp_match
+  wildcards: nw_tos|tp_dst|dl_dst|dl_src|in_port|dl_vlan_pcp|nw_proto|dl_vlan|tp_src (1100000000000011101111 = 3000ef)
+  dl_type: 0x800
+  nw_src: 10.1.1.3
+  nw_dst: 10.1.2.2
+Flow mod message: ofp_flow_mod
+  header: 
+    version: 1
+    type:    14 (OFPT_FLOW_MOD)
+    length:  88
+    xid:     5831
+  match: 
+    wildcards: nw_tos|tp_dst|dl_dst|dl_src|in_port|dl_vlan_pcp|nw_proto|dl_vlan|tp_src (1100000000000011101111 = 3000ef)
+    dl_type: 0x800
+    nw_src: 10.1.1.3
+    nw_dst: 10.1.2.2
+  cookie: 0
+  command: 0
+  idle_timeout: 0
+  hard_timeout: 0
+  priority: 65535
+  buffer_id: None
+  out_port: 65535
+  flags: 0
+  actions: 
+    type: 11
+    len: 16
+    port: 1
+    queue_id: 11
+dpid parameter: 00b6789f7bd2
+Connection dpid: 317034996094
+Real dpidStr: 0049d0c2217e
+Connection dpid: 779328912337
+Real dpidStr: 00b5739f7bd1
+Connection dpid: 317033881980
+Real dpidStr: 0049d0b1217c
+Connection dpid: 783707765714
+Real dpidStr: 00b6789f7bd2
+Sent to: [00-b6-78-9f-7b-d2 3]
+Well...done

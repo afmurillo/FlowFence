@@ -134,6 +134,7 @@ class handle_message(Thread):
 
 			# We only want to redirect outgoing flows
 			if message['bwList'][i]['action'] != 'OFPP_LOCAL':		
+				
 				my_match = of.ofp_match(dl_type = 0x800,nw_src=message['bwList'][i]['nw_src'],nw_dst=message['bwList'][i]['nw_dst'])
 
 				print "Flow Match: " + str(my_match)
@@ -202,33 +203,55 @@ def _handle_flowstats_received (event):
 	alfa = 1
 	responsePort = 23456
 
-	for f in event.stats:
-		print "Received flow " + str(f)
-		if f.match.nw_dst != '10.1.2.2':
-			continue
+	#accBwList=[]
 
-		print "Creating dict for flow"
+	# Get indexes of flowList
+	indexesToProcess = [flowIndex for flowIndex, flow in enumerate(flowList) ]
+
+	#print "Flow List indexes: " + str(indexesToProcess)
+
+	while len(indexesToProcess) > 0 :
+
+		#print "Remaining indexes: " + str(indexesToProcess)
+
+		# we should add a line to ignore if nw_dst != '10.1.2.2'
+		# Get src of first flow
+		nw_src = flowList[indexesToProcess[0]]['match']['nw_src']
+
+		#print "Processing flows with nw_src: " + str(nw_src)
+
+		processingIndexes = [flowIndex for flowIndex, flow in enumerate(flowList) if flow['match']['nw_src'] == nw_src ]
+
+		#print "Processing indexes: " + str(processingIndexes)
+
 		flowBwDict=dict.fromkeys(['nw_src','nw_dst','reportedBw','goodBehaved','bw', 'action'])
-		flowBwDict['nw_src'] = str(f.match.nw_src)
-		flowBwDict['nw_dst'] = str(f.match.nw_dst)
-		flowBwDict['reportedBw'] = f.byte_count
-		flowBwDict['goodBehaved'] = classifyFlows(capacity, f.byte_count,numFlows)
-		flowBwDict['action'] = f.actions[0].port
+		flowBwDict['nw_src'] = flowList[processingIndexes[0]]['match']['nw_src']
+		flowBwDict['nw_dst'] = flowList[processingIndexes[0]]['match']['nw_dst']
+		flowBwDict['action'] = flowList[processingIndexes[0]]['actions'][0]['port']	
 
+		accBw = 0
+
+		for i in range(len(processingIndexes)):
+			accBw = accBw + flowList[processingIndexes[i]]['byte_count']
+
+		flowBwDict['reportedBw'] = accBw		
+		flowBwDict['goodBehaved'] = classifyFlows(capacity, flowBwDict['reportedBw'],numFlows)	
+	
 		if flowBwDict['goodBehaved'] == True:	
-			flowBwDict['bw']=  f.byte_count
-			remainingBw = remainingBw -  f.byte_count
+			flowBwDict['bw']= accBw
+			remainingBw = remainingBw -  accBw
 		else:
 			badFlows=badFlows+1
 
 		flowBwList.append(flowBwDict)
 
-	bwForBadFlows=remainingBw
-	print "Flow list: " + str(flowBwList)
-	# Bad Flows
+		bwForBadFlows=remainingBw
 
-	for i in range(len(flowBwList)):
-		print i
+		for i in range(len(processingIndexes)):
+			indexesToProcess.remove(processingIndexes[i])
+
+	# Bad Flows
+	for i in range(len(flowBwList)):	
 		if flowBwList[i]['goodBehaved'] == False:
 			flowBwList[i]['bw']= assignBwToBadBehaved(bwForBadFlows, badFlows, capacity, numFlows, flowBwList[i]['reportedBw'], alfa)
 			print "Bad behaved flow bw " +  str(flowBwList[i]['bw'])
@@ -253,7 +276,6 @@ def _handle_flowstats_received (event):
 
 	print "Response Message sent: " + str(responseMessage)
 
-	# Revisar como responder!
 	responseSocket = createSocket()
 	sendMessage(responseSocket,sendingAddress, responsePort, responseMessage)
 	closeConnection(responseSocket)

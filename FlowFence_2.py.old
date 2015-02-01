@@ -10,6 +10,8 @@ from pox.lib.recoco import Timer
 
 import pox.lib.packet as pkt
 
+from pox.openflow.of_json import *
+
 from threading import Thread
 from collections import deque
 
@@ -18,9 +20,6 @@ import string, sys, socket, json, subprocess
 import thread 
 import time
 import math
-
-# include as part of the betta branch
-from pox.openflow.of_json import *
 
 """
 DoS Mitigation - FlowFence component
@@ -53,7 +52,7 @@ class server_socket(Thread):
 		while True:												
 			try:			
 				client, addr = self.sock.accept()				# Establish connection with client
-				data = client.recv(1024)						# Get data from the client 
+				data = client.recv(4096)						# Get data from the client 
 				print 'Message from', addr 						# Print a message confirming 
 				data_treatment = handle_message(data,self.connections, addr)	# Call the thread to work with the data received
 				data_treatment.setDaemon(True)					# Set the thread as a demond
@@ -90,13 +89,11 @@ class handle_message(Thread):
 		#print "Type of message " + str(message['Notification'])
 	
 		if message['Notification'] == 'Congestion':
-			self.handleCongestionNotification(message, self.srcAddress)
-		elif message['Notification'] == 'Uncongestion':
-			self.handleUncongestionNotification(message, self.srcAddress)
+			self.handleCongestionNotification(message['Interface']['dpid'],message, self.srcAddress)
 		elif message['Notification'] == 'QueuesDone':
 			self.handleFlowsRedirection(message['Interface']['dpid'],self.myconnections, self.srcAddress, message)
 
-	def handleCongestionNotification(self, notificationMessage, switchAddres):
+	def handleCongestionNotification(self, dpid, notificationMessage, switchAddres):
 		# Algorithm: Classify good and bad flows, assign bandwidth fo good flows, assign band fo bad flows, assign remaining band
 		# Bad flows bw: assignedBw(j,i)=avaliableBw/badFlows - (1 -exp( - (rates(i)-capacityOverN) ) )*alfas(j)*rates(i);
 
@@ -104,85 +101,25 @@ class handle_message(Thread):
 		badFlows=0
 		bwForBadFlows=0
 
+                dpid = dpid[:len(dpid)-1]
+                dpid = dpid[len(dpid)-12:]
+                print 'Received dpid: ' + str(dpid)
+
 		# We leave the 10% to handle new flows, during congestion.
 		remainingBw = notificationMessage['Interface']['capacity']*(1-self.bwForNewFlows)
 
-		# Good Flows
-		for i in range(len(notificationMessage['Flowlist'])):
-			flowBwDict=dict.fromkeys(['nw_src','nw_dst','goodBehaved','bw'])
-			flowBwDict['nw_src'] = notificationMessage['Flowlist'][i]['nw_src']
-			flowBwDict['nw_dst'] = notificationMessage['Flowlist'][i]['nw_dst']
-			flowBwDict['goodBehaved'] = self.classifyFlows(notificationMessage['Interface']['capacity'], notificationMessage['Flowlist'][i]['arrivalRate'],len(notificationMessage['Flowlist']))
-
-			if flowBwDict['goodBehaved'] == True:	
-				flowBwDict['bw']= notificationMessage['Flowlist'][i]['arrivalRate']
-				#flowBwDict['bw'] = 300000
-				remainingBw = remainingBw - notificationMessage['Flowlist'][i]['arrivalRate']
-			else:
-				badFlows=badFlows+1
-
-			flowBwList.append(flowBwDict)
-
-		bwForBadFlows=remainingBw
-
-		# Bad Flows
-		for i in range(len(notificationMessage['Flowlist'])):
-			if flowBwDict['goodBehaved'] == False:
-				flowBwList[i]['bw']= self.assignBwToBadBehaved(bwForBadFlows, badFlows, notificationMessage['Interface']['capacity'], len(notificationMessage['Flowlist']), notificationMessage['Flowlist'][i]['arrivalRate'], self.alfa)
-				#flowBwList[i]['bw'] = 300000
-				# Here we should check witch switches also handle the bad behaved flow to apply the same control, in the simplest topology (Dumb-bell), it is not neccesary
-				print "Bad behaved flow bw " +  str(flowBwDict['bw'])
-				remainingBw = remainingBw - flowBwList[i]['bw']
-
-		# Give remmaining bw between good flows
-		extraBw = remainingBw/(len(notificationMessage['Flowlist']) - badFlows)
-
-		for i in range(len(notificationMessage['Flowlist'])):
-			if flowBwDict['goodBehaved'] == True:
-				flowBwList[i]['bw']=  flowBwList[i]['bw'] + extraBw
-				print "Good behaved flow bw: " + str(flowBwDict['bw'])
-				#flowBwList[i]['bw'] = 300000
+		# Request flow stats from switch
+		print "dpid parameter: " + str(dpid)
+		for connection in self.myconnections:
+			connectionDpid=connection.dpid
+			print "Connection dpid: " + str(connectionDpid)
+			dpidStr=dpidToStr(connectionDpid)
+			dpidStr=dpidStr.replace("-", "")
+			print 'Real dpidStr: ' + dpidStr
+			if dpid == dpidStr:
+				connection.send(of.ofp_stats_request(body=of.ofp_flow_stats_request()))
+				print 'Flow stats requets sent to: ' + str(connection)				
 		
-		print "Calculated Bandwidth: " + str(flowBwList)
-
-		queuesDict = dict.fromkeys(['Response'],['bwList'])
-		queuesDict['Interface'] = notificationMessage['Interface']['name']
-		queuesDict['Response'] = "Decrement"
-		queuesDict['bwList'] = flowBwList
-
-		responseMessage = json.dumps(str(queuesDict))
-
-		print "Response Message sent: " + str(responseMessage)
-
-		responseSocket = self.createSocket()
-		self.sendMessage(responseSocket,switchAddres, self.responsePort, responseMessage)
-		self.closeConnection(responseSocket)
-	
-	def sendMessage(self, aSocket, ipAddress, port, aMessage):
-		aSocket.connect((ipAddress, port))
-		aSocket.send(aMessage)	
-	
-	def closeConnection(self, aSocket):				
-		aSocket.close()
-
-	def createSocket(self):
-		return socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-		
-	def handleUnCongestionNotification(self, notificationMessage, switchAddres):
-		print "Congestion stopped"
-	
-	#In further versions, other classification methods could be used
-	def classifyFlows(self, capacity, estimatedBw, numFlows):
-		if (estimatedBw>capacity/numFlows):
-			return False
-		else:
-			return True
-
-	def assignBwToBadBehaved(self, avaliableBw, numBadFlows, capacity, numTotalFlows, flowRate, alfa):		
-		return avaliableBw/numBadFlows - (1 - math.exp(-(flowRate-(capacity/numTotalFlows))))*alfa*flowRate
-		#return 300000
-
-	
 	def handleFlowsRedirection(self, dpid, connections, switchAddress, message):
 
 		print 'message from ' + str(switchAddress)
@@ -193,12 +130,12 @@ class handle_message(Thread):
 		print 'Received dpid: ' + str(dpid)
 
 		print "message to be used for redirection" + str(message)
-		for i in range(len(message['Flowlist'])):
+		for i in range(len(message['bwList'])):
 
 			# We only want to redirect outgoing flows
-			if message['Flowlist'][i]['action'] != 'LOCAL':		
-				#my_match = of.ofp_match(nw_src=message['Flowlist'][i]['nw_src'],nw_dst=message['Flowlist'][i]['nw_dst'])
-				my_match = of.ofp_match(dl_type = 0x800,nw_src=message['Flowlist'][i]['nw_src'],nw_dst=message['Flowlist'][i]['nw_dst'])
+			if message['bwList'][i]['action'] != 'OFPP_LOCAL':		
+				
+				my_match = of.ofp_match(dl_type = 0x800,nw_src=message['bwList'][i]['nw_src'],nw_dst=message['bwList'][i]['nw_dst'])
 
 				print "Flow Match: " + str(my_match)
 				msg = of.ofp_flow_mod()
@@ -207,7 +144,7 @@ class handle_message(Thread):
 		
 				# There is a bug here, the error it shows reads "can't convert argument to int" when try to send the message
 				# If the actions are omitted (aka we order to drop the packets with match, we get no error)
-				msg.actions.append(of.ofp_action_enqueue(port=int(message['Flowlist'][i]['action'].split(':')[1]), queue_id=int(message['QueueList'][i]['queueId'])))
+				msg.actions.append(of.ofp_action_enqueue(port=int(message['bwList'][i]['action']), queue_id=int(message['QueueList'][i]['queueId'])))
 				
 				print "Flow mod message: " + str(msg)
 
@@ -246,43 +183,109 @@ class connect_test(EventMixin):
 
 #######################################
 
-# handler to display flow statistics received in JSON format
-# structure of event.stats is defined by ofp_flow_stats()
 def _handle_flowstats_received (event):
-	stats = flow_stats_to_list(event.stats)
-	print "FlowStatsReceived from " + str(dpidToStr(event.connection.dpid)) + "Stats: " + str(stats)
-	#log.debug("FlowStatsReceived from %s: %s",dpidToStr(event.connection.dpid), stats)
 
-	sbytes = 0
-	sflows = 0
-	spackets = 0
+	flowList = flow_stats_to_list(event.stats)
+	sendingDpid = event.connection.dpid
+	sendingAddress = event.connection.sock.getpeername()[0]
+
+	print "Sending address " + str(sendingAddress)
+	
+	# check how to dynamically do this
+
+	badFlows=0
+	bwForBadFlows=0
+	flowBwList=[]
+	capacity = 10000000
+	bwForNewFlows = 0.1
+	remainingBw = capacity*(1-bwForNewFlows)
+	numFlows = len(flowList)
+	alfa = 1
+	responsePort = 23456
 
 	for f in event.stats:
-			sbytes += f.byte_count
-			spackets += f.packet_count
-			sflows += 1
-			#'log.info("Web traffic from %s: %s bytes (%s packets) over %s flows",dpidToStr(event.connection.dpid), web_bytes, web_packet, web_flows)
-			print "Traffic of switch: " + str(dpidToStr(event.connection.dpid)) + "Bytes: " + str(sbytes) + "Packets: " + str(spackets) + "Flows: " + str(sflows)
+		print "Received flow " + str(f)
+		if f.match.nw_dst != '10.1.2.2':
+			continue
+
+		print "Creating dict for flow"
+		flowBwDict=dict.fromkeys(['nw_src','nw_dst','reportedBw','goodBehaved','bw', 'action'])
+		flowBwDict['nw_src'] = str(f.match.nw_src)
+		flowBwDict['nw_dst'] = str(f.match.nw_dst)
+		flowBwDict['reportedBw'] = f.byte_count
+		flowBwDict['goodBehaved'] = classifyFlows(capacity, f.byte_count,numFlows)
+		flowBwDict['action'] = f.actions[0].port
+
+		if flowBwDict['goodBehaved'] == True:	
+			flowBwDict['bw']=  f.byte_count
+			remainingBw = remainingBw -  f.byte_count
+		else:
+			badFlows=badFlows+1
+
+		flowBwList.append(flowBwDict)
+
+	bwForBadFlows=remainingBw
+	print "Flow list: " + str(flowBwList)
+	# Bad Flows
+
+	for i in range(len(flowBwList)):
+		print i
+		if flowBwList[i]['goodBehaved'] == False:
+			flowBwList[i]['bw']= assignBwToBadBehaved(bwForBadFlows, badFlows, capacity, numFlows, flowBwList[i]['reportedBw'], alfa)
+			print "Bad behaved flow bw " +  str(flowBwList[i]['bw'])
+			remainingBw = remainingBw - flowBwList[i]['bw']
+
+	# Give remmaining bw between good flows
+	extraBw = remainingBw/(numFlows - badFlows)
+
+	for i in range(len(flowBwList)):
+		if flowBwList[i]['goodBehaved'] == True:
+			flowBwList[i]['bw']=  flowBwList[i]['bw'] + extraBw
+			print "Good behaved flow bw: " + str(flowBwList[i]['bw'])		
+
+	print "Calculated Bandwidth: " + str(flowBwList)	
+
+	queuesDict = dict.fromkeys(['Response','dpid','bwList'])
+	queuesDict['dpid'] = sendingDpid
+	queuesDict['Response'] = "Decrement"
+	queuesDict['bwList'] = flowBwList
+
+	responseMessage = json.dumps(str(queuesDict))
+
+	print "Response Message sent: " + str(responseMessage)
+
+	# Revisar como responder!
+	responseSocket = createSocket()
+	sendMessage(responseSocket,sendingAddress, responsePort, responseMessage)
+	closeConnection(responseSocket)
+
+def createSocket():
+	return socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+
+	
+def sendMessage(aSocket, ipAddress, port, aMessage):
+	aSocket.connect((ipAddress, port))
+	aSocket.send(aMessage)	
+
+def closeConnection(aSocket):				
+	aSocket.close()
 
 
-def _timer_func ():
-	for connection in core.openflow._connections.values():
-		connection.send(of.ofp_stats_request(body=of.ofp_flow_stats_request()))
-		# We could even request port stats!
-		#connection.send(of.ofp_stats_request(body=of.ofp_port_stats_request()))
-		print "Sent " + str(len(core.openflow._connections))+ " flowstats request(s)"
-  		log.info("Sent %i flow/port stats request(s)", )
 
+#In further versions, other classification methods could be used
+def classifyFlows( capacity, estimatedBw, numFlows):
+	if (estimatedBw>capacity/numFlows):
+		return False
+	else:
+		return True
 
+def assignBwToBadBehaved( avaliableBw, numBadFlows, capacity, numTotalFlows, flowRate, alfa):		
+	return avaliableBw/numBadFlows - (1 - math.exp(-(flowRate-(capacity/numTotalFlows))))*alfa*flowRate
+	
 def launch ():
 	#core.openflow.addListenerByName("FlowStatsReceived", listarFluxosIp)
 	print "FlowFence launched"
 	core.registerNew(connect_test)
-
-	# attach handsers to listners
 	core.openflow.addListenerByName("FlowStatsReceived", _handle_flowstats_received) 
-
-	# timer set to execute every five seconds
-	Timer(1, _timer_func, recurring=True)
 
 
