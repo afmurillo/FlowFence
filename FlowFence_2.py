@@ -198,12 +198,10 @@ def _handle_flowstats_received (event):
 	flowBwList=[]
 	capacity = 10000000
 	bwForNewFlows = 0.1
-	remainingBw = capacity*(1-bwForNewFlows)
-	numFlows = len(flowList)
+	remainingBw = capacity*(1-bwForNewFlows)	
+	numFlows = 0
 	alfa = 1
 	responsePort = 23456
-
-	#accBwList=[]
 
 	# Get indexes of flowList
 	indexesToProcess = [flowIndex for flowIndex, flow in enumerate(flowList) ]
@@ -235,22 +233,24 @@ def _handle_flowstats_received (event):
 			accBw = accBw + flowList[processingIndexes[i]]['byte_count']
 
 		flowBwDict['reportedBw'] = accBw		
-		flowBwDict['goodBehaved'] = classifyFlows(capacity, flowBwDict['reportedBw'],numFlows)	
+		flowBwList.append(flowBwDict)
+		numFlows = numFlows + 1
+		
+		for i in range(len(processingIndexes)):
+			indexesToProcess.remove(processingIndexes[i])
+		
+	# Good flows
+	for i in range(len(flowBwList)):	
+		flowBwList[i]['goodBehaved'] = classifyFlows(capacity, flowBwList[i]['reportedBw'],numFlows)	
 	
-		if flowBwDict['goodBehaved'] == True:	
-			flowBwDict['bw']= accBw
-			remainingBw = remainingBw -  accBw
+		if flowBwList[i]['goodBehaved'] == True:	
+			flowBwList[i]['bw']= flowBwList[i]['reportedBw']
+			remainingBw = remainingBw -  flowBwList[i]['reportedBw']
 		else:
 			badFlows=badFlows+1
 
-		flowBwList.append(flowBwDict)
-
-		bwForBadFlows=remainingBw
-
-		for i in range(len(processingIndexes)):
-			indexesToProcess.remove(processingIndexes[i])
-
 	# Bad Flows
+	bwForBadFlows=remainingBw
 	for i in range(len(flowBwList)):	
 		if flowBwList[i]['goodBehaved'] == False:
 			flowBwList[i]['bw']= assignBwToBadBehaved(bwForBadFlows, badFlows, capacity, numFlows, flowBwList[i]['reportedBw'], alfa)
