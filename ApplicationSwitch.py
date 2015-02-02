@@ -102,7 +102,7 @@ class ApplicationSwitch:
 
                         print self.interfacesList
 
-                        self.feedbackDict=dict.fromkeys(['Notification','Flowlist','Interface'])
+                        self.feedbackDict=dict.fromkeys(['Notification',,'Interface'])
 
                         for i in range(len(self.interfacesList)):
                                 flowIntDict = dict.fromkeys(['interfaceName','dpid','flowList'])
@@ -124,7 +124,7 @@ class ApplicationSwitch:
 
 				print "Interface Dict: " + str(interfaceDict)
 				self.feedbackDict['Notification']="Congestion"
-				self.feedbackDict['Flowlist']=flowList
+				@self.feedbackDict['Flowlist']=flowList
 				self.feedbackDict['Interface']=dict.fromkeys(['capacity','dpid','name'])
 				self.feedbackDict['Interface']['capacity']=interfaceDict['capacity']
 				self.feedbackDict['Interface']['dpid']=interfaceDict['dpid']
