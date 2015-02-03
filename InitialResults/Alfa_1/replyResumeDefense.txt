@@ -1,0 +1,7 @@
+Defense
+
+meanTwoDefense =     18.2600   10.0843
+meanFourDefense =    27.62      6.8316908595164
+meanSevenDefense = 1385.1     302.1680492706
+meanTenDefense =    921.04    428.202584065066
+

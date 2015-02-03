@@ -1,0 +1,6 @@
+Defense
+
+meanOutTwoDefense = 45.2          18.0333025261598
+meanOutTwoDefense = 88.2          3.27108544675922
+meanOutTwoDefense = 82.8          5.80517010948
+meanOutTwoDefense = 91.6          4.03732584763727
