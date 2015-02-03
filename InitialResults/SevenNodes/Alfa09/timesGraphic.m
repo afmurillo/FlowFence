@@ -6,6 +6,14 @@ pingNoAttackTimes = csvread('httpPerfNoAttack/times.txt');
 pingAttackTimes = csvread('httpPerfAttack/times.txt');
 pingDefenseTimes = csvread('httpPerfDefense/times.txt');
 
+httpNoAttackOuts = csvread('httpPerfNoAttack/outs.txt');
+httpAttackOuts = csvread('httpPerfAttack/outs.txt');
+httpDefenseOuts = csvread('httpPerfDefense/outs.txt');
+
+httpNoAttackNwk= csvread('httpPerfNoAttack/nwk.txt');
+httpAttackNwk = csvread('httpPerfAttack/nwk.txt');
+httpDefenseNwk = csvread('httpPerfDefense/nwk.txt');
+
 figure(1)
 
 %boxplot(times,'labels',{'With no attack', 'With attack and no Flowfence', 'With attack and Flowfence'});
@@ -33,6 +41,62 @@ grid on
 
 ylabel(a,'Reply Time (ms)')
 title(b, 'Client HTTP Perf Reply Time')
+
+figure(2)
+a = subplot(1,3,1)
+
+boxplot(httpNoAttackOuts, 'labels',{'No attack'});
+txt = findobj(gca,'Type','text');
+set(findobj(gca,'Type','text'),'FontSize',20)
+set(txt(1:end),'VerticalAlignment', 'Middle');
+grid on
+
+b=subplot(1,3,2)
+boxplot(httpAttackOuts, 'labels',{'Attack and no Flowfence'});
+txt = findobj(gca,'Type','text');
+set(findobj(gca,'Type','text'),'FontSize',20)
+set(txt(1:end),'VerticalAlignment', 'Middle');
+grid on
+
+subplot(1,3,3)
+boxplot(httpDefenseOuts, 'labels',{'Attack and Flowfence'});
+txt = findobj(gca,'Type','text');
+set(findobj(gca,'Type','text'),'FontSize',20)
+set(txt(1:end),'VerticalAlignment', 'Middle');
+grid on
+
+ylabel(a,'Number of timeouts')
+title(b, 'Connection timeouts')
+
+
+
+figure(3)
+a = subplot(1,3,1)
+
+boxplot(httpNoAttackNwk, 'labels',{'No attack'});
+txt = findobj(gca,'Type','text');
+set(findobj(gca,'Type','text'),'FontSize',20)
+set(txt(1:end),'VerticalAlignment', 'Middle');
+grid on
+
+b=subplot(1,3,2)
+boxplot(httpAttackNwk, 'labels',{'Attack and no Flowfence'});
+txt = findobj(gca,'Type','text');
+set(findobj(gca,'Type','text'),'FontSize',20)
+set(txt(1:end),'VerticalAlignment', 'Middle');
+grid on
+
+subplot(1,3,3)
+boxplot(httpDefenseNwk, 'labels',{'Attack and Flowfence'});
+txt = findobj(gca,'Type','text');
+set(findobj(gca,'Type','text'),'FontSize',20)
+set(txt(1:end),'VerticalAlignment', 'Middle');
+grid on
+
+ylabel(a,'KB/s')
+title(b, 'Network Throughput')
+
+
 
 % meanUdp100=[meanTxUdpPkts_1' meanRoutedUdpPkts_1' meanRxUdpPkts_1'];
 % 
