@@ -1,0 +1,7 @@
+Defense
+
+meanFourDefense =   16.8200   21.9443
+meanFourDefense =   19.46      5.49618049194165
+meanFourDefense =  782.88    787.490213907449
+meanFourDefense =  756.48    465.803565894466
+

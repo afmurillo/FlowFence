@@ -20,7 +20,7 @@ import time
 import math
 
 # include as part of the betta branch
-# from pox.openflow.of_json import *
+from pox.openflow.of_json import *
 
 """
 DoS Mitigation - FlowFence component
