@@ -8,174 +8,178 @@ interfaces List: ['"eth0br"', '']
 [{'capacity': 100000000, 'name': '"eth0br"', 'dpid': '"000000b6789f7bd2"'}]
 10.1.4.1
 12345
-Measured K: 0.504387140274
-Measured K: 0.497503042221
-Measured K: 0.516433954239
-Measured K: 0.501223087311
-Measured K: 0.515413999557
-Measured K: 0.498018980026
-Measured K: 0.504001140594
-Measured K: 0.49679517746
-Measured K: 0.497778892517
-Measured K: 0.497711896896
-Measured K: 0.498768091202
-Measured K: 0.502708911896
-Measured K: 0.497341871262
-Measured K: 0.498036146164
-Measured K: 0.498332023621
-Measured K: 0.496193885803
-Measured K: 0.495635986328
-Measured K: 0.496119976044
-Measured K: 0.496236801147
-Measured K: 0.495849132538
-update, ema: 0.0
-current threshold: 1000
-Measured K: 0.497198104858
-Measured K: 0.497950792313
-Measured K: 0.496870994568
-Measured K: 0.4974629879
-Measured K: 0.496450901031
-Measured K: 0.498286962509
-Measured K: 0.497745990753
-Measured K: 0.498840093613
-Measured K: 0.498471975327
-Measured K: 0.497847080231
-Measured K: 0.496662855148
-Measured K: 0.497806072235
-Measured K: 0.496977090836
-Measured K: 0.497208833694
-Measured K: 0.497750997543
-Measured K: 0.497349023819
-Measured K: 0.496273994446
-Measured K: 0.497214078903
-Measured K: 0.49759888649
-Measured K: 0.497616052628
-update, ema: 0.0
-current threshold: 1000
-Measured K: 0.496698856354
-Measured K: 0.498188018799
-Measured K: 0.4963722229
-Measured K: 0.497772932053
-Measured K: 0.512687921524
-Measured K: 0.497826099396
-Measured K: 0.512750148773
-Measured K: 0.497539043427
-Measured K: 0.503134012222
-Measured K: 0.506644964218
-Measured K: 0.501533985138
-Measured K: 0.524290084839
-Measured K: 0.504697084427
-Measured K: 0.515035152435
-Measured K: 0.497071027756
-Measured K: 0.511084794998
-Measured K: 0.49897313118
-Measured K: 0.497661828995
-Measured K: 0.496875047684
-Measured K: 0.49621796608
-Measured K: 0.496938943863
-update, ema: 0.0
-current threshold: 1000
-Measured K: 0.496943950653
-Measured K: 0.497513055801
-Measured K: 0.497418880463
-Measured K: 0.497055053711
-Measured K: 0.497873067856
-Measured K: 0.498342037201
-Measured K: 0.497057199478
-Measured K: 0.497261047363
-Measured K: 0.496029853821
-Measured K: 0.497377872467
-Measured K: 0.497156858444
-Measured K: 0.497154951096
-Measured K: 0.497282981873
-Measured K: 0.498719930649
-Measured K: 0.499267101288
-Measured K: 0.502318143845
-Measured K: 0.502602100372
-Measured K: 0.497228860855
-Measured K: 0.497934103012
-Measured K: 0.497301101685
-update, ema: 0.0
-current threshold: 1000
-Measured K: 0.498271942139
-Measured K: 0.497225999832
-Measured K: 0.498391151428
-Measured K: 0.501224994659
-Measured K: 0.500415086746
-Flow Bytes: 98
-Simeple Flow Rate: 195.837420964
-Flow Arrival: 139.787254845
-Measured K: 0.500400066376
-Flow Bytes: 0
-Simeple Flow Rate: 0.0
-Flow Arrival: 0.0
-Measured K: 0.504075050354
-Flow Bytes: 98
-Simeple Flow Rate: 194.415494144
-Flow Arrival: 139.279102401
-Measured K: 0.500608921051
-Flow Bytes: 0
-Simeple Flow Rate: 0.0
-Flow Arrival: 0.0
-Measured K: 0.499862194061
-Flow Bytes: 98
-Simeple Flow Rate: 196.054034821
-Flow Arrival: 139.864258523
-Measured K: 0.500200033188
-Flow Bytes: 0
-Simeple Flow Rate: 0.0
-Flow Arrival: 0.0
-Measured K: 0.501085996628
-Flow Bytes: 98
-Simeple Flow Rate: 195.575211959
-Flow Arrival: 139.693899021
-Measured K: 0.50096487999
-Flow Bytes: 0
-Simeple Flow Rate: 0.0
-Flow Arrival: 0.0
-Measured K: 0.501117944717
-Flow Bytes: 98
-Simeple Flow Rate: 195.562743328
-Flow Arrival: 139.689455818
-Measured K: 0.501940011978
-Flow Bytes: 0
-Simeple Flow Rate: 0.0
-Flow Arrival: 0.0
-Measured K: 0.50070810318
-Flow Bytes: 98
-Simeple Flow Rate: 195.722816103
-Flow Arrival: 139.746470766
-Measured K: 0.501948833466
-Flow Bytes: 0
-Simeple Flow Rate: 0.0
-Flow Arrival: 0.0
-Measured K: 0.500575065613
-Flow Bytes: 98
-Simeple Flow Rate: 195.774833251
-Flow Arrival: 139.764985674
-Measured K: 0.500684022903
-Flow Bytes: 0
-Simeple Flow Rate: 0.0
-Flow Arrival: 0.0
-Measured K: 0.501953125
-Flow Bytes: 98
-Simeple Flow Rate: 195.237354086
-Flow Arrival: 139.573377024
-Measured K: 0.513813972473
-Flow Bytes: 0
-Simeple Flow Rate: 0.0
-Flow Arrival: 0.0
-update, ema: 98.05376
-current threshold: 1000
-Measured K: 0.504019021988
-Flow Bytes: 98
-Simeple Flow Rate: 194.437105992
-Flow Arrival: 139.286860707
-Measured K: 0.503003120422
-Flow Bytes: 0
-Simeple Flow Rate: 0.0
-Flow Arrival: 0.0
-Measured K: 0.512250185013
-Flow Bytes: 98
-Simeple Flow Rate: 191.312766432
-Flow Arrival: 138.153940565
+update, ema: 62773018.0
+current threshold: 100
+Congested
+Reporting congestion
+Interface Dict: {'capacity': 100000000, 'name': '"eth0br"', 'lowerLimit': 50, 'prevEma': 62773018.0, 'isCongested': 0, 'currentEma': 62773018.0, 'queueList': [], 'samples': [], 'dpid': '"000000b6789f7bd2"', 'threshold': 50, 'monitoring': 0, 'useAverages': deque([98.0, 98.0, 98.0, 98.0, 98.0, 98.0, 98.0, 98.0, 30067768.0, 72452714.0], maxlen=10), 'prevema': 98.0, 'upperLimit': 100}
+Message sent: "{'Interface': {'capacity': 100000000, 'name': '\"eth0br\"', 'dpid': '\"000000b6789f7bd2\"'}, 'Notification': 'Congestion'}"
+Message from ('10.1.4.1', 49599)
+Raw message received: "{'bwList': [{'reportedBw': 3410134, 'nw_dst': '10.1.2.2', 'bw': -2910230.4444444445, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.1'}, {'reportedBw': 3517800, 'nw_dst': '10.1.2.2', 'bw': -3017896.4444444445, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.4'}, {'reportedBw': 3464500, 'nw_dst': '10.1.2.2', 'bw': -2964596.4444444445, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.1'}, {'reportedBw': 3952728, 'nw_dst': '10.1.2.2', 'bw': -3452824.4444444445, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.2'}, {'reportedBw': 3872778, 'nw_dst': '10.1.2.2', 'bw': -3372874.4444444445, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.2'}, {'reportedBw': 3929276, 'nw_dst': '10.1.2.2', 'bw': -3429372.4444444445, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.2'}, {'reportedBw': 296, 'nw_dst': '10.1.2.2', 'bw': 4775976.000000002, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.3'}, {'reportedBw': 3519932, 'nw_dst': '10.1.2.2', 'bw': -3020028.4444444445, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.4'}, {'reportedBw': 4992078, 'nw_dst': '10.1.2.2', 'bw': -4492174.444444444, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.2'}, {'reportedBw': 74, 'nw_dst': '10.1.2.2', 'bw': 4775754.000000002, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.3'}, {'reportedBw': 494, 'nw_dst': '10.1.2.2', 'bw': 4776174.000000002, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.3'}, {'reportedBw': 74, 'nw_dst': '10.1.2.2', 'bw': 4775754.000000002, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.3'}, {'reportedBw': 3470896, 'nw_dst': '10.1.2.2', 'bw': -2970992.4444444445, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.4'}, {'reportedBw': 3309930, 'nw_dst': '10.1.2.2', 'bw': -2810026.4444444445, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.1'}, {'reportedBw': 3419728, 'nw_dst': '10.1.2.2', 'bw': -2919824.4444444445, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.4'}, {'reportedBw': 3864250, 'nw_dst': '10.1.2.2', 'bw': -3364346.4444444445, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.2'}, {'reportedBw': 3363230, 'nw_dst': '10.1.2.2', 'bw': -2863326.4444444445, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.1'}, {'reportedBw': 3555110, 'nw_dst': '10.1.2.2', 'bw': -3055206.4444444445, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.1'}, {'reportedBw': 3429322, 'nw_dst': '10.1.2.2', 'bw': -2929418.4444444445, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.4'}, {'reportedBw': 6130566, 'nw_dst': '10.1.2.2', 'bw': -5630662.444444444, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.2'}, {'reportedBw': 2854748, 'nw_dst': '10.1.2.2', 'bw': -2354844.4444444445, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.1'}, {'reportedBw': 428, 'nw_dst': '10.1.2.2', 'bw': 4776108.000000002, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.3'}, {'reportedBw': 74, 'nw_dst': '10.1.2.2', 'bw': 4775754.000000002, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.3'}, {'reportedBw': 2802514, 'nw_dst': '10.1.2.2', 'bw': -2302610.4444444445, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.4'}, {'reportedBw': 296, 'nw_dst': '10.1.2.2', 'bw': 4775976.000000002, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.3'}], 'Response': 'Decrement', 'dpid': 783707765714}"
+Message Received: {'dpid': 783707765714, 'Response': 'Decrement', 'bwList': [{'reportedBw': 3410134, 'nw_dst': '10.1.2.2', 'bw': -2910230.4444444445, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.1'}, {'reportedBw': 3517800, 'nw_dst': '10.1.2.2', 'bw': -3017896.4444444445, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.4'}, {'reportedBw': 3464500, 'nw_dst': '10.1.2.2', 'bw': -2964596.4444444445, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.1'}, {'reportedBw': 3952728, 'nw_dst': '10.1.2.2', 'bw': -3452824.4444444445, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.2'}, {'reportedBw': 3872778, 'nw_dst': '10.1.2.2', 'bw': -3372874.4444444445, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.2'}, {'reportedBw': 3929276, 'nw_dst': '10.1.2.2', 'bw': -3429372.4444444445, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.2'}, {'reportedBw': 296, 'nw_dst': '10.1.2.2', 'bw': 4775976.000000002, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.3'}, {'reportedBw': 3519932, 'nw_dst': '10.1.2.2', 'bw': -3020028.4444444445, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.4'}, {'reportedBw': 4992078, 'nw_dst': '10.1.2.2', 'bw': -4492174.444444444, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.2'}, {'reportedBw': 74, 'nw_dst': '10.1.2.2', 'bw': 4775754.000000002, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.3'}, {'reportedBw': 494, 'nw_dst': '10.1.2.2', 'bw': 4776174.000000002, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.3'}, {'reportedBw': 74, 'nw_dst': '10.1.2.2', 'bw': 4775754.000000002, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.3'}, {'reportedBw': 3470896, 'nw_dst': '10.1.2.2', 'bw': -2970992.4444444445, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.4'}, {'reportedBw': 3309930, 'nw_dst': '10.1.2.2', 'bw': -2810026.4444444445, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.1'}, {'reportedBw': 3419728, 'nw_dst': '10.1.2.2', 'bw': -2919824.4444444445, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.4'}, {'reportedBw': 3864250, 'nw_dst': '10.1.2.2', 'bw': -3364346.4444444445, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.2'}, {'reportedBw': 3363230, 'nw_dst': '10.1.2.2', 'bw': -2863326.4444444445, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.1'}, {'reportedBw': 3555110, 'nw_dst': '10.1.2.2', 'bw': -3055206.4444444445, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.1'}, {'reportedBw': 3429322, 'nw_dst': '10.1.2.2', 'bw': -2929418.4444444445, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.4'}, {'reportedBw': 6130566, 'nw_dst': '10.1.2.2', 'bw': -5630662.444444444, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.2'}, {'reportedBw': 2854748, 'nw_dst': '10.1.2.2', 'bw': -2354844.4444444445, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.1'}, {'reportedBw': 428, 'nw_dst': '10.1.2.2', 'bw': 4776108.000000002, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.3'}, {'reportedBw': 74, 'nw_dst': '10.1.2.2', 'bw': 4775754.000000002, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.3'}, {'reportedBw': 2802514, 'nw_dst': '10.1.2.2', 'bw': -2302610.4444444445, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.4'}, {'reportedBw': 296, 'nw_dst': '10.1.2.2', 'bw': 4775976.000000002, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.3'}]}
+Initing queues for: "eth0br"
+Created queue dict: {'queueId': 1, 'bw': -2910230.4444444445, 'nw_src': '10.1.1.1', 'queueuuid': None, 'nw_dst': '10.1.2.2'}
+Created queue dict: {'queueId': 2, 'bw': -3017896.4444444445, 'nw_src': '10.1.1.4', 'queueuuid': None, 'nw_dst': '10.1.2.2'}
+Created queue dict: {'queueId': 3, 'bw': -2964596.4444444445, 'nw_src': '10.1.1.1', 'queueuuid': None, 'nw_dst': '10.1.2.2'}
+Created queue dict: {'queueId': 4, 'bw': -3452824.4444444445, 'nw_src': '10.1.1.2', 'queueuuid': None, 'nw_dst': '10.1.2.2'}
+Created queue dict: {'queueId': 5, 'bw': -3372874.4444444445, 'nw_src': '10.1.1.2', 'queueuuid': None, 'nw_dst': '10.1.2.2'}
+Created queue dict: {'queueId': 6, 'bw': -3429372.4444444445, 'nw_src': '10.1.1.2', 'queueuuid': None, 'nw_dst': '10.1.2.2'}
+Created queue dict: {'queueId': 7, 'bw': 4775976.000000002, 'nw_src': '10.1.1.3', 'queueuuid': None, 'nw_dst': '10.1.2.2'}
+Created queue dict: {'queueId': 8, 'bw': -3020028.4444444445, 'nw_src': '10.1.1.4', 'queueuuid': None, 'nw_dst': '10.1.2.2'}
+Created queue dict: {'queueId': 9, 'bw': -4492174.444444444, 'nw_src': '10.1.1.2', 'queueuuid': None, 'nw_dst': '10.1.2.2'}
+Created queue dict: {'queueId': 10, 'bw': 4775754.000000002, 'nw_src': '10.1.1.3', 'queueuuid': None, 'nw_dst': '10.1.2.2'}
+Created queue dict: {'queueId': 11, 'bw': 4776174.000000002, 'nw_src': '10.1.1.3', 'queueuuid': None, 'nw_dst': '10.1.2.2'}
+Created queue dict: {'queueId': 12, 'bw': 4775754.000000002, 'nw_src': '10.1.1.3', 'queueuuid': None, 'nw_dst': '10.1.2.2'}
+Created queue dict: {'queueId': 13, 'bw': -2970992.4444444445, 'nw_src': '10.1.1.4', 'queueuuid': None, 'nw_dst': '10.1.2.2'}
+Created queue dict: {'queueId': 14, 'bw': -2810026.4444444445, 'nw_src': '10.1.1.1', 'queueuuid': None, 'nw_dst': '10.1.2.2'}
+Created queue dict: {'queueId': 15, 'bw': -2919824.4444444445, 'nw_src': '10.1.1.4', 'queueuuid': None, 'nw_dst': '10.1.2.2'}
+Created queue dict: {'queueId': 16, 'bw': -3364346.4444444445, 'nw_src': '10.1.1.2', 'queueuuid': None, 'nw_dst': '10.1.2.2'}
+Created queue dict: {'queueId': 17, 'bw': -2863326.4444444445, 'nw_src': '10.1.1.1', 'queueuuid': None, 'nw_dst': '10.1.2.2'}
+Created queue dict: {'queueId': 18, 'bw': -3055206.4444444445, 'nw_src': '10.1.1.1', 'queueuuid': None, 'nw_dst': '10.1.2.2'}
+Created queue dict: {'queueId': 19, 'bw': -2929418.4444444445, 'nw_src': '10.1.1.4', 'queueuuid': None, 'nw_dst': '10.1.2.2'}
+Created queue dict: {'queueId': 20, 'bw': -5630662.444444444, 'nw_src': '10.1.1.2', 'queueuuid': None, 'nw_dst': '10.1.2.2'}
+Created queue dict: {'queueId': 21, 'bw': -2354844.4444444445, 'nw_src': '10.1.1.1', 'queueuuid': None, 'nw_dst': '10.1.2.2'}
+Created queue dict: {'queueId': 22, 'bw': 4776108.000000002, 'nw_src': '10.1.1.3', 'queueuuid': None, 'nw_dst': '10.1.2.2'}
+Created queue dict: {'queueId': 23, 'bw': 4775754.000000002, 'nw_src': '10.1.1.3', 'queueuuid': None, 'nw_dst': '10.1.2.2'}
+Created queue dict: {'queueId': 24, 'bw': -2302610.4444444445, 'nw_src': '10.1.1.4', 'queueuuid': None, 'nw_dst': '10.1.2.2'}
+Created queue dict: {'queueId': 25, 'bw': 4775976.000000002, 'nw_src': '10.1.1.3', 'queueuuid': None, 'nw_dst': '10.1.2.2'}
+Queue command: 
+ ovs-vsctl -- set Port "eth0br" qos=@fenceqos -- --id=@fenceqos create QoS type=linux-htb queues=0=@queue0,1=@queue1,2=@queue2,3=@queue3,4=@queue4,5=@queue5,6=@queue6,7=@queue7,8=@queue8,9=@queue9,10=@queue10,11=@queue11,12=@queue12,13=@queue13,14=@queue14,15=@queue15,16=@queue16,17=@queue17,18=@queue18,19=@queue19,20=@queue20,21=@queue21,22=@queue22,23=@queue23,24=@queue24,25=@queue25 -- --id=@queue0 create Queue other-config:max-rate=1000000000 -- --id=@queue1 create Queue other-config:max-rate=1000000000 -- --id=@queue2 create Queue other-config:max-rate=1000000000 -- --id=@queue3 create Queue other-config:max-rate=1000000000 -- --id=@queue4 create Queue other-config:max-rate=1000000000 -- --id=@queue5 create Queue other-config:max-rate=1000000000 -- --id=@queue6 create Queue other-config:max-rate=1000000000 -- --id=@queue7 create Queue other-config:max-rate=1000000000 -- --id=@queue8 create Queue other-config:max-rate=1000000000 -- --id=@queue9 create Queue other-config:max-rate=1000000000 -- --id=@queue10 create Queue other-config:max-rate=1000000000 -- --id=@queue11 create Queue other-config:max-rate=1000000000 -- --id=@queue12 create Queue other-config:max-rate=1000000000 -- --id=@queue13 create Queue other-config:max-rate=1000000000 -- --id=@queue14 create Queue other-config:max-rate=1000000000 -- --id=@queue15 create Queue other-config:max-rate=1000000000 -- --id=@queue16 create Queue other-config:max-rate=1000000000 -- --id=@queue17 create Queue other-config:max-rate=1000000000 -- --id=@queue18 create Queue other-config:max-rate=1000000000 -- --id=@queue19 create Queue other-config:max-rate=1000000000 -- --id=@queue20 create Queue other-config:max-rate=1000000000 -- --id=@queue21 create Queue other-config:max-rate=1000000000 -- --id=@queue22 create Queue other-config:max-rate=1000000000 -- --id=@queue23 create Queue other-config:max-rate=1000000000 -- --id=@queue24 create Queue other-config:max-rate=1000000000 -- --id=@queue25 create Queue other-config:max-rate=1000000000 
+Queues list [{'queueId': 1, 'bw': -2910230.4444444445, 'nw_src': '10.1.1.1', 'queueuuid': None, 'nw_dst': '10.1.2.2'}, {'queueId': 2, 'bw': -3017896.4444444445, 'nw_src': '10.1.1.4', 'queueuuid': None, 'nw_dst': '10.1.2.2'}, {'queueId': 3, 'bw': -2964596.4444444445, 'nw_src': '10.1.1.1', 'queueuuid': None, 'nw_dst': '10.1.2.2'}, {'queueId': 4, 'bw': -3452824.4444444445, 'nw_src': '10.1.1.2', 'queueuuid': None, 'nw_dst': '10.1.2.2'}, {'queueId': 5, 'bw': -3372874.4444444445, 'nw_src': '10.1.1.2', 'queueuuid': None, 'nw_dst': '10.1.2.2'}, {'queueId': 6, 'bw': -3429372.4444444445, 'nw_src': '10.1.1.2', 'queueuuid': None, 'nw_dst': '10.1.2.2'}, {'queueId': 7, 'bw': 4775976.000000002, 'nw_src': '10.1.1.3', 'queueuuid': None, 'nw_dst': '10.1.2.2'}, {'queueId': 8, 'bw': -3020028.4444444445, 'nw_src': '10.1.1.4', 'queueuuid': None, 'nw_dst': '10.1.2.2'}, {'queueId': 9, 'bw': -4492174.444444444, 'nw_src': '10.1.1.2', 'queueuuid': None, 'nw_dst': '10.1.2.2'}, {'queueId': 10, 'bw': 4775754.000000002, 'nw_src': '10.1.1.3', 'queueuuid': None, 'nw_dst': '10.1.2.2'}, {'queueId': 11, 'bw': 4776174.000000002, 'nw_src': '10.1.1.3', 'queueuuid': None, 'nw_dst': '10.1.2.2'}, {'queueId': 12, 'bw': 4775754.000000002, 'nw_src': '10.1.1.3', 'queueuuid': None, 'nw_dst': '10.1.2.2'}, {'queueId': 13, 'bw': -2970992.4444444445, 'nw_src': '10.1.1.4', 'queueuuid': None, 'nw_dst': '10.1.2.2'}, {'queueId': 14, 'bw': -2810026.4444444445, 'nw_src': '10.1.1.1', 'queueuuid': None, 'nw_dst': '10.1.2.2'}, {'queueId': 15, 'bw': -2919824.4444444445, 'nw_src': '10.1.1.4', 'queueuuid': None, 'nw_dst': '10.1.2.2'}, {'queueId': 16, 'bw': -3364346.4444444445, 'nw_src': '10.1.1.2', 'queueuuid': None, 'nw_dst': '10.1.2.2'}, {'queueId': 17, 'bw': -2863326.4444444445, 'nw_src': '10.1.1.1', 'queueuuid': None, 'nw_dst': '10.1.2.2'}, {'queueId': 18, 'bw': -3055206.4444444445, 'nw_src': '10.1.1.1', 'queueuuid': None, 'nw_dst': '10.1.2.2'}, {'queueId': 19, 'bw': -2929418.4444444445, 'nw_src': '10.1.1.4', 'queueuuid': None, 'nw_dst': '10.1.2.2'}, {'queueId': 20, 'bw': -5630662.444444444, 'nw_src': '10.1.1.2', 'queueuuid': None, 'nw_dst': '10.1.2.2'}, {'queueId': 21, 'bw': -2354844.4444444445, 'nw_src': '10.1.1.1', 'queueuuid': None, 'nw_dst': '10.1.2.2'}, {'queueId': 22, 'bw': 4776108.000000002, 'nw_src': '10.1.1.3', 'queueuuid': None, 'nw_dst': '10.1.2.2'}, {'queueId': 23, 'bw': 4775754.000000002, 'nw_src': '10.1.1.3', 'queueuuid': None, 'nw_dst': '10.1.2.2'}, {'queueId': 24, 'bw': -2302610.4444444445, 'nw_src': '10.1.1.4', 'queueuuid': None, 'nw_dst': '10.1.2.2'}, {'queueId': 25, 'bw': 4775976.000000002, 'nw_src': '10.1.1.3', 'queueuuid': None, 'nw_dst': '10.1.2.2'}]
+Queues Ready: _uuid               : 17a89880-b4c0-4d25-b773-612bf801d8a1
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="1000000000"}
+
+_uuid               : d22ea962-9690-4252-bee2-f0acac90ef13
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="1000000000"}
+
+_uuid               : b7a343d2-dfec-4837-98fb-f747731d9a0c
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="1000000000"}
+
+_uuid               : 80bc9164-a04b-45be-a082-e8ebf8ee7c36
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="1000000000"}
+
+_uuid               : 85fb2874-b05b-4d33-b880-a445e33c9d5c
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="1000000000"}
+
+_uuid               : f8514054-0e4b-4198-b7c5-eaf7063ab680
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="1000000000"}
+
+_uuid               : 5fd294c4-5333-4977-a7a2-88ce141add9f
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="1000000000"}
+
+_uuid               : 04978495-6d5f-4fcd-ba64-bf3451894a72
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="1000000000"}
+
+_uuid               : c2ff38b5-94da-4634-951f-ea3b488952a0
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="1000000000"}
+
+_uuid               : c33b9cb6-53f8-4a76-9761-c56c5180fb09
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="1000000000"}
+
+_uuid               : 34d8ade6-2d9d-4993-b2f3-68641b4c0b5c
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="1000000000"}
+
+_uuid               : 25f02907-b744-4bfb-b30c-ee67e9bb05d0
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="1000000000"}
+
+_uuid               : f3062379-93ee-4cc7-9465-148517e9710c
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="1000000000"}
+
+_uuid               : a9bdaaf9-d688-4113-8ad3-62866464109a
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="1000000000"}
+
+_uuid               : 0079f1ea-8715-4455-90a8-ab62e0d56f9f
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="1000000000"}
+
+_uuid               : f90de6ca-9cc6-4680-a583-b896d529a581
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="1000000000"}
+
+_uuid               : 0ad2ba1a-e261-4a39-acfc-5e6414c6a3e8
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="1000000000"}
+
+_uuid               : 2d2e858a-abdb-4342-89b6-ab6d256d9298
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="1000000000"}
+
+_uuid               : 6dc2037a-59f8-4f91-ad11-2729318321b5
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="1000000000"}
+
+_uuid               : 9497ad7b-0af8-4eec-bf94-664ce7e2850e
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="1000000000"}
+
+_uuid               : 5265762c-ea9c-4069-9d23-828580635478
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="1000000000"}
+
+_uuid               : 805c759c-dc8e-4734-b2ac-1829c6e38174
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="1000000000"}
+
+_uuid               : 633e6dfd-44f3-4a68-8f09-6c00fcb942ce
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="1000000000"}
+
+_uuid               : b4e4a9cd-183f-48de-943d-fe7e88bb60a5
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="1000000000"}
+
+_uuid               : bd5ee18d-da41-40a8-818e-fd0d51ea67b4
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="1000000000"}
+
+_uuid               : 65f50b4e-809f-4dbb-99a3-a2a8797f2ac6
+dscp                : []
+external_ids        : {}
+other_config        : {max-rate="1000000000"}
+
+Queue List: [{'queueId': 1, 'bw': -2910230.4444444445, 'nw_src': '10.1.1.1', 'queueuuid': 'f8514054-0e4b-4198-b7c5-eaf7063ab680', 'nw_dst': '10.1.2.2'}, {'queueId': 2, 'bw': -3017896.4444444445, 'nw_src': '10.1.1.4', 'queueuuid': 'bd5ee18d-da41-40a8-818e-fd0d51ea67b4', 'nw_dst': '10.1.2.2'}, {'queueId': 3, 'bw': -2964596.4444444445, 'nw_src': '10.1.1.1', 'queueuuid': '0ad2ba1a-e261-4a39-acfc-5e6414c6a3e8', 'nw_dst': '10.1.2.2'}, {'queueId': 4, 'bw': -3452824.4444444445, 'nw_src': '10.1.1.2', 'queueuuid': 'a9bdaaf9-d688-4113-8ad3-62866464109a', 'nw_dst': '10.1.2.2'}, {'queueId': 5, 'bw': -3372874.4444444445, 'nw_src': '10.1.1.2', 'queueuuid': '633e6dfd-44f3-4a68-8f09-6c00fcb942ce', 'nw_dst': '10.1.2.2'}, {'queueId': 6, 'bw': -3429372.4444444445, 'nw_src': '10.1.1.2', 'queueuuid': '17a89880-b4c0-4d25-b773-612bf801d8a1', 'nw_dst': '10.1.2.2'}, {'queueId': 7, 'bw': 4775976.000000002, 'nw_src': '10.1.1.3', 'queueuuid': '9497ad7b-0af8-4eec-bf94-664ce7e2850e', 'nw_dst': '10.1.2.2'}, {'queueId': 8, 'bw': -3020028.4444444445, 'nw_src': '10.1.1.4', 'queueuuid': '2d2e858a-abdb-4342-89b6-ab6d256d9298', 'nw_dst': '10.1.2.2'}, {'queueId': 9, 'bw': -4492174.444444444, 'nw_src': '10.1.1.2', 'queueuuid': '85fb2874-b05b-4d33-b880-a445e33c9d5c', 'nw_dst': '10.1.2.2'}, {'queueId': 10, 'bw': 4775754.000000002, 'nw_src': '10.1.1.3', 'queueuuid': 'b7a343d2-dfec-4837-98fb-f747731d9a0c', 'nw_dst': '10.1.2.2'}, {'queueId': 11, 'bw': 4776174.000000002, 'nw_src': '10.1.1.3', 'queueuuid': '25f02907-b744-4bfb-b30c-ee67e9bb05d0', 'nw_dst': '10.1.2.2'}, {'queueId': 12, 'bw': 4775754.000000002, 'nw_src': '10.1.1.3', 'queueuuid': '80bc9164-a04b-45be-a082-e8ebf8ee7c36', 'nw_dst': '10.1.2.2'}, {'queueId': 13, 'bw': -2970992.4444444445, 'nw_src': '10.1.1.4', 'queueuuid': 'c2ff38b5-94da-4634-951f-ea3b488952a0', 'nw_dst': '10.1.2.2'}, {'queueId': 14, 'bw': -2810026.4444444445, 'nw_src': '10.1.1.1', 'queueuuid': 'f90de6ca-9cc6-4680-a583-b896d529a581', 'nw_dst': '10.1.2.2'}, {'queueId': 15, 'bw': -2919824.4444444445, 'nw_src': '10.1.1.4', 'queueuuid': 'b4e4a9cd-183f-48de-943d-fe7e88bb60a5', 'nw_dst': '10.1.2.2'}, {'queueId': 16, 'bw': -3364346.4444444445, 'nw_src': '10.1.1.2', 'queueuuid': '5fd294c4-5333-4977-a7a2-88ce141add9f', 'nw_dst': '10.1.2.2'}, {'queueId': 17, 'bw': -2863326.4444444445, 'nw_src': '10.1.1.1', 'queueuuid': '04978495-6d5f-4fcd-ba64-bf3451894a72', 'nw_dst': '10.1.2.2'}, {'queueId': 18, 'bw': -3055206.4444444445, 'nw_src': '10.1.1.1', 'queueuuid': 'd22ea962-9690-4252-bee2-f0acac90ef13', 'nw_dst': '10.1.2.2'}, {'queueId': 19, 'bw': -2929418.4444444445, 'nw_src': '10.1.1.4', 'queueuuid': '5265762c-ea9c-4069-9d23-828580635478', 'nw_dst': '10.1.2.2'}, {'queueId': 20, 'bw': -5630662.444444444, 'nw_src': '10.1.1.2', 'queueuuid': '65f50b4e-809f-4dbb-99a3-a2a8797f2ac6', 'nw_dst': '10.1.2.2'}, {'queueId': 21, 'bw': -2354844.4444444445, 'nw_src': '10.1.1.1', 'queueuuid': '6dc2037a-59f8-4f91-ad11-2729318321b5', 'nw_dst': '10.1.2.2'}, {'queueId': 22, 'bw': 4776108.000000002, 'nw_src': '10.1.1.3', 'queueuuid': '34d8ade6-2d9d-4993-b2f3-68641b4c0b5c', 'nw_dst': '10.1.2.2'}, {'queueId': 23, 'bw': 4775754.000000002, 'nw_src': '10.1.1.3', 'queueuuid': '0079f1ea-8715-4455-90a8-ab62e0d56f9f', 'nw_dst': '10.1.2.2'}, {'queueId': 24, 'bw': -2302610.4444444445, 'nw_src': '10.1.1.4', 'queueuuid': 'f3062379-93ee-4cc7-9465-148517e9710c', 'nw_dst': '10.1.2.2'}, {'queueId': 25, 'bw': 4775976.000000002, 'nw_src': '10.1.1.3', 'queueuuid': 'c33b9cb6-53f8-4a76-9761-c56c5180fb09', 'nw_dst': '10.1.2.2'}]
+Interface Dict: {'capacity': 100000000, 'name': '"eth0br"', 'lowerLimit': 50, 'prevEma': 5564566.159999998, 'isCongested': 0, 'currentEma': 5564566.159999998, 'queueList': [{'queueId': 1, 'bw': -2910230.4444444445, 'nw_src': '10.1.1.1', 'queueuuid': 'f8514054-0e4b-4198-b7c5-eaf7063ab680', 'nw_dst': '10.1.2.2'}, {'queueId': 2, 'bw': -3017896.4444444445, 'nw_src': '10.1.1.4', 'queueuuid': 'bd5ee18d-da41-40a8-818e-fd0d51ea67b4', 'nw_dst': '10.1.2.2'}, {'queueId': 3, 'bw': -2964596.4444444445, 'nw_src': '10.1.1.1', 'queueuuid': '0ad2ba1a-e261-4a39-acfc-5e6414c6a3e8', 'nw_dst': '10.1.2.2'}, {'queueId': 4, 'bw': -3452824.4444444445, 'nw_src': '10.1.1.2', 'queueuuid': 'a9bdaaf9-d688-4113-8ad3-62866464109a', 'nw_dst': '10.1.2.2'}, {'queueId': 5, 'bw': -3372874.4444444445, 'nw_src': '10.1.1.2', 'queueuuid': '633e6dfd-44f3-4a68-8f09-6c00fcb942ce', 'nw_dst': '10.1.2.2'}, {'queueId': 6, 'bw': -3429372.4444444445, 'nw_src': '10.1.1.2', 'queueuuid': '17a89880-b4c0-4d25-b773-612bf801d8a1', 'nw_dst': '10.1.2.2'}, {'queueId': 7, 'bw': 4775976.000000002, 'nw_src': '10.1.1.3', 'queueuuid': '9497ad7b-0af8-4eec-bf94-664ce7e2850e', 'nw_dst': '10.1.2.2'}, {'queueId': 8, 'bw': -3020028.4444444445, 'nw_src': '10.1.1.4', 'queueuuid': '2d2e858a-abdb-4342-89b6-ab6d256d9298', 'nw_dst': '10.1.2.2'}, {'queueId': 9, 'bw': -4492174.444444444, 'nw_src': '10.1.1.2', 'queueuuid': '85fb2874-b05b-4d33-b880-a445e33c9d5c', 'nw_dst': '10.1.2.2'}, {'queueId': 10, 'bw': 4775754.000000002, 'nw_src': '10.1.1.3', 'queueuuid': 'b7a343d2-dfec-4837-98fb-f747731d9a0c', 'nw_dst': '10.1.2.2'}, {'queueId': 11, 'bw': 4776174.000000002, 'nw_src': '10.1.1.3', 'queueuuid': '25f02907-b744-4bfb-b30c-ee67e9bb05d0', 'nw_dst': '10.1.2.2'}, {'queueId': 12, 'bw': 4775754.000000002, 'nw_src': '10.1.1.3', 'queueuuid': '80bc9164-a04b-45be-a082-e8ebf8ee7c36', 'nw_dst': '10.1.2.2'}, {'queueId': 13, 'bw': -2970992.4444444445, 'nw_src': '10.1.1.4', 'queueuuid': 'c2ff38b5-94da-4634-951f-ea3b488952a0', 'nw_dst': '10.1.2.2'}, {'queueId': 14, 'bw': -2810026.4444444445, 'nw_src': '10.1.1.1', 'queueuuid': 'f90de6ca-9cc6-4680-a583-b896d529a581', 'nw_dst': '10.1.2.2'}, {'queueId': 15, 'bw': -2919824.4444444445, 'nw_src': '10.1.1.4', 'queueuuid': 'b4e4a9cd-183f-48de-943d-fe7e88bb60a5', 'nw_dst': '10.1.2.2'}, {'queueId': 16, 'bw': -3364346.4444444445, 'nw_src': '10.1.1.2', 'queueuuid': '5fd294c4-5333-4977-a7a2-88ce141add9f', 'nw_dst': '10.1.2.2'}, {'queueId': 17, 'bw': -2863326.4444444445, 'nw_src': '10.1.1.1', 'queueuuid': '04978495-6d5f-4fcd-ba64-bf3451894a72', 'nw_dst': '10.1.2.2'}, {'queueId': 18, 'bw': -3055206.4444444445, 'nw_src': '10.1.1.1', 'queueuuid': 'd22ea962-9690-4252-bee2-f0acac90ef13', 'nw_dst': '10.1.2.2'}, {'queueId': 19, 'bw': -2929418.4444444445, 'nw_src': '10.1.1.4', 'queueuuid': '5265762c-ea9c-4069-9d23-828580635478', 'nw_dst': '10.1.2.2'}, {'queueId': 20, 'bw': -5630662.444444444, 'nw_src': '10.1.1.2', 'queueuuid': '65f50b4e-809f-4dbb-99a3-a2a8797f2ac6', 'nw_dst': '10.1.2.2'}, {'queueId': 21, 'bw': -2354844.4444444445, 'nw_src': '10.1.1.1', 'queueuuid': '6dc2037a-59f8-4f91-ad11-2729318321b5', 'nw_dst': '10.1.2.2'}, {'queueId': 22, 'bw': 4776108.000000002, 'nw_src': '10.1.1.3', 'queueuuid': '34d8ade6-2d9d-4993-b2f3-68641b4c0b5c', 'nw_dst': '10.1.2.2'}, {'queueId': 23, 'bw': 4775754.000000002, 'nw_src': '10.1.1.3', 'queueuuid': '0079f1ea-8715-4455-90a8-ab62e0d56f9f', 'nw_dst': '10.1.2.2'}, {'queueId': 24, 'bw': -2302610.4444444445, 'nw_src': '10.1.1.4', 'queueuuid': 'f3062379-93ee-4cc7-9465-148517e9710c', 'nw_dst': '10.1.2.2'}, {'queueId': 25, 'bw': 4775976.000000002, 'nw_src': '10.1.1.3', 'queueuuid': 'c33b9cb6-53f8-4a76-9761-c56c5180fb09', 'nw_dst': '10.1.2.2'}], 'samples': [], 'dpid': '"000000b6789f7bd2"', 'threshold': 50, 'monitoring': 0, 'useAverages': deque([98.0, 98.0, 98.0, 98.0, 98.0, 98.0, 30067768.0, 72452714.0, 8179714.0, 2181114.0], maxlen=10), 'prevema': 8179714.0, 'upperLimit': 100}
+Message sent: "{'Interface': {'capacity': 100000000, 'name': '\"eth0br\"', 'dpid': '\"000000b6789f7bd2\"'}, 'Notification': 'QueuesDone', 'QueueList': [{'queueId': 1, 'bw': -2910230.4444444445, 'nw_src': '10.1.1.1', 'queueuuid': 'f8514054-0e4b-4198-b7c5-eaf7063ab680', 'nw_dst': '10.1.2.2'}, {'queueId': 2, 'bw': -3017896.4444444445, 'nw_src': '10.1.1.4', 'queueuuid': 'bd5ee18d-da41-40a8-818e-fd0d51ea67b4', 'nw_dst': '10.1.2.2'}, {'queueId': 3, 'bw': -2964596.4444444445, 'nw_src': '10.1.1.1', 'queueuuid': '0ad2ba1a-e261-4a39-acfc-5e6414c6a3e8', 'nw_dst': '10.1.2.2'}, {'queueId': 4, 'bw': -3452824.4444444445, 'nw_src': '10.1.1.2', 'queueuuid': 'a9bdaaf9-d688-4113-8ad3-62866464109a', 'nw_dst': '10.1.2.2'}, {'queueId': 5, 'bw': -3372874.4444444445, 'nw_src': '10.1.1.2', 'queueuuid': '633e6dfd-44f3-4a68-8f09-6c00fcb942ce', 'nw_dst': '10.1.2.2'}, {'queueId': 6, 'bw': -3429372.4444444445, 'nw_src': '10.1.1.2', 'queueuuid': '17a89880-b4c0-4d25-b773-612bf801d8a1', 'nw_dst': '10.1.2.2'}, {'queueId': 7, 'bw': 4775976.000000002, 'nw_src': '10.1.1.3', 'queueuuid': '9497ad7b-0af8-4eec-bf94-664ce7e2850e', 'nw_dst': '10.1.2.2'}, {'queueId': 8, 'bw': -3020028.4444444445, 'nw_src': '10.1.1.4', 'queueuuid': '2d2e858a-abdb-4342-89b6-ab6d256d9298', 'nw_dst': '10.1.2.2'}, {'queueId': 9, 'bw': -4492174.444444444, 'nw_src': '10.1.1.2', 'queueuuid': '85fb2874-b05b-4d33-b880-a445e33c9d5c', 'nw_dst': '10.1.2.2'}, {'queueId': 10, 'bw': 4775754.000000002, 'nw_src': '10.1.1.3', 'queueuuid': 'b7a343d2-dfec-4837-98fb-f747731d9a0c', 'nw_dst': '10.1.2.2'}, {'queueId': 11, 'bw': 4776174.000000002, 'nw_src': '10.1.1.3', 'queueuuid': '25f02907-b744-4bfb-b30c-ee67e9bb05d0', 'nw_dst': '10.1.2.2'}, {'queueId': 12, 'bw': 4775754.000000002, 'nw_src': '10.1.1.3', 'queueuuid': '80bc9164-a04b-45be-a082-e8ebf8ee7c36', 'nw_dst': '10.1.2.2'}, {'queueId': 13, 'bw': -2970992.4444444445, 'nw_src': '10.1.1.4', 'queueuuid': 'c2ff38b5-94da-4634-951f-ea3b488952a0', 'nw_dst': '10.1.2.2'}, {'queueId': 14, 'bw': -2810026.4444444445, 'nw_src': '10.1.1.1', 'queueuuid': 'f90de6ca-9cc6-4680-a583-b896d529a581', 'nw_dst': '10.1.2.2'}, {'queueId': 15, 'bw': -2919824.4444444445, 'nw_src': '10.1.1.4', 'queueuuid': 'b4e4a9cd-183f-48de-943d-fe7e88bb60a5', 'nw_dst': '10.1.2.2'}, {'queueId': 16, 'bw': -3364346.4444444445, 'nw_src': '10.1.1.2', 'queueuuid': '5fd294c4-5333-4977-a7a2-88ce141add9f', 'nw_dst': '10.1.2.2'}, {'queueId': 17, 'bw': -2863326.4444444445, 'nw_src': '10.1.1.1', 'queueuuid': '04978495-6d5f-4fcd-ba64-bf3451894a72', 'nw_dst': '10.1.2.2'}, {'queueId': 18, 'bw': -3055206.4444444445, 'nw_src': '10.1.1.1', 'queueuuid': 'd22ea962-9690-4252-bee2-f0acac90ef13', 'nw_dst': '10.1.2.2'}, {'queueId': 19, 'bw': -2929418.4444444445, 'nw_src': '10.1.1.4', 'queueuuid': '5265762c-ea9c-4069-9d23-828580635478', 'nw_dst': '10.1.2.2'}, {'queueId': 20, 'bw': -5630662.444444444, 'nw_src': '10.1.1.2', 'queueuuid': '65f50b4e-809f-4dbb-99a3-a2a8797f2ac6', 'nw_dst': '10.1.2.2'}, {'queueId': 21, 'bw': -2354844.4444444445, 'nw_src': '10.1.1.1', 'queueuuid': '6dc2037a-59f8-4f91-ad11-2729318321b5', 'nw_dst': '10.1.2.2'}, {'queueId': 22, 'bw': 4776108.000000002, 'nw_src': '10.1.1.3', 'queueuuid': '34d8ade6-2d9d-4993-b2f3-68641b4c0b5c', 'nw_dst': '10.1.2.2'}, {'queueId': 23, 'bw': 4775754.000000002, 'nw_src': '10.1.1.3', 'queueuuid': '0079f1ea-8715-4455-90a8-ab62e0d56f9f', 'nw_dst': '10.1.2.2'}, {'queueId': 24, 'bw': -2302610.4444444445, 'nw_src': '10.1.1.4', 'queueuuid': 'f3062379-93ee-4cc7-9465-148517e9710c', 'nw_dst': '10.1.2.2'}, {'queueId': 25, 'bw': 4775976.000000002, 'nw_src': '10.1.1.3', 'queueuuid': 'c33b9cb6-53f8-4a76-9761-c56c5180fb09', 'nw_dst': '10.1.2.2'}], 'bwList': [{'reportedBw': 3410134, 'nw_dst': '10.1.2.2', 'bw': -2910230.4444444445, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.1'}, {'reportedBw': 3517800, 'nw_dst': '10.1.2.2', 'bw': -3017896.4444444445, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.4'}, {'reportedBw': 3464500, 'nw_dst': '10.1.2.2', 'bw': -2964596.4444444445, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.1'}, {'reportedBw': 3952728, 'nw_dst': '10.1.2.2', 'bw': -3452824.4444444445, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.2'}, {'reportedBw': 3872778, 'nw_dst': '10.1.2.2', 'bw': -3372874.4444444445, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.2'}, {'reportedBw': 3929276, 'nw_dst': '10.1.2.2', 'bw': -3429372.4444444445, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.2'}, {'reportedBw': 296, 'nw_dst': '10.1.2.2', 'bw': 4775976.000000002, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.3'}, {'reportedBw': 3519932, 'nw_dst': '10.1.2.2', 'bw': -3020028.4444444445, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.4'}, {'reportedBw': 4992078, 'nw_dst': '10.1.2.2', 'bw': -4492174.444444444, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.2'}, {'reportedBw': 74, 'nw_dst': '10.1.2.2', 'bw': 4775754.000000002, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.3'}, {'reportedBw': 494, 'nw_dst': '10.1.2.2', 'bw': 4776174.000000002, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.3'}, {'reportedBw': 74, 'nw_dst': '10.1.2.2', 'bw': 4775754.000000002, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.3'}, {'reportedBw': 3470896, 'nw_dst': '10.1.2.2', 'bw': -2970992.4444444445, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.4'}, {'reportedBw': 3309930, 'nw_dst': '10.1.2.2', 'bw': -2810026.4444444445, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.1'}, {'reportedBw': 3419728, 'nw_dst': '10.1.2.2', 'bw': -2919824.4444444445, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.4'}, {'reportedBw': 3864250, 'nw_dst': '10.1.2.2', 'bw': -3364346.4444444445, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.2'}, {'reportedBw': 3363230, 'nw_dst': '10.1.2.2', 'bw': -2863326.4444444445, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.1'}, {'reportedBw': 3555110, 'nw_dst': '10.1.2.2', 'bw': -3055206.4444444445, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.1'}, {'reportedBw': 3429322, 'nw_dst': '10.1.2.2', 'bw': -2929418.4444444445, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.4'}, {'reportedBw': 6130566, 'nw_dst': '10.1.2.2', 'bw': -5630662.444444444, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.2'}, {'reportedBw': 2854748, 'nw_dst': '10.1.2.2', 'bw': -2354844.4444444445, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.1'}, {'reportedBw': 428, 'nw_dst': '10.1.2.2', 'bw': 4776108.000000002, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.3'}, {'reportedBw': 74, 'nw_dst': '10.1.2.2', 'bw': 4775754.000000002, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.3'}, {'reportedBw': 2802514, 'nw_dst': '10.1.2.2', 'bw': -2302610.4444444445, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.4'}, {'reportedBw': 296, 'nw_dst': '10.1.2.2', 'bw': 4775976.000000002, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.3'}]}"
+update, ema: 12467959.6496
+current threshold: 50
+Congested
+Reporting congestion

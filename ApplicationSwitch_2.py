@@ -140,6 +140,7 @@ class ApplicationSwitch_2:
 			if self.controlInProcess == 1:			
 			
 				print "Congestion ceased"
+				self.controlInProcess = 1
 
                 def queuesReady(self, interfaceDict, bwList, queueList):
 
