@@ -1,0 +1,30 @@
+------------------------------------------------------------
+Server listening on UDP port 5001
+Receiving 1470 byte datagrams
+UDP buffer size:  224 KByte (default)
+------------------------------------------------------------
+[  3] local 10.1.2.2 port 5001 connected with 10.1.1.3 port 46836
+[ ID] Interval       Transfer     Bandwidth        Jitter   Lost/Total Datagrams
+[  3]  0.0- 1.0 sec  6.63 MBytes  55.6 Mbits/sec   0.105 ms 5713/10444 (55%)
+[  3]  0.0- 1.0 sec  574 datagrams received out-of-order
+[  3]  1.0- 2.0 sec  7.81 MBytes  65.5 Mbits/sec   0.125 ms 2972/ 8542 (35%)
+[  3]  2.0- 3.0 sec  7.81 MBytes  65.5 Mbits/sec   0.120 ms 2978/ 8547 (35%)
+[  3]  3.0- 4.0 sec  7.78 MBytes  65.2 Mbits/sec   0.158 ms 2998/ 8545 (35%)
+[  3]  4.0- 5.0 sec  7.62 MBytes  63.9 Mbits/sec   0.113 ms 3114/ 8549 (36%)
+[  3]  4.0- 5.0 sec  150 datagrams received out-of-order
+[  3]  5.0- 6.0 sec  7.57 MBytes  63.5 Mbits/sec   0.112 ms 3147/ 8545 (37%)
+[  3]  6.0- 7.0 sec  4.81 MBytes  40.3 Mbits/sec   9.507 ms 5125/ 8555 (60%)
+[  3]  7.0- 8.0 sec  1.27 MBytes  10.7 Mbits/sec   0.044 ms 7639/ 8545 (89%)
+[  3]  7.0- 8.0 sec  7 datagrams received out-of-order
+[  3]  8.0- 9.0 sec  1.28 MBytes  10.7 Mbits/sec   0.065 ms 7643/ 8554 (89%)
+[  3]  9.0-10.0 sec  1.25 MBytes  10.5 Mbits/sec   0.674 ms 7651/ 8540 (90%)
+[  3] 10.0-11.0 sec  1.24 MBytes  10.4 Mbits/sec   0.086 ms 7666/ 8548 (90%)
+[  3] 11.0-12.0 sec  1.21 MBytes  10.2 Mbits/sec   0.197 ms 7664/ 8529 (90%)
+[  3] 12.0-13.0 sec  1.16 MBytes  9.70 Mbits/sec   0.091 ms 7747/ 8572 (90%)
+[  3] 13.0-14.0 sec  1.30 MBytes  10.9 Mbits/sec   0.129 ms 7617/ 8544 (89%)
+[  3] 14.0-15.0 sec  1.22 MBytes  10.2 Mbits/sec   0.057 ms 7676/ 8546 (90%)
+[  3] 15.0-16.0 sec  1.27 MBytes  10.6 Mbits/sec   0.070 ms 7636/ 8541 (89%)
+[  3] 16.0-17.0 sec  1.32 MBytes  11.1 Mbits/sec   0.060 ms 7594/ 8534 (89%)
+[  3] 17.0-18.0 sec  1.21 MBytes  10.2 Mbits/sec   0.054 ms 7687/ 8551 (90%)
+[  3] 18.0-19.0 sec  1.21 MBytes  10.2 Mbits/sec   0.032 ms 7697/ 8563 (90%)
+

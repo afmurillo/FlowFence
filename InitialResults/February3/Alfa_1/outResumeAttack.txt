@@ -1,0 +1,6 @@
+Attack 
+
+meanOutTwoAttack =  85.8          2.38746727726266
+meanOutTwoAttack =  95.6          1.67332005306815
+meanOutTwoAttack =  97.2          2.16794833886788
+meanOutTwoAttack =  97.2          1.48323969741913

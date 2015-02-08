@@ -1,0 +1,8 @@
+Defense
+
+
+meanNwkTwoDefense =  3.68          1.14105214604767
+meanNwkTwoDefense =  1.02          0.238746727726266
+meanNwkTwoDefense =  1.32          0.414728827066554
+meanNwkTwoDefense =    0.7         0.254950975679639
+
