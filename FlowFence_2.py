@@ -135,13 +135,35 @@ class handle_message(Thread):
 			# We only want to redirect outgoing flows
 			if message['bwList'][i]['action'] != 'OFPP_LOCAL':		
 				
+				# First, we will try to delete all flows, later use the flowmod
+				msg = of.ofp_flow_mod(command=of.OFPFC_DELETE)
+				msg.priority=65535
+
+				print "Flow mod message: " + str(msg)
+
+	  	              	#toDo: Check a better way to do this
+				print "dpid parameter: " + str(dpid)
+	                	for connection in connections:
+        	        		connectionDpid=connection.dpid
+					print "Connection dpid: " + str(connectionDpid)
+                			dpidStr=dpidToStr(connectionDpid)
+	                		dpidStr=dpidStr.replace("-", "")
+        	        		print 'Real dpidStr: ' + dpidStr
+
+	                		if dpid == dpidStr:
+        	        			connection.send(msg)
+						print 'Sent to: ' + str(connection)
+						print 'Well...done'	
+
 				my_match = of.ofp_match(dl_type = 0x800,nw_src=message['bwList'][i]['nw_src'],nw_dst=message['bwList'][i]['nw_dst'])
 
 				print "Flow Match: " + str(my_match)
 				msg = of.ofp_flow_mod()
 				msg.match = my_match
 				msg.priority=65535
-		
+				msg.idle_timeout = OFP_FLOW_PERMANENT
+    			msg.hard_timeout = OFP_FLOW_PERMANENT			
+
 				# There is a bug here, the error it shows reads "can't convert argument to int" when try to send the message
 				# If the actions are omitted (aka we order to drop the packets with match, we get no error)
 				msg.actions.append(of.ofp_action_enqueue(port=int(message['bwList'][i]['action']), queue_id=int(message['QueueList'][i]['queueId'])))
