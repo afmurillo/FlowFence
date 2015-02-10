@@ -135,13 +135,35 @@ class handle_message(Thread):
 			# We only want to redirect outgoing flows
 			if message['bwList'][i]['action'] != 'OFPP_LOCAL':		
 				
+				# First, we will try to delete all flows, later use the flowmod
+				msg = of.ofp_flow_mod(command=of.OFPFC_DELETE)
+				msg.priority=65535
+
+				print "Flow mod message: " + str(msg)
+
+	  	              	#toDo: Check a better way to do this
+				print "dpid parameter: " + str(dpid)
+	                	for connection in connections:
+        	        		connectionDpid=connection.dpid
+					print "Connection dpid: " + str(connectionDpid)
+                			dpidStr=dpidToStr(connectionDpid)
+	                		dpidStr=dpidStr.replace("-", "")
+        	        		print 'Real dpidStr: ' + dpidStr
+
+	                		if dpid == dpidStr:
+        	        			connection.send(msg)
+						print 'Sent to: ' + str(connection)
+						print 'Well...done'	
+
 				my_match = of.ofp_match(dl_type = 0x800,nw_src=message['bwList'][i]['nw_src'],nw_dst=message['bwList'][i]['nw_dst'])
 
 				print "Flow Match: " + str(my_match)
 				msg = of.ofp_flow_mod()
 				msg.match = my_match
 				msg.priority=65535
-		
+				msg.idle_timeout = OFP_FLOW_PERMANENT
+    				msg.hard_timeout = OFP_FLOW_PERMANENT			
+
 				# There is a bug here, the error it shows reads "can't convert argument to int" when try to send the message
 				# If the actions are omitted (aka we order to drop the packets with match, we get no error)
 				msg.actions.append(of.ofp_action_enqueue(port=int(message['bwList'][i]['action']), queue_id=int(message['QueueList'][i]['queueId'])))
@@ -197,14 +219,14 @@ def _handle_flowstats_received (event):
 	bwForBadFlows=0
 	flowBwList=[]
 	capacity = 10000000
-	bwForNewFlows = 0.1
+	bwForNewFlows = 0.0
 	remainingBw = capacity*(1-bwForNewFlows)	
 	numFlows = 0
 	alfa = 1
 	responsePort = 23456
 
 	# Get indexes of flowList
-	indexesToProcess = [flowIndex for flowIndex, flow in enumerate(flowList) ]
+	indexesToProcess = [flowIndex for flowIndex, flow in enumerate(flowList) if str(flow['match']['nw_dst'])=='10.1.2.2']
 
 	#print "Flow List indexes: " + str(indexesToProcess)
 
@@ -242,6 +264,9 @@ def _handle_flowstats_received (event):
 	# Good flows
 	for i in range(len(flowBwList)):	
 		flowBwList[i]['goodBehaved'] = classifyFlows(capacity, flowBwList[i]['reportedBw'],numFlows)	
+		# only for udp Iperf debugging purposes!
+		if flowBwList[i]['nw_src']=='10.1.1.3':
+			flowBwList[i]['goodBehaved'] = True
 	
 		if flowBwList[i]['goodBehaved'] == True:	
 			flowBwList[i]['bw']= flowBwList[i]['reportedBw']
@@ -258,12 +283,12 @@ def _handle_flowstats_received (event):
 			remainingBw = remainingBw - flowBwList[i]['bw']
 
 	# Give remmaining bw between good flows
-	extraBw = remainingBw/(numFlows - badFlows)
-
-	for i in range(len(flowBwList)):
-		if flowBwList[i]['goodBehaved'] == True:
-			flowBwList[i]['bw']=  flowBwList[i]['bw'] + extraBw
-			print "Good behaved flow bw: " + str(flowBwList[i]['bw'])		
+	if (badFlows < numFlows):
+		extraBw = remainingBw/(numFlows - badFlows)
+	        for i in range(len(flowBwList)):
+        	        if flowBwList[i]['goodBehaved'] == True:
+                	        flowBwList[i]['bw']=  flowBwList[i]['bw'] + extraBw
+                        	#print "Good behaved flow bw: " + str(flowBwList[i]['bw'])
 
 	print "Calculated Bandwidth: " + str(flowBwList)	
 
@@ -301,7 +326,7 @@ def classifyFlows( capacity, estimatedBw, numFlows):
 		return True
 
 def assignBwToBadBehaved( avaliableBw, numBadFlows, capacity, numTotalFlows, flowRate, alfa):		
-	return avaliableBw/numBadFlows - (1 - math.exp(-(flowRate-(capacity/numTotalFlows))))*alfa*flowRate
+	return flowRate - (1 - math.exp(-(flowRate-(capacity/numTotalFlows))))*alfa*flowRate
 	
 def launch ():
 	#core.openflow.addListenerByName("FlowStatsReceived", listarFluxosIp)
