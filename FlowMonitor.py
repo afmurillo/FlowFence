@@ -189,7 +189,7 @@ class FlowMonitor:
 	
 		for j in range(len(queuesList)):
 			#uuid[i] = queuesString.split(":")[1].split(",")[i].split("=")[1]
-			queuesList[j]['queueuuid']=allQueuesString.split(":")[1].split(",")[j+1].split("=")[1].split('}\n')[0]
+			queuesList[j]['queueuuid']=allQueuesString.split(":")[1].split(",")[j+1].split("=")[1].split('}\n')[0].strip()
 
 		print "Queue List: " + str(queuesList)
 		return queuesList
@@ -197,7 +197,7 @@ class FlowMonitor:
 	def setQueuesBw(self, queuesList, flowBwList):
 
 		for i in range(len(queuesList)): 
-			subprocess.check_output("ovs-vsctl set queue " + queuesList[i]['queueuuid'] + " other-config:max-rate="+str(flowBwList[i]['bw']), shell=True)			
+			subprocess.check_output("ovs-vsctl set queue " + queuesList[i]['queueuuid'] + " other-config:max-rate="+str(queuesList[i]['bw']), shell=True)			
 
 	def getUuid(self):
 		uuid=subprocess.check_output("ovs-vsctl list qos | grep queues | awk '{print $4;}'", shell=True).split('=')[1].split('}')[0]

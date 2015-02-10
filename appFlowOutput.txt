@@ -1,0 +1,23 @@
+Message sent: "{'Interface': {'capacity': 100000000, 'name': '\"eth0br\"', 'dpid': '\"000000b6789f7bd2\"'}, 
+'Notification': 'QueuesDone', 'QueueList': [{'queueId': 1, 'bw': 0.0, 'nw_src': '10.1.1.5',
+'queueuuid': '3cf62e76-cb10-43cb-850d-a6992032d270', 'nw_dst': '10.1.2.2/32'}, 
+{'queueId': 2, 'bw': 0.0, 'nw_src': '10.1.1.7', 'queueuuid': '42136132-9bbc-4116-a840-7bb9f7ce97cb', 'nw_dst': '10.1.2.2/32'},
+ {'queueId': 3, 'bw': 0.0, 'nw_src': '10.1.1.11', 'queueuuid': '67d6022a-f495-4466-b731-38beb7869c3e', 'nw_dst': '10.1.2.2/32'},
+  {'queueId': 4, 'bw': 0.0, 'nw_src': '10.1.1.9', 'queueuuid': 'b83cd72d-fee1-4c49-987e-3fe0685be20c', 'nw_dst': '10.1.2.2/32'}, {
+  'queueId': 5, 'bw': 0.0, 'nw_src': '10.1.1.1', 'queueuuid': '2ad5ddc5-a2e0-4a3b-86f9-f7efabde0f86', 'nw_dst': '10.1.2.2/32'},
+   {'queueId': 6, 'bw': 0.0, 'nw_src': '10.1.1.4', 'queueuuid': '4e6fbc03-adc4-4b7e-a71a-2284188bb43e', 'nw_dst': '10.1.2.2/32'}, 
+   {'queueId': 7, 'bw': 0.0, 'nw_src': '10.1.1.2', 'queueuuid': '79e0ce8f-abdb-4bde-88d4-3b1a6b72d9a3', 'nw_dst': '10.1.2.2/32'},
+    {'queueId': 8, 'bw': 0.0, 'nw_src': '10.1.1.6', 'queueuuid': '10273dde-2851-4bda-8a74-d6842004e68e', 'nw_dst': '10.1.2.2/32'}, 
+    {'queueId': 9, 'bw': 0.0, 'nw_src': '10.1.1.10', 'queueuuid': 'a3304206-bdff-4c7f-a71b-1ea14281293c', 'nw_dst': '10.1.2.2/32'}, 
+    {'queueId': 10, 'bw': 10000000.0, 'nw_src': '10.1.1.3', 'queueuuid': 'f7b53207-05c4-4410-a897-30a5a1c5c5e5', 'nw_dst': '10.1.2.2/32'}], 
+    'bwList': [{'reportedBw': 48177214, 'nw_dst': '10.1.2.2/32', 'bw': 0.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.5'},
+     {'reportedBw': 47996421, 'nw_dst': '10.1.2.2/32', 'bw': 0.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.7'},
+      {'reportedBw': 47771475, 'nw_dst': '10.1.2.2/32', 'bw': 0.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.11'}, 
+      {'reportedBw': 47935216, 'nw_dst': '10.1.2.2/32', 'bw': 0.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.9'},
+       {'reportedBw': 47827904, 'nw_dst': '10.1.2.2/32', 'bw': 0.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.1'}, 
+       {'reportedBw': 47938518, 'nw_dst': '10.1.2.2/32', 'bw': 0.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.4'}, 
+       {'reportedBw': 47880025, 'nw_dst': '10.1.2.2/32', 'bw': 0.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.2'},
+        {'reportedBw': 47827062, 'nw_dst': '10.1.2.2/32', 'bw': 0.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.6'},
+        {'reportedBw': 47941074, 'nw_dst': '10.1.2.2/32', 'bw': 0.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.10'},
+         {'reportedBw': 103446504, 'nw_dst': '10.1.2.2/32', 'bw': 10000000.0, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.3'}]}"
+         

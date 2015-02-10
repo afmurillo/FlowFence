@@ -9,7 +9,7 @@ set -e
 #ovs-vsctl -- --all destroy QoS
 
 ovs-vsctl -- clear Port eth0br QoS
-ovs-vsctl -- clear POrt eth1br QoS
+ovs-vsctl -- clear Port eth1br QoS
 
 #ovs-vsctl -- --if-exists destroy QoS eth0br
 #ovs-vsctl -- --if-exists destroy QoS eth1br

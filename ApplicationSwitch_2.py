@@ -157,7 +157,7 @@ class ApplicationSwitch_2:
 
                         self.notificationMessage = json.dumps(str(feedbackDict))
                         
-                        print 'Message sent: ' + self.notificationMessage
+                        print 'Queues message sent: ' + self.notificationMessage
 
                         self.msgSender.sendMessage(self.notificationMessage, self.controllerIp, self.flowFencePort)
                         self.msgSender.closeConnection()                
