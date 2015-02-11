@@ -130,30 +130,28 @@ class handle_message(Thread):
 		print 'Received dpid: ' + str(dpid)
 
 		print "message to be used for redirection" + str(message)
+
+		msg = of.ofp_flow_mod(command=of.OFPFC_DELETE)
+		msg.priority=65535
+
+		print "dpid parameter: " + str(dpid)
+		for connection in connections:
+			connectionDpid=connection.dpid
+			dpidStr=dpidToStr(connectionDpid)
+			dpidStr=dpidStr.replace("-", "")
+			print 'Real dpidStr: ' + dpidStr
+			if dpid == dpidStr:
+				connection.send(msg)
+				print 'Sent to: ' + str(connection)
+				print 'Well...done'
+
+
+
 		for i in range(len(message['bwList'])):
 
 			# We only want to redirect outgoing flows
 			if message['bwList'][i]['action'] != 'OFPP_LOCAL':		
 				
-				# First, we will try to delete all flows, later use the flowmod
-				msg = of.ofp_flow_mod(command=of.OFPFC_DELETE)
-				msg.priority=65535
-
-				print "Flow mod message: " + str(msg)
-
-	  	              	#toDo: Check a better way to do this
-				print "dpid parameter: " + str(dpid)
-	                	for connection in connections:
-        	        		connectionDpid=connection.dpid
-					print "Connection dpid: " + str(connectionDpid)
-                			dpidStr=dpidToStr(connectionDpid)
-	                		dpidStr=dpidStr.replace("-", "")
-        	        		print 'Real dpidStr: ' + dpidStr
-
-	                		if dpid == dpidStr:
-        	        			connection.send(msg)
-						print 'Sent to: ' + str(connection)
-						print 'Well...done'	
 
 				my_match = of.ofp_match(dl_type = 0x800,nw_src=message['bwList'][i]['nw_src'],nw_dst=message['bwList'][i]['nw_dst'])
 
@@ -161,8 +159,8 @@ class handle_message(Thread):
 				msg = of.ofp_flow_mod()
 				msg.match = my_match
 				msg.priority=65535
-				msg.idle_timeout = OFP_FLOW_PERMANENT
-    				msg.hard_timeout = OFP_FLOW_PERMANENT			
+				msg.idle_timeout = 0
+    				msg.hard_timeout = 0			
 
 				# There is a bug here, the error it shows reads "can't convert argument to int" when try to send the message
 				# If the actions are omitted (aka we order to drop the packets with match, we get no error)
@@ -218,7 +216,7 @@ def _handle_flowstats_received (event):
 	badFlows=0
 	bwForBadFlows=0
 	flowBwList=[]
-	capacity = 10000000
+	capacity = 100000000
 	bwForNewFlows = 0.0
 	remainingBw = capacity*(1-bwForNewFlows)	
 	numFlows = 0
@@ -226,7 +224,7 @@ def _handle_flowstats_received (event):
 	responsePort = 23456
 
 	# Get indexes of flowList
-	indexesToProcess = [flowIndex for flowIndex, flow in enumerate(flowList) if str(flow['match']['nw_dst'])=='10.1.2.2']
+	indexesToProcess = [flowIndex for flowIndex, flow in enumerate(flowList) if str(flow['match']['nw_dst'])=='10.1.2.1/32']
 
 	#print "Flow List indexes: " + str(indexesToProcess)
 
@@ -236,17 +234,17 @@ def _handle_flowstats_received (event):
 
 		# we should add a line to ignore if nw_dst != '10.1.2.2'
 		# Get src of first flow
-		nw_src = flowList[indexesToProcess[0]]['match']['nw_src']
+		nw_src = str(flowList[indexesToProcess[0]]['match']['nw_src'])
 
 		#print "Processing flows with nw_src: " + str(nw_src)
 
-		processingIndexes = [flowIndex for flowIndex, flow in enumerate(flowList) if flow['match']['nw_src'] == nw_src ]
+		processingIndexes = [flowIndex for flowIndex, flow in enumerate(flowList) if str(flow['match']['nw_src']) == nw_src ]
 
 		#print "Processing indexes: " + str(processingIndexes)
 
 		flowBwDict=dict.fromkeys(['nw_src','nw_dst','reportedBw','goodBehaved','bw', 'action'])
-		flowBwDict['nw_src'] = flowList[processingIndexes[0]]['match']['nw_src']
-		flowBwDict['nw_dst'] = flowList[processingIndexes[0]]['match']['nw_dst']
+		flowBwDict['nw_src'] = str(flowList[processingIndexes[0]]['match']['nw_src'])
+		flowBwDict['nw_dst'] = str(flowList[processingIndexes[0]]['match']['nw_dst'])
 		flowBwDict['action'] = flowList[processingIndexes[0]]['actions'][0]['port']	
 
 		accBw = 0
