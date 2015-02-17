@@ -106,8 +106,8 @@ class ApplicationSwitch:
 				feedback_dict['Interface']['name'] = interface_dict['name']
 				notification_message = json.dumps(str(feedback_dict))
 				print 'Message sent: ' + notification_message
-				self.msg_sender.sendMessage(notification_message, self.controller_ip, self.flowfence_port)
-				self.msg_sender.closeConnection()
+				self.msg_sender.send_message(notification_message, self.controller_ip, self.flowfence_port)
+				self.msg_sender.close_connection()
 
 				self.control_in_process = 1
 
@@ -135,8 +135,8 @@ class ApplicationSwitch:
                         notification_message = json.dumps(str(feedback_dict))
 
 			print 'Queues message sent: ' + notification_message
-			self.msg_sender.sendMessage(notification_message, self.controller_ip, self.flowfence_port)
-                        self.msg_sender.closeConnection()
+			self.msg_sender.send_message(notification_message, self.controller_ip, self.flowfence_port)
+                        self.msg_sender.close_connection()
 
 		def message_from_controller(self, message):
 

@@ -23,7 +23,7 @@ import math
 LOG = core.getLogger()
 CONTROLLER_IP = '10.1.4.1'
 
-class server_socket(Thread):
+class ServerSocket(Thread):
 
 	""" Class that listens for switch messages """
 	def __init__(self, connections):
@@ -46,7 +46,7 @@ class server_socket(Thread):
 				client, addr = self.sock.accept()
 				data = client.recv(4096)
 				print 'Message from', addr
-				data_treatment = handle_message(data,self.connections, addr)
+				data_treatment = HandleMessage(data,self.connections, addr)
 				data_treatment.setDaemon(True)
 				data_treatment.start()
 			except KeyboardInterrupt:
@@ -54,7 +54,7 @@ class server_socket(Thread):
 				client.close()
 				break
 
-class handle_message(Thread):
+class HandleMessage(Thread):
 
 	""" Handles messages sent by SDN switchhes """
 
@@ -79,11 +79,11 @@ class handle_message(Thread):
 			print "An error ocurred processing the incoming message"
 
 		if message['Notification'] == 'Congestion':
-			self.handle_congestion_notification(message['Interface']['dpid'], message, self.src_address)
+			self.handle_congestion_notification(message['Interface']['dpid'])
 		elif message['Notification'] == 'QueuesDone':
-			self.handleFlowsRedirection(message['Interface']['dpid'], self.myconnections, self.src_address, message)
+			self.handle_flows_redirection(message['Interface']['dpid'], self.myconnections, self.src_address, message)
 
-	def handle_congestion_notification(self, dpid, notification_message):
+	def handle_congestion_notification(self, dpid):
 		""" Upon reception of a congestion notification, requests for flow stats in the congestioned switch """
 
                 dpid = dpid[:len(dpid)-1]
@@ -104,7 +104,8 @@ class handle_message(Thread):
 				connection.send(of.ofp_stats_request(body=of.ofp_flow_stats_request()))
 				print 'Flow stats requets sent to: ' + str(connection)
 
-	def handleFlowsRedirection(self, dpid, connections, switch_addresss, message):
+	@classmethod
+	def handle_flows_redirection(cls, dpid, connections, switch_addresss, message):
 
 		""" Sends flow mod messages to redirect flows to created queues """
 		print 'message from ' + str(switch_addresss)
@@ -163,7 +164,7 @@ class handle_message(Thread):
 						print 'Sent to: ' + str(connection)
 						print 'Well...done'
 
-class connect_test(EventMixin):
+class ConnectTest(EventMixin):
 
 	""" Waits for OpenFlow switches to connect and makes them learning switches. """
 
@@ -172,7 +173,7 @@ class connect_test(EventMixin):
 		LOG.debug("Received connection from switch")
 		print "Received connection from switch"
 		self.myconnections = []		# a list of the connections
-		socket_server=server_socket(self.myconnections)	# send it to the socket with the connection
+		socket_server=ServerSocket(self.myconnections)	# send it to the socket with the connection
 		socket_server.setDaemon(True)		# establish the thread as a deamond, this will make to close the thread with the main program
 		socket_server.start()				# starting the thread
 
@@ -192,10 +193,7 @@ def _handle_flowstats_received (event):
 	sending_dpid = event.connection.dpid
 	sending_address = event.connection.sock.getpeername()[0]
 
-	print "Sending address " + str(sending_address)
-
 	bad_flows = 0
-	bw_for_bad_flows = 0
 	flow_bw_list = []
 	capacity = 100000000
 	bw_for_new_flows = 0.0
@@ -232,29 +230,29 @@ def _handle_flowstats_received (event):
 		for i in range(len(processing_indexes)):
 			acc_bw = acc_bw + flow_list[processing_indexes[i]]['byte_count']
 
-		flow_bw_dictt['reportedBw'] = acc_bw		
+		flow_bw_dictt['reportedBw'] = acc_bw
 		flow_bw_list.append(flow_bw_dictt)
 		num_flows = num_flows + 1
-		
+
 		for i in range(len(processing_indexes)):
 			indexes_to_process.remove(processing_indexes[i])
-		
+
 	# Good flows
-	for i in range(len(flow_bw_list)):	
-		flow_bw_list[i]['goodBehaved'] = classiy_flows(capacity, flow_bw_list[i]['reportedBw'], num_flows)	
+	for i in range(len(flow_bw_list)):
+		flow_bw_list[i]['goodBehaved'] = classiy_flows(capacity, flow_bw_list[i]['reportedBw'], num_flows)
+
 		# only for udp Iperf debugging purposes!
 		if flow_bw_list[i]['nw_src'] == '10.1.1.3':
 			flow_bw_list[i]['goodBehaved'] = True
-	
-		if flow_bw_list[i]['goodBehaved'] == True:	
+
+		if flow_bw_list[i]['goodBehaved'] == True:
 			flow_bw_list[i]['bw'] = flow_bw_list[i]['reportedBw']
 			remaining_bw = remaining_bw -  flow_bw_list[i]['reportedBw']
 		else:
 			bad_flows = bad_flows+1
 
 	# Bad Flows
-	bw_for_bad_flows=remaining_bw
-	for i in range(len(flow_bw_list)):	
+	for i in range(len(flow_bw_list)):
 		if flow_bw_list[i]['goodBehaved'] == False:
 			flow_bw_list[i]['bw']= assign_bw_to_bad_behaved(capacity, num_flows, flow_bw_list[i]['reportedBw'], alfa)
 			print "Bad behaved flow bw " +  str(flow_bw_list[i]['bw'])
@@ -267,8 +265,6 @@ def _handle_flowstats_received (event):
         	        if flow_bw_list[i]['goodBehaved'] == True:
                 	        flow_bw_list[i]['bw'] =  flow_bw_list[i]['bw'] + extra_bw
                         	#print "Good behaved flow bw: " + str(flow_bw_list[i]['bw'])
-
-	print "Calculated Bandwidth: " + str(flow_bw_list)	
 
 	queues_dict = dict.fromkeys(['Response','dpid','bwList'])
 	queues_dict['dpid'] = sending_dpid
@@ -287,12 +283,11 @@ def create_socket():
 	""" Creates a socket """
 	return socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-	
 def send_message(a_socket, ip_address, port, a_message):
 
 	""" Sends a message to a SDN switch """
 	a_socket.connect((ip_address, port))
-	a_socket.send(a_message)	
+	a_socket.send(a_message)
 
 def close_connection(a_socket):
 	""" Closes a connection """
@@ -305,14 +300,12 @@ def classiy_flows( capacity, estimated_bw, num_flows):
 	else:
 		return True
 
-def assign_bw_to_bad_behaved(capacity, num_total_flows, flow_rate, alfa):		
+def assign_bw_to_bad_behaved(capacity, num_total_flows, flow_rate, alfa):
 	""" Assigns bw to each flow """
 	return flow_rate - (1 - math.exp(-(flow_rate-(capacity/num_total_flows))))*alfa*flow_rate
-	
+
 def launch ():
 	""" First method called """
 	print "FlowFence launched"
-	core.registerNew(connect_test)
-	core.openflow.addListenerByName("FlowStatsReceived", _handle_flowstats_received) 
-
-
+	core.registerNew(ConnectTest)
+	core.openflow.addListenerByName("FlowStatsReceived", _handle_flowstats_received)

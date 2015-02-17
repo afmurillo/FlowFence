@@ -2,7 +2,7 @@
 <body>
 <div>
 <h1>Report</h1>
-<p>180 statements analysed.</p><div>
+<p>181 statements analysed.</p><div>
 <h2>Statistics by type</h2>
 <table>
 <tr class="header">
@@ -64,30 +64,30 @@
 </tr>
 <tr class="even">
 <td>code</td>
-<td>177</td>
-<td>71.95</td>
-<td>177</td>
+<td>178</td>
+<td>72.65</td>
+<td>178</td>
 <td>=</td>
 </tr>
 <tr class="odd">
 <td>docstring</td>
-<td>44</td>
-<td>17.89</td>
-<td>44</td>
+<td>41</td>
+<td>16.73</td>
+<td>41</td>
 <td>=</td>
 </tr>
 <tr class="even">
 <td>comment</td>
-<td>6</td>
-<td>2.44</td>
-<td>6</td>
+<td>8</td>
+<td>3.27</td>
+<td>8</td>
 <td>=</td>
 </tr>
 <tr class="odd">
 <td>empty</td>
-<td>19</td>
-<td>7.72</td>
-<td>19</td>
+<td>18</td>
+<td>7.35</td>
+<td>18</td>
 <td>=</td>
 </tr>
 </table>
@@ -132,8 +132,8 @@
 </tr>
 <tr class="odd">
 <td>refactor</td>
-<td>2</td>
-<td>2</td>
+<td>3</td>
+<td>3</td>
 <td>=</td>
 </tr>
 <tr class="even">
@@ -162,15 +162,15 @@
 <td>5</td>
 </tr>
 <tr class="odd">
-<td>relative-import</td>
+<td>too-many-arguments</td>
 <td>2</td>
 </tr>
 <tr class="even">
-<td>too-many-instance-attributes</td>
-<td>1</td>
+<td>relative-import</td>
+<td>2</td>
 </tr>
 <tr class="odd">
-<td>too-many-arguments</td>
+<td>too-many-instance-attributes</td>
 <td>1</td>
 </tr>
 <tr class="even">
@@ -181,7 +181,7 @@
 </div>
 <div>
 <h2>Global evaluation</h2>
-Your code has been rated at 9.44/10 (previous run: 9.17/10, +0.28)</div>
+Your code has been rated at 9.39/10 (previous run: 9.12/10, +0.28)</div>
 <div>
 <h2>Messages</h2>
 <table>
@@ -197,7 +197,7 @@ Your code has been rated at 9.44/10 (previous run: 9.17/10, +0.28)</div>
 <td>warning</td>
 <td>FlowFence.FlowMonitor</td>
 <td>&#160;</td>
-<td>7</td>
+<td>9</td>
 <td>0</td>
 <td>Relative import 'application_switch_2', should be 'FlowFence.application_switch_2'</td>
 </tr>
@@ -205,7 +205,7 @@ Your code has been rated at 9.44/10 (previous run: 9.17/10, +0.28)</div>
 <td>warning</td>
 <td>FlowFence.FlowMonitor</td>
 <td>&#160;</td>
-<td>8</td>
+<td>10</td>
 <td>0</td>
 <td>Relative import 'SwitchProperties', should be 'FlowFence.SwitchProperties'</td>
 </tr>
@@ -213,7 +213,7 @@ Your code has been rated at 9.44/10 (previous run: 9.17/10, +0.28)</div>
 <td>refactor</td>
 <td>FlowFence.FlowMonitor</td>
 <td>FlowMonitor</td>
-<td>11</td>
+<td>13</td>
 <td>0</td>
 <td>Too many instance attributes (10/7)</td>
 </tr>
@@ -221,19 +221,27 @@ Your code has been rated at 9.44/10 (previous run: 9.17/10, +0.28)</div>
 <td>convention</td>
 <td>FlowFence.FlowMonitor</td>
 <td>FlowMonitor</td>
-<td>11</td>
+<td>13</td>
 <td>0</td>
 <td>Old-style class defined.</td>
 </tr>
 <tr class="even">
 <td>refactor</td>
 <td>FlowFence.FlowMonitor</td>
-<td>FlowMonitor.ema</td>
-<td>235</td>
-<td>1</td>
+<td>FlowMonitor.__init__</td>
+<td>18</td>
+<td>8</td>
 <td>Too many arguments (6/5)</td>
 </tr>
 <tr class="odd">
+<td>refactor</td>
+<td>FlowFence.FlowMonitor</td>
+<td>FlowMonitor.ema</td>
+<td>232</td>
+<td>1</td>
+<td>Too many arguments (6/5)</td>
+</tr>
+<tr class="even">
 <td>warning</td>
 <td>FlowFence.FlowMonitor</td>
 <td>FlowMonitor.congestion_stopped</td>
@@ -241,23 +249,23 @@ Your code has been rated at 9.44/10 (previous run: 9.17/10, +0.28)</div>
 <td>2</td>
 <td>Attribute 'is_congested' defined outside __init__</td>
 </tr>
-<tr class="even">
+<tr class="odd">
 <td>warning</td>
 <td>FlowFence.FlowMonitor</td>
 <td>FlowMonitor.start_monitoring</td>
-<td>112</td>
+<td>110</td>
+<td>2</td>
+<td>Attribute 'monitoring' defined outside __init__</td>
+</tr>
+<tr class="even">
+<td>warning</td>
+<td>FlowFence.FlowMonitor</td>
+<td>FlowMonitor.stop_monitoring</td>
+<td>117</td>
 <td>2</td>
 <td>Attribute 'monitoring' defined outside __init__</td>
 </tr>
 <tr class="odd">
-<td>warning</td>
-<td>FlowFence.FlowMonitor</td>
-<td>FlowMonitor.stop_monitoring</td>
-<td>119</td>
-<td>2</td>
-<td>Attribute 'monitoring' defined outside __init__</td>
-</tr>
-<tr class="even">
 <td>warning</td>
 <td>FlowFence.FlowMonitor</td>
 <td>FlowMonitor.monitor</td>
@@ -265,11 +273,11 @@ Your code has been rated at 9.44/10 (previous run: 9.17/10, +0.28)</div>
 <td>4</td>
 <td>Attribute 'monitoring' defined outside __init__</td>
 </tr>
-<tr class="odd">
+<tr class="even">
 <td>warning</td>
 <td>FlowFence.FlowMonitor</td>
 <td>FlowMonitor.start_monitoring</td>
-<td>111</td>
+<td>109</td>
 <td>2</td>
 <td>Attribute 'report_object' defined outside __init__</td>
 </tr>
