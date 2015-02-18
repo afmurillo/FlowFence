@@ -131,14 +131,12 @@ class HandleMessage(Thread):
 				print 'Sent to: ' + str(connection)
 				print 'Well...done'
 
-
-
-		for i in range(len(message['bwList'])):
+		for i in range(len(message['bw_list'])):
 
 			# We only want to redirect outgoing flows
-			if message['bwList'][i]['action'] != 'OFPP_LOCAL':
+			if message['bw_list'][i]['action'] != 'OFPP_LOCAL':
 
-				my_match = of.ofp_match(dl_type = 0x800,nw_src=message['bwList'][i]['nw_src'],nw_dst=message['bwList'][i]['nw_dst'])
+				my_match = of.ofp_match(dl_type = 0x800,nw_src=message['bw_list'][i]['nw_src'],nw_dst=message['bw_list'][i]['nw_dst'])
 
 				print "Flow Match: " + str(my_match)
 				msg = of.ofp_flow_mod()
@@ -146,7 +144,7 @@ class HandleMessage(Thread):
 				msg.priority = 65535
 				msg.idle_timeout = 0
     				msg.hard_timeout = 0
-				msg.actions.append(of.ofp_action_enqueue(port=int(message['bwList'][i]['action']), queue_id=int(message['QueueList'][i]['queueId'])))
+				msg.actions.append(of.ofp_action_enqueue(port=int(message['bw_list'][i]['action']), queue_id=int(message['queue_list'][i]['queueId'])))
 
 				print "Flow mod message: " + str(msg)
 
@@ -266,10 +264,10 @@ def _handle_flowstats_received (event):
                 	        flow_bw_list[i]['bw'] =  flow_bw_list[i]['bw'] + extra_bw
                         	#print "Good behaved flow bw: " + str(flow_bw_list[i]['bw'])
 
-	queues_dict = dict.fromkeys(['Response','dpid','bwList'])
+	queues_dict = dict.fromkeys(['Response','dpid','bw_list'])
 	queues_dict['dpid'] = sending_dpid
 	queues_dict['Response'] = "Decrement"
-	queues_dict['bwList'] = flow_bw_list
+	queues_dict['bw_list'] = flow_bw_list
 
 	response_message = json.dumps(str(queues_dict))
 
