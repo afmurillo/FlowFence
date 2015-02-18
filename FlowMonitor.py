@@ -245,12 +245,12 @@ class FlowMonitor:
 
             smoothing = 0.8
 
-            if a_bar <= 0:
+            if a_bar[0] <= 0:
                 return series[0]
-	    elif a_bar < period:
-		return self.cumulative_sma(a_bar, series, prevma)
+	    elif a_bar[0] < period:
+		return self.cumulative_sma(a_bar[0], series, prevma)
 
-	    return prevma + smoothing * (series[a_bar] - prevma)
+	    return prevma + smoothing * (series[a_bar[0]] - prevma)
 
         @classmethod
 	def cumulative_sma(cls, a_bar, series, prevma):
@@ -262,10 +262,10 @@ class FlowMonitor:
             series  --  list or tuple of data to average
             prevma  --  previous average (n - 1) of the series.
             """
-            if a_bar <= 0:
+            if a_bar[0] <= 0:
 		return series[0]
             else:
-		return prevma + ((series[a_bar] - prevma) / (a_bar + 1.0))
+		return prevma + ((series[a_bar[0]] - prevma) / (a_bar[0] + 1.0))
 
 	def get_sample(self, interval_time=1.0):
 

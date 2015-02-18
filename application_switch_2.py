@@ -51,7 +51,7 @@ class HandleMessage(Thread):
 		self.report_object = report_object
 
         def run(self):
-                self.report_object.message_from_controller(self.received, self.src_address)
+                self.report_object.message_from_controller(self.received)
 
 class ApplicationSwitch:
 
@@ -137,6 +137,7 @@ class ApplicationSwitch:
 			print 'Queues message sent: ' + notification_message
 			self.msg_sender.send_message(notification_message, self.controller_ip, self.flowfence_port)
                         self.msg_sender.close_connection()
+
 
 		def message_from_controller(self, message):
 
