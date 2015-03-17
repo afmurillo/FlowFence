@@ -135,15 +135,15 @@ class FlowMonitor:
 					print "update, ema: " + str(self.complete_interface_list[j]['currentEma'])
 					print "current threshold: " + str(self.complete_interface_list[j]['threshold'])
 					if (self.complete_interface_list[j]['is_congested'] == 0) and (self.complete_interface_list[j]['currentEma'] >= self.complete_interface_list[j]['threshold']):
-						print "Congested"
+						#print "Congested"
 						self.complete_interface_list[j]['threshold'] = self.complete_interface_list[j]['lower_limit']
-						print "Reporting congestion"
+						#print "Reporting congestion"
 						self.report_object.congestion_detected(self.complete_interface_list[j])
 
 					elif (self.complete_interface_list[j]['is_congested'] == 1) and (self.complete_interface_list[j]['currentEma'] <= self.complete_interface_list[j]['threshold']):
 						self.complete_interface_list[j]['is_congested'] = 0
 						self.complete_interface_list[j]['threshold'] = self.complete_interface_list[j]['upper_limit']
-						print "Congestion ceased"
+						#print "Congestion ceased"
 						self.report_object.congestion_ceased()
 
 			except KeyboardInterrupt:
@@ -165,7 +165,7 @@ class FlowMonitor:
 	def init_queues(cls, interface_name, bw_list):
 		""" Inits the QoS queues """
 
-		print "Initing queues for: " + str(interface_name)
+		#print "Initing queues for: " + str(interface_name)
 		queues_list=[]
 		qos_string='ovs-vsctl -- set Port ' + interface_name + ' qos=@fenceqos -- --id=@fenceqos create QoS type=linux-htb'
 		queues_string=''
@@ -178,7 +178,7 @@ class FlowMonitor:
 			a_queue_dict['bw'] = bw_list[j]['bw']
 			a_queue= ',' + str(a_queue_dict['queueId']) +'=@queue' + str(a_queue_dict['queueId'])
 			queues_string=queues_string+a_queue
-			print "Created queue dict: " + str(a_queue_dict)
+			#print "Created queue dict: " + str(a_queue_dict)
 			queues_list.append(a_queue_dict)
 
 		queues_string='queues=0=@queue0'+queues_string
@@ -192,21 +192,21 @@ class FlowMonitor:
 			queues_creation=queues_creation+a_creation
 
 		command=qos_string + ' ' + queues_string + ' ' + queues_creation
-		print "Queue command: \n " + str(command)
+		#print "Queue command: \n " + str(command)
 		subprocess.check_output(command, shell=True)
 
-		print "Queues list " + str(queues_list)
+		#print "Queues list " + str(queues_list)
 
 		# Getting uuid of each queue
 		queues_string = subprocess.check_output("ovs-vsctl list Queue", shell=True)
-		print "Queues Ready: " + str(queues_string)
+		#print "Queues Ready: " + str(queues_string)
 
 		allqueues_string = subprocess.check_output("ovs-vsctl list QoS  | grep queues", shell=True)
 
 		for j in range(len(queues_list)):
 			queues_list[j]['queueuuid']=allqueues_string.split(":")[1].split(",")[j+1].split("=")[1].split('}\n')[0].strip()
 
-		print "Queue List: " + str(queues_list)
+		#print "Queue List: " + str(queues_list)
 		return queues_list
 
         @classmethod
@@ -215,7 +215,7 @@ class FlowMonitor:
 		""" Sets the queue bw, according to the policy defined by the SDN controller """
 
 		for i in range(len(queues_list)):
-			subprocess.check_output("ovs-vsctl set queue " + queues_list[i]['queueuuid'] + " other-config:max-rate="+str(queues_list[i]['bw']), shell=True)
+			subprocess.check_output("ovs-vsctl set queue " + queues_list[i]['queueuuid'] + " other-config:max-rate="+str(queues_list[i]['bw']) + " other-config:min-rate="+str(queues_list[i]['bw'] , shell=True)
 
         @classmethod
 	def get_uuid(cls):

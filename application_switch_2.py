@@ -29,7 +29,7 @@ class SwitchSocket(Thread):
                         try:
                                 client, addr = self.sock.accept()                               # Establish connection with client
                                 data = client.recv(4096)                                                # Get data from the client
-                                print 'Message from', addr                                              # Print a message confirming
+                                #print 'Message from', addr                                              # Print a message confirming
                                 data_treatment = HandleMessage(self.report_object, data, addr)    # Call the thread to work with the data received
                                 data_treatment.setDaemon(True)                                  # Set the thread as a demond
                                 data_treatment.start()                                                  # Start the thread
@@ -81,7 +81,7 @@ class ApplicationSwitch:
 
                         self.application_port = 23456
 
-                        print self.interfaces_list
+                        #print self.interfaces_list
 
                         for i in range(len(self.interfaces_list)):
                                 flow_int_dict = dict.fromkeys(['interfaceName', 'dpid'])
@@ -96,7 +96,7 @@ class ApplicationSwitch:
 			""" This method prepares and sends the congestion notification message to the controller """
 			#Control variable to avoid sending multiple process
 			if self.control_in_process == 0:
-				print "Interface Dict: " + str(interface_dict)
+				#print "Interface Dict: " + str(interface_dict)
 				feedback_dict = dict.fromkeys(['Notification', 'Interface'])
 
 				feedback_dict['Notification'] = "Congestion"
@@ -105,7 +105,7 @@ class ApplicationSwitch:
 				feedback_dict['Interface']['dpid'] = interface_dict['dpid']
 				feedback_dict['Interface']['name'] = interface_dict['name']
 				notification_message = json.dumps(str(feedback_dict))
-				print 'Message sent: ' + notification_message
+				#print 'Message sent: ' + notification_message
 				self.msg_sender.send_message(notification_message, self.controller_ip, self.flowfence_port)
 				self.msg_sender.close_connection()
 
@@ -115,13 +115,13 @@ class ApplicationSwitch:
 
 			""" Unused for now """
 			if self.control_in_process == 1:
-				print "Congestion ceased"
+				#print "Congestion ceased"
 				self.control_in_process = 1
 
 		def queues_ready(self, interface_dict, bw_list, queue_list):
 
 			""" After receiving the order to create a queue for each flo, notifies the controller that the queues are ready """
-			print "Interface Dict: " + str(interface_dict)
+			#print "Interface Dict: " + str(interface_dict)
 
                         feedback_dict = dict.fromkeys(['Notification', 'queue_list', 'Interface', 'bw_list'])
                         feedback_dict['Notification'] = "QueuesDone"
@@ -134,7 +134,7 @@ class ApplicationSwitch:
 
                         notification_message = json.dumps(str(feedback_dict))
 
-			print 'Queues message sent: ' + notification_message
+			print 'Queues message sent: ' + str(feedback_dict['bw_list'])
 			self.msg_sender.send_message(notification_message, self.controller_ip, self.flowfence_port)
                         self.msg_sender.close_connection()
 
@@ -142,10 +142,10 @@ class ApplicationSwitch:
 		def message_from_controller(self, message):
 
 			""" Handles the message from the controller, this orders the switch to create 1 queue by each flow """
-			print "Raw message received: " + str(message)
+			#print "Raw message received: " + str(message)
 			message_dict = eval(json.loads(message))
 
-			print "Message Received: " + str(message_dict)
+			#print "Message Received: " + str(message_dict)
                         # En caso que el mensaje sea una indicacion de congestion, debemos preparar las filas y reportar que han sido inicializadas exitosamente
                         # Luego recibiremos un flowmod enviando los flujos a las filas respectivas
                         if message_dict['Response'] == "Decrement":
