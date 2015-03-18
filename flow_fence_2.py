@@ -193,15 +193,15 @@ def _handle_flowstats_received (event):
 
 	bad_flows = 0
 	flow_bw_list = []
-	capacity = 100000000
-	bw_for_new_flows = 0.0
-	remaining_bw = capacity*(1-bw_for_new_flows)
+	capacity = 90000000
+	#bw_for_new_flows = 0.0
+	remaining_bw = capacity 
 	num_flows = 0
 	alfa = 1
 	response_port = 23456
 
 	# Get indexes of flow_list
-	indexes_to_process = [flow_index for flow_index, flow in enumerate(flow_list) if str(flow['match']['nw_dst'])=='10.1.2.1/32']
+	indexes_to_process = [flow_index for flow_index, flow in enumerate(flow_list) if str(flow['match']['nw_dst'])=='10.1.2.2/32']
 
 	#print "Flow List indexes: " + str(indexes_to_process)
 
@@ -242,17 +242,25 @@ def _handle_flowstats_received (event):
 		# only for udp Iperf debugging purposes!
 		if flow_bw_list[i]['nw_src'] == '10.1.1.3':
 			flow_bw_list[i]['goodBehaved'] = True
+		#else:
+		#flow_bw_list[i]['goodBehaved'] = False
 
 		if flow_bw_list[i]['goodBehaved'] == True:
 			flow_bw_list[i]['bw'] = flow_bw_list[i]['reportedBw']
-			remaining_bw = remaining_bw -  flow_bw_list[i]['reportedBw']
+
+                        if flow_bw_list[i]['bw'] > 20000000:
+                                flow_bw_list[i]['bw'] = 20000000 
+
+			remaining_bw = remaining_bw -  flow_bw_list[i]['bw']
 		else:
 			bad_flows = bad_flows+1
 
 	# Bad Flows
 	for i in range(len(flow_bw_list)):
 		if flow_bw_list[i]['goodBehaved'] == False:
-			flow_bw_list[i]['bw']= assign_bw_to_bad_behaved(capacity, num_flows, flow_bw_list[i]['reportedBw'], alfa)
+			flow_bw_list[i]['bw']= assign_bw_to_bad_behaved(capacity, remaining_bw, bad_flows, num_flows, flow_bw_list[i]['reportedBw'], alfa)
+                        if flow_bw_list[i]['bw'] > 25000000:
+				flow_bw_list[i]['bw'] = 25000000
 			print "Bad behaved flow bw " +  str(flow_bw_list[i]['bw'])
 			remaining_bw = remaining_bw - flow_bw_list[i]['bw']
 
@@ -263,6 +271,8 @@ def _handle_flowstats_received (event):
         	        if flow_bw_list[i]['goodBehaved'] == True:
                 	        flow_bw_list[i]['bw'] =  flow_bw_list[i]['bw'] + extra_bw
                         	#print "Good behaved flow bw: " + str(flow_bw_list[i]['bw'])
+	                        if flow_bw_list[i]['bw'] > 25000000:
+        	                        flow_bw_list[i]['bw'] = 25000000
 
 	queues_dict = dict.fromkeys(['Response','dpid','bw_list'])
 	queues_dict['dpid'] = sending_dpid
@@ -291,16 +301,25 @@ def close_connection(a_socket):
 	""" Closes a connection """
 	a_socket.close()
 
-def classiy_flows( capacity, estimated_bw, num_flows):
+def classiy_flows(capacity, estimated_bw, num_flows):
 	""" Classifies flows """
-	if estimated_bw>capacity/num_flows:
+	if estimated_bw > capacity/num_flows:
 		return False
 	else:
 		return True
 
-def assign_bw_to_bad_behaved(capacity, num_total_flows, flow_rate, alfa):
+def assign_bw_to_bad_behaved(capacity, remaining_bw, num_bad_flows, num_total_flows, flow_rate, alfa):
 	""" Assigns bw to each flow """
-	return flow_rate - (1 - math.exp(-(flow_rate-(capacity/num_total_flows))))*alfa*flow_rate
+	#return flow_rate - (1 - math.exp(-(flow_rate-(capacity/num_total_flows))))*alfa*flow_rate
+	fair_rate = capacity/num_total_flows
+	bad_fair_rate = remaining_bw / num_bad_flows
+	print "remaining_bw: " + str(remaining_bw)
+	print "num bad flows : " + str(num_bad_flows)
+	print "fair rate: " + str(fair_rate)
+	print "bad fair: " + str(bad_fair_rate)
+	print "flow rate: " + str (flow_rate)
+	bw = bad_fair_rate - (1 - math.exp( - (flow_rate - fair_rate) )) * alfa * bad_fair_rate
+	return bw
 
 def launch ():
 	""" First method called """
