@@ -193,7 +193,7 @@ def _handle_flowstats_received (event):
 
 	bad_flows = 0
 	flow_bw_list = []
-	capacity = 90000000
+	capacity = 25000000
 	#bw_for_new_flows = 0.0
 	remaining_bw = capacity 
 	num_flows = 0
@@ -201,7 +201,7 @@ def _handle_flowstats_received (event):
 	response_port = 23456
 
 	# Get indexes of flow_list
-	indexes_to_process = [flow_index for flow_index, flow in enumerate(flow_list) if str(flow['match']['nw_dst'])=='10.1.2.2/32']
+	indexes_to_process = [flow_index for flow_index, flow in enumerate(flow_list) if str(flow['match']['nw_dst'])=='10.1.2.1/32']
 
 	#print "Flow List indexes: " + str(indexes_to_process)
 
@@ -248,8 +248,8 @@ def _handle_flowstats_received (event):
 		if flow_bw_list[i]['goodBehaved'] == True:
 			flow_bw_list[i]['bw'] = flow_bw_list[i]['reportedBw']
 
-                        if flow_bw_list[i]['bw'] > 20000000:
-                                flow_bw_list[i]['bw'] = 20000000 
+                        if flow_bw_list[i]['bw'] > 25000000:
+                                flow_bw_list[i]['bw'] = 25000000 
 
 			remaining_bw = remaining_bw -  flow_bw_list[i]['bw']
 		else:
@@ -303,7 +303,9 @@ def close_connection(a_socket):
 
 def classiy_flows(capacity, estimated_bw, num_flows):
 	""" Classifies flows """
-	if estimated_bw > capacity/num_flows:
+	print "Num Flows: " + str(num_flows)
+	print "Capacity: " + str(capacity)
+	if estimated_bw > (capacity/num_flows):
 		return False
 	else:
 		return True
