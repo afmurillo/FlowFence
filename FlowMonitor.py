@@ -184,11 +184,11 @@ class FlowMonitor:
 		queues_string='queues=0=@queue0'+queues_string
 		#toDo: Check the string creation
 
-		queues_creation='-- --id=@queue0 create Queue other-config:max-rate=1000000000 '
+		queues_creation='-- --id=@queue0 create Queue other-config:max-rate=25000000 '
 		#toDo: Check the numqueues handling
 
 		for j in range(len(bw_list)):
-			a_creation='-- --id=@queue' + str(queues_list[j]['queueId']) + ' create Queue other-config:max-rate=1000000000 '
+			a_creation='-- --id=@queue' + str(queues_list[j]['queueId']) + ' create Queue other-config:max-rate=25000000 '
 			queues_creation=queues_creation+a_creation
 
 		command=qos_string + ' ' + queues_string + ' ' + queues_creation
@@ -215,7 +215,7 @@ class FlowMonitor:
 		""" Sets the queue bw, according to the policy defined by the SDN controller """
 
 		for i in range(len(queues_list)):
-			subprocess.check_output("ovs-vsctl set queue " + queues_list[i]['queueuuid'] + " other-config:max-rate="+str(queues_list[i]['bw']) + " other-config:min-rate="+str(queues_list[i]['bw'] , shell=True)
+			subprocess.check_output("ovs-vsctl set queue " + queues_list[i]['queueuuid'] + " other-config:max-rate="+str(queues_list[i]['bw']), shell=True)
 
         @classmethod
 	def get_uuid(cls):
