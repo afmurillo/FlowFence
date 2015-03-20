@@ -1,0 +1,245 @@
+            dst: '10.1.2.2'
+            proto: 'udp'
+            length: 'minmax(100,1024)'
+            ratetype: 'flat'
+            lowrate: '1000000'
+            highrate: '1000000'
+            sport: 'minmax(1010,1010)'
+            dport: '80'
+
+
+': [{'reportedBw': 8935966, 'nw_dst': '10.1.2.2/32', 'bw': 11164410, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.2'}, {'reportedBw': 9751867, 'nw_dst': '10.1.2.2/32', 'bw': 11980311, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.7'}, {'reportedBw': 7052469, 'nw_dst': '10.1.2.2/32', 'bw': 9280913, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.5'}, {'reportedBw': 831584, 'nw_dst': '10.1.2.2/32', 'bw': 3060028, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.1'}, {'reportedBw': 8958312, 'nw_dst': '10.1.2.2/32', 'bw': 11186756, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.11'}, {'reportedBw': 9033790, 'nw_dst': '10.1.2.2/32', 'bw': 11262234, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.10'}, {'reportedBw': 7944461, 'nw_dst': '10.1.2.2/32', 'bw': 10172905, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.9'}, {'reportedBw': 8281368, 'nw_dst': '10.1.2.2/32', 'bw': 10509812, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.6'}, {'reportedBw': 9154186, 'nw_dst': '10.1.2.2/32', 'bw': 11382630, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.4'}]}"
+
+            dst: '10.1.2.2'
+            proto: 'udp'
+            length: 'minmax(100,1024)'
+            ratetype: 'flat'
+            lowrate: '10000000'
+            highrate: '10000000'
+            sport: 'minmax(1010,1010)'
+            dport: '80'
+
+
+
+
+': [{'reportedBw': 4362867, 'nw_dst': '10.1.2.2/32', 'bw': 10548090, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.2'}, {'reportedBw': 4210529, 'nw_dst': '10.1.2.2/32', 'bw': 10395752, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.7'}, {'reportedBw': 481484, 'nw_dst': '10.1.2.2/32', 'bw': 6666707, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.1'}, {'reportedBw': 4123182, 'nw_dst': '10.1.2.2/32', 'bw': 10308405, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.5'}, {'reportedBw': 4490747, 'nw_dst': '10.1.2.2/32', 'bw': 10675970, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.11'}, {'reportedBw': 4175678, 'nw_dst': '10.1.2.2/32', 'bw': 10360901, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.10'}, {'reportedBw': 3986302, 'nw_dst': '10.1.2.2/32', 'bw': 10171525, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.9'}, {'reportedBw': 4378519, 'nw_dst': '10.1.2.2/32', 'bw': 10563742, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.6'}, {'reportedBw': 4123678, 'nw_dst': '10.1.2.2/32', 'bw': 10308901, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.4'}]}"
+
+
+
+      - type: event
+        agent: attack_agent
+        method: setConfiguration
+        args:
+            dst: '10.1.2.2'
+            proto: 'udp'
+            length: 'minmax(100,1024)'
+            ratetype: 'flat'
+            lowrate: '1000000'
+            highrate: '1000000'
+            sport: '1010'
+            dport: '80'
+
+
+': [{'reportedBw': 3652172, 'nw_dst': '10.1.2.2/32', 'bw': 10148406, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.2'}, {'reportedBw': 3652860, 'nw_dst': '10.1.2.2/32', 'bw': 10149094, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.7'}, {'reportedBw': 4063491, 'nw_dst': '10.1.2.2/32', 'bw': 10559725, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.5'}, {'reportedBw': 349605, 'nw_dst': '10.1.2.2/32', 'bw': 6845839, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.1'}, {'reportedBw': 3783321, 'nw_dst': '10.1.2.2/32', 'bw': 10279555, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.11'}, {'reportedBw': 3839002, 'nw_dst': '10.1.2.2/32', 'bw': 10335236, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.10'}, {'reportedBw': 4000931, 'nw_dst': '10.1.2.2/32', 'bw': 10497165, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.9'}, {'reportedBw': 4400685, 'nw_dst': '10.1.2.2/32', 'bw': 10896919, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.6'}, {'reportedBw': 3791826, 'nw_dst': '10.1.2.2/32', 'bw': 10288060, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.4'}]}"
+
+      - type: event
+        agent: attack_agent
+        method: setConfiguration
+        args:
+            dst: '10.1.2.2'
+            proto: 'udp'
+            length: 'minmax(800,1024)'
+            ratetype: 'flat'
+            lowrate: '1000000'
+            highrate: '1000000'
+            sport: '1010'
+            dport: '80'
+
+
+': [{'reportedBw': 14675323, 'nw_dst': '10.1.2.2/32', 'bw': 0.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.2'}, {'reportedBw': 14805034, 'nw_dst': '10.1.2.2/32', 'bw': 0.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.7'}, {'reportedBw': 1178447, 'nw_dst': '10.1.2.2/32', 'bw': 90000000.0, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.1'}, {'reportedBw': 14037708, 'nw_dst': '10.1.2.2/32', 'bw': 0.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.5'}, {'reportedBw': 16322749, 'nw_dst': '10.1.2.2/32', 'bw': 0.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.11'}, {'reportedBw': 15885984, 'nw_dst': '10.1.2.2/32', 'bw': 0.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.10'}, {'reportedBw': 14684560, 'nw_dst': '10.1.2.2/32', 'bw': 0.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.9'}, {'reportedBw': 14368743, 'nw_dst': '10.1.2.2/32', 'bw': 0.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.6'}, {'reportedBw': 15466084, 'nw_dst': '10.1.2.2/32', 'bw': 0.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.4'}]}"
+
+      - type: event
+        agent: attack_agent
+        method: setConfiguration
+        args:
+            dst: '10.1.2.2'
+            proto: 'udp'
+            length: '1024'
+            ratetype: 'flat'
+            lowrate: '1000000'
+            highrate: '1000000'
+            sport: '1010'
+            dport: '80'
+
+
+
+': [{'reportedBw': 4848168, 'nw_dst': '10.1.2.2/32', 'bw': 10749753, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.2'}, {'reportedBw': 4092374, 'nw_dst': '10.1.2.2/32', 'bw': 9993959, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.7'}, {'reportedBw': 442390, 'nw_dst': '10.1.2.2/32', 'bw': 6343975, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.1'}, {'reportedBw': 4718116, 'nw_dst': '10.1.2.2/32', 'bw': 10619701, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.5'}, {'reportedBw': 4474002, 'nw_dst': '10.1.2.2/32', 'bw': 10375587, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.11'}, {'reportedBw': 4513444, 'nw_dst': '10.1.2.2/32', 'bw': 10415029, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.10'}, {'reportedBw': 4607252, 'nw_dst': '10.1.2.2/32', 'bw': 10508837, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.9'}, {'reportedBw': 4299178, 'nw_dst': '10.1.2.2/32', 'bw': 10200763, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.6'}, {'reportedBw': 4890808, 'nw_dst': '10.1.2.2/32', 'bw': 10792393, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.4'}]}"
+
+
+      - type: event
+        agent: attack_agent
+        method: setConfiguration
+        args:
+            dst: '10.1.2.2'
+            proto: 'udp'
+            length: 'minmax(800,1024)'
+            ratetype: 'flat'
+            lowrate: '1000000'
+            highrate: '1000000'
+            sport: '1010'
+            dport: '80'
+
+
+': [{'reportedBw': 3304467, 'nw_dst': '10.1.2.2/32', 'bw': 9995124, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.2'}, {'reportedBw': 2839164, 'nw_dst': '10.1.2.2/32', 'bw': 9529821, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.7'}, {'reportedBw': 2954068, 'nw_dst': '10.1.2.2/32', 'bw': 9644725, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.5'}, {'reportedBw': 365804, 'nw_dst': '10.1.2.2/32', 'bw': 7056461, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.1'}, {'reportedBw': 4953602, 'nw_dst': '10.1.2.2/32', 'bw': 11644259, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.11'}, {'reportedBw': 3401043, 'nw_dst': '10.1.2.2/32', 'bw': 10091700, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.10'}, {'reportedBw': 3885876, 'nw_dst': '10.1.2.2/32', 'bw': 10576533, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.9'}, {'reportedBw': 2764094, 'nw_dst': '10.1.2.2/32', 'bw': 9454751, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.6'}, {'reportedBw': 5315969, 'nw_dst': '10.1.2.2/32', 'bw': 12006626, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.4'}]}"
+
+      - type: event
+        agent: attack_agent
+        method: setConfiguration
+        args:
+            dst: '10.1.2.2'
+            proto: 'udp'
+            length: 'minmax(600,1024)'
+            ratetype: 'flat'
+            lowrate: '1000000'
+            highrate: '1000000'
+            sport: '1010'
+            dport: '80'
+
+
+ 'bw_list': [{'reportedBw': 8383808, 'nw_dst': '10.1.2.2/32', 'bw': 48532027.5, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.2'}, {'reportedBw': 13506365, 'nw_dst': '10.1.2.2/32', 'bw': 0.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.7'}, {'reportedBw': 1319753, 'nw_dst': '10.1.2.2/32', 'bw': 41467972.5, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.1'}, {'reportedBw': 12530132, 'nw_dst': '10.1.2.2/32', 'bw': 0.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.5'}, {'reportedBw': 14240041, 'nw_dst': '10.1.2.2/32', 'bw': 0.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.11'}, {'reportedBw': 13488204, 'nw_dst': '10.1.2.2/32', 'bw': 0.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.10'}, {'reportedBw': 12599876, 'nw_dst': '10.1.2.2/32', 'bw': 0.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.9'}, {'reportedBw': 14132532, 'nw_dst': '10.1.2.2/32', 'bw': 0.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.6'}, {'reportedBw': 12961002, 'nw_dst': '10.1.2.2/32', 'bw': 0.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.4'}]}"
+
+      - type: event
+        agent: attack_agent
+        method: setConfiguration
+        args:
+            dst: '10.1.2.2'
+            proto: 'udp'
+            length: 'minmax(800,1024)'
+            ratetype: 'flat'
+            lowrate: '1000000'
+            highrate: '1000000'
+            sport: '1010'
+            dport: '80'
+
+
+
+andres@monserrate:~$ cat justtesting  | awk -F 'bw_list' '{print $2;}' 
+': [{'reportedBw': 16116, 'nw_dst': '10.1.2.2/32', 'bw': 17986890, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.2'}, {'reportedBw': 16532, 'nw_dst': '10.1.2.2/32', 'bw': 17987306, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.7'}, {'reportedBw': 998, 'nw_dst': '10.1.2.2/32', 'bw': 17971772, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.5'}, {'reportedBw': 858, 'nw_dst': '10.1.2.2/32', 'bw': 17971632, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.9'}, {'reportedBw': 111624, 'nw_dst': '10.1.2.2/32', 'bw': 18082398, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.4'}]}"
+
+      - type: event
+        agent: attack_agent
+        method: setConfiguration
+        args:
+            dst: '10.1.2.2'
+            proto: 'udp'
+            length: 'minmax(700,1024)'
+            ratetype: 'flat'
+            lowrate: '1000000'
+            highrate: '1000000'
+            sport: '1010'
+            dport: '80'
+
+
+': [{'reportedBw': 3025587, 'nw_dst': '10.1.2.2/32', 'bw': 12843937, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.5'}, {'reportedBw': 865, 'nw_dst': '10.1.2.2/32', 'bw': 9819215, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.11'}, {'reportedBw': 1468924, 'nw_dst': '10.1.2.2/32', 'bw': 11287274, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.2'}, {'reportedBw': 2099116, 'nw_dst': '10.1.2.2/32', 'bw': 11917466, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.10'}, {'reportedBw': 685570, 'nw_dst': '10.1.2.2/32', 'bw': 10503920, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.7'}, {'reportedBw': 2316484, 'nw_dst': '10.1.2.2/32', 'bw': 12134834, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.9'}, {'reportedBw': 385329, 'nw_dst': '10.1.2.2/32', 'bw': 10203679, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.6'}, {'reportedBw': 1471324, 'nw_dst': '10.1.2.2/32', 'bw': 11289674, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.4'}]}"
+
+      - type: event
+        agent: attack_agent
+        method: setConfiguration
+        args:
+            dst: '10.1.2.2'
+            proto: 'udp'
+            length: 'minmax(700,1024)'
+            ratetype: 'flat'
+            lowrate: '10000'
+            highrate: '10000'
+            sport: '1010'
+            dport: '80'
+
+
+
+': [{'reportedBw': 12272469, 'nw_dst': '10.1.2.2/32', 'bw': 0.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.2'}, {'reportedBw': 12281630, 'nw_dst': '10.1.2.2/32', 'bw': 0.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.7'}, {'reportedBw': 12272743, 'nw_dst': '10.1.2.2/32', 'bw': 0.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.5'}, {'reportedBw': 12256745, 'nw_dst': '10.1.2.2/32', 'bw': 0.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.1'}, {'reportedBw': 12269542, 'nw_dst': '10.1.2.2/32', 'bw': 0.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.11'}, {'reportedBw': 12288179, 'nw_dst': '10.1.2.2/32', 'bw': 0.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.10'}, {'reportedBw': 12271063, 'nw_dst': '10.1.2.2/32', 'bw': 0.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.9'}, {'reportedBw': 12284834, 'nw_dst': '10.1.2.2/32', 'bw': 0.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.6'}, {'reportedBw': 12248543, 'nw_dst': '10.1.2.2/32', 'bw': 0.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.4'}]}"
+
+
+      - type: event
+        agent: attack_agent
+        method: setConfiguration
+        args:
+            dst: '10.1.2.2'
+            proto: 'udp'
+            length: 'minmax(700,1024)'
+            ratetype: 'flat'
+            lowrate: '10000'
+            highrate: '10000'
+            sport: '1010'
+            dport: '80'
+
+': [{'reportedBw': 31263709, 'nw_dst': '10.1.2.2/32', 'bw': 0.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.2'}, {'reportedBw': 31446402, 'nw_dst': '10.1.2.2/32', 'bw': 0.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.7'}, {'reportedBw': 30689901, 'nw_dst': '10.1.2.2/32', 'bw': 0.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.1'}, {'reportedBw': 34735825, 'nw_dst': '10.1.2.2/32', 'bw': 0.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.5'}, {'reportedBw': 30669895, 'nw_dst': '10.1.2.2/32', 'bw': 0.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.11'}, {'reportedBw': 34305876, 'nw_dst': '10.1.2.2/32', 'bw': 0.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.10'}, {'reportedBw': 31517744, 'nw_dst': '10.1.2.2/32', 'bw': 0.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.9'}, {'reportedBw': 30687317, 'nw_dst': '10.1.2.2/32', 'bw': 0.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.6'}, {'reportedBw': 30662617, 'nw_dst': '10.1.2.2/32', 'bw': 0.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.4'}]}"
+
+
+
+
+
+      - type: event
+        agent: attack_agent
+        method: setConfiguration
+        args:
+            dst: '10.1.2.2'
+            proto: 'udp'
+            length: 'minmax(800,1024)'
+            ratetype: 'flat'
+            lowrate: '5000'
+            highrate: '5000'
+            sport: '1010'
+            dport: '80'
+
+
+
+': [{'reportedBw': 9174347, 'nw_dst': '10.1.2.2/32', 'bw': 9991116, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.2'}, {'reportedBw': 9185349, 'nw_dst': '10.1.2.2/32', 'bw': 10002118, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.7'}, {'reportedBw': 9187825, 'nw_dst': '10.1.2.2/32', 'bw': 10004594, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.5'}, {'reportedBw': 9181242, 'nw_dst': '10.1.2.2/32', 'bw': 9998011, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.1'}, {'reportedBw': 9177680, 'nw_dst': '10.1.2.2/32', 'bw': 9994449, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.11'}, {'reportedBw': 9199059, 'nw_dst': '10.1.2.2/32', 'bw': 10015828, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.10'}, {'reportedBw': 9194564, 'nw_dst': '10.1.2.2/32', 'bw': 10011333, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.9'}, {'reportedBw': 9186585, 'nw_dst': '10.1.2.2/32', 'bw': 10003354, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.6'}, {'reportedBw': 9162423, 'nw_dst': '10.1.2.2/32', 'bw': 9979192, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.4'}]}"
+
+      - type: event
+        agent: attack_agent
+        method: setConfiguration
+        args:
+            dst: '10.1.2.2'
+            proto: 'udp'
+            length: 'minmax(800,1024)'
+            ratetype: 'flat'
+            lowrate: '7500'
+            highrate: '7500'
+            sport: '1010'
+            dport: '80'
+
+
+': [{'reportedBw': 12851692, 'nw_dst': '10.1.2.2/32', 'bw': 0.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.2'}, {'reportedBw': 12943627, 'nw_dst': '10.1.2.2/32', 'bw': 0.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.7'}, {'reportedBw': 12833700, 'nw_dst': '10.1.2.2/32', 'bw': 0.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.1'}, {'reportedBw': 12913353, 'nw_dst': '10.1.2.2/32', 'bw': 0.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.5'}, {'reportedBw': 12854092, 'nw_dst': '10.1.2.2/32', 'bw': 0.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.11'}, {'reportedBw': 12878130, 'nw_dst': '10.1.2.2/32', 'bw': 0.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.10'}, {'reportedBw': 12860494, 'nw_dst': '10.1.2.2/32', 'bw': 0.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.9'}, {'reportedBw': 12900691, 'nw_dst': '10.1.2.2/32', 'bw': 0.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.6'}, {'reportedBw': 12898346, 'nw_dst': '10.1.2.2/32', 'bw': 0.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.4'}]}"
+
+      - type: event
+        agent: attack_agent
+        method: setConfiguration
+        args:
+            dst: '10.1.2.2'
+            proto: 'udp'
+            length: 'minmax(800,1024)'
+            ratetype: 'flat'
+            lowrate: '7500'
+            highrate: '7500'
+            sport: '1010'
+            dport: '80'
+
+': [{'reportedBw': 5679811, 'nw_dst': '10.1.2.2/32', 'bw': 10002107, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.2'}, {'reportedBw': 5623831, 'nw_dst': '10.1.2.2/32', 'bw': 9946127, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.7'}, {'reportedBw': 5669694, 'nw_dst': '10.1.2.2/32', 'bw': 9991990, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.5'}, {'reportedBw': 5690229, 'nw_dst': '10.1.2.2/32', 'bw': 10012525, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.1'}, {'reportedBw': 5680462, 'nw_dst': '10.1.2.2/32', 'bw': 10002758, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.11'}, {'reportedBw': 5688282, 'nw_dst': '10.1.2.2/32', 'bw': 10010578, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.10'}, {'reportedBw': 5699550, 'nw_dst': '10.1.2.2/32', 'bw': 10021846, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.9'}, {'reportedBw': 5685486, 'nw_dst': '10.1.2.2/32', 'bw': 10007782, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.6'}, {'reportedBw': 5681988, 'nw_dst': '10.1.2.2/32', 'bw': 10004284, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.4'}]}"
+
+      - type: event
+        agent: attack_agent
+        method: setConfiguration
+        args:
+            dst: '10.1.2.2'
+            proto: 'udp'
+            length: 'minmax(800,1024)'
+            ratetype: 'flat'
+            lowrate: '7500'
+            highrate: '7500'
+            sport: '1010'
+            dport: '80'
+
+': [{'reportedBw': 13190777, 'nw_dst': '10.1.2.2/32', 'bw': 0.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.2'}, {'reportedBw': 13325015, 'nw_dst': '10.1.2.2/32', 'bw': 0.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.7'}, {'reportedBw': 13324520, 'nw_dst': '10.1.2.2/32', 'bw': 0.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.1'}, {'reportedBw': 13192327, 'nw_dst': '10.1.2.2/32', 'bw': 0.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.5'}, {'reportedBw': 13192783, 'nw_dst': '10.1.2.2/32', 'bw': 0.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.11'}, {'reportedBw': 13198718, 'nw_dst': '10.1.2.2/32', 'bw': 0.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.10'}, {'reportedBw': 13183689, 'nw_dst': '10.1.2.2/32', 'bw': 0.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.9'}, {'reportedBw': 13192669, 'nw_dst': '10.1.2.2/32', 'bw': 0.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.6'}, {'reportedBw': 13185955, 'nw_dst': '10.1.2.2/32', 'bw': 0.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.4'}]}"
+
+
