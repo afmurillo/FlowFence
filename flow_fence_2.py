@@ -193,7 +193,9 @@ def _handle_flowstats_received (event):
 
 	bad_flows = 0
 	flow_bw_list = []
-	capacity = 25000000
+
+	# in bits, obtained experimentally using TCP - Iperf
+	capacity = 16000000				 
 	#bw_for_new_flows = 0.0
 	remaining_bw = capacity 
 	num_flows = 0
@@ -228,7 +230,8 @@ def _handle_flowstats_received (event):
 		for i in range(len(processing_indexes)):
 			acc_bw = acc_bw + flow_list[processing_indexes[i]]['byte_count']
 
-		flow_bw_dictt['reportedBw'] = acc_bw
+		# Expressed in bits
+		flow_bw_dictt['reportedBw'] = acc_bw * 8
 		flow_bw_list.append(flow_bw_dictt)
 		num_flows = num_flows + 1
 
@@ -248,8 +251,8 @@ def _handle_flowstats_received (event):
 		if flow_bw_list[i]['goodBehaved'] == True:
 			flow_bw_list[i]['bw'] = flow_bw_list[i]['reportedBw']
 
-                        if flow_bw_list[i]['bw'] > 25000000:
-                                flow_bw_list[i]['bw'] = 25000000 
+                        if flow_bw_list[i]['bw'] > capacity:
+                                flow_bw_list[i]['bw'] = capacity 
 
 			remaining_bw = remaining_bw -  flow_bw_list[i]['bw']
 		else:
@@ -259,8 +262,8 @@ def _handle_flowstats_received (event):
 	for i in range(len(flow_bw_list)):
 		if flow_bw_list[i]['goodBehaved'] == False:
 			flow_bw_list[i]['bw']= assign_bw_to_bad_behaved(capacity, remaining_bw, bad_flows, num_flows, flow_bw_list[i]['reportedBw'], alfa)
-                        if flow_bw_list[i]['bw'] > 25000000:
-				flow_bw_list[i]['bw'] = 25000000
+                        if flow_bw_list[i]['bw'] > capacity:
+				flow_bw_list[i]['bw'] = capacity
 			print "Bad behaved flow bw " +  str(flow_bw_list[i]['bw'])
 			remaining_bw = remaining_bw - flow_bw_list[i]['bw']
 
@@ -271,8 +274,8 @@ def _handle_flowstats_received (event):
         	        if flow_bw_list[i]['goodBehaved'] == True:
                 	        flow_bw_list[i]['bw'] =  flow_bw_list[i]['bw'] + extra_bw
                         	#print "Good behaved flow bw: " + str(flow_bw_list[i]['bw'])
-	                        if flow_bw_list[i]['bw'] > 25000000:
-        	                        flow_bw_list[i]['bw'] = 25000000
+	                        if flow_bw_list[i]['bw'] > capacity:
+        	                        flow_bw_list[i]['bw'] = capacity
 
 	queues_dict = dict.fromkeys(['Response','dpid','bw_list'])
 	queues_dict['dpid'] = sending_dpid

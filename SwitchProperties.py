@@ -41,7 +41,7 @@ class SwitchProperties:
         def get_interface_capacity(cls):
 
 		""" Returns the interface capacity in bytes/s """
-		return 100000000
+		return 16000000
 
 if __name__ == "__main__":
 
