@@ -167,7 +167,7 @@ class FlowMonitor:
 
 		#print "Initing queues for: " + str(interface_name)
 		queues_list=[]
-		qos_string='ovs-vsctl -- set Port ' + interface_name + ' qos=@fenceqos -- --id=@fenceqos create QoS type=linux-htb other-config:max-rate=16000000 other-config:max-rate=16000000'
+		qos_string='ovs-vsctl -- set Port ' + interface_name + ' qos=@fenceqos -- --id=@fenceqos create QoS type=linux-htb other-config:min-rate=16000000 other-config:max-rate=16000000'
 		queues_string=''
 
 		# Example
@@ -175,19 +175,21 @@ class FlowMonitor:
 
 		for j in range(len(bw_list)):
 			a_queue_dict=dict.fromkeys(['queueId','queueuuid','nw_src','nw_dst','bw'])
-			a_queue_dict['queueId']=j
+			a_queue_dict['queueId']=j+1
 			a_queue_dict['nw_src']=bw_list[j]['nw_src']
 			a_queue_dict['nw_dst']=bw_list[j]['nw_dst']
 			a_queue_dict['bw'] = bw_list[j]['bw']
-			a_queue= 'queues:' + str(a_queue_dict['queueId']) +'=@queue' + str(a_queue_dict['queueId']) + ' '
+			#a_queue= 'queues:' + str(a_queue_dict['queueId']) +'=@queue' + str(a_queue_dict['queueId']) + ' '
+			a_queue= ',' + str(a_queue_dict['queueId']) +'=@queue' + str(a_queue_dict['queueId'])
 			queues_string=queues_string+a_queue
 			#print "Created queue dict: " + str(a_queue_dict)
 			queues_list.append(a_queue_dict)
 
-		#queues_string='queues=0=@queue0'+queues_string
+		queues_string='queues=0=@queue0'+queues_string
 		#toDo: Check the string creation
 
-		#queues_creation='-- --id=@queue0 create Queue other-config:max-rate=16000000 '
+		queues_creation='-- --id=@queue0 create Queue other-config:max-rate=16000000 '
+		#queues_creation=''
 		#toDo: Check the numqueues handling
 
 		for j in range(len(bw_list)):
@@ -195,7 +197,7 @@ class FlowMonitor:
 			queues_creation=queues_creation+a_creation
 
 		command=qos_string + ' ' + queues_string + ' ' + queues_creation
-		#print "Queue command: \n " + str(command)
+		print "Queue command: \n " + str(command)
 		subprocess.check_output(command, shell=True)
 
 		#print "Queues list " + str(queues_list)
@@ -218,7 +220,7 @@ class FlowMonitor:
 		""" Sets the queue bw, according to the policy defined by the SDN controller """
 
 		for i in range(len(queues_list)):
-			subprocess.check_output("ovs-vsctl set queue " + queues_list[i]['queueuuid'] + " other-config:max-rate="+str(queues_list[i]['bw'] + "other-config:min-rate="+str(queues_list[i]['bw']), shell=True)
+			subprocess.check_output("ovs-vsctl set queue " + queues_list[i]['queueuuid'] + " other-config:max-rate="+str(queues_list[i]['bw']) + " other-config:min-rate=" + str(queues_list[i]['bw']), shell=True)
 
         @classmethod
 	def get_uuid(cls):
