@@ -1,0 +1,1 @@
+ovs-vsctl -- set Port $1 qos=@fenceqos -- --id=@fenceqos create QoS type=linux-htb other-config:max-rate=10000000 queues:0=@queue0 queues:1=@queue1 -- --id=@queue0 create Queue other-config:min-rate=1000000 other-config:max-rate=1000000 -- --id=@queue1 create Queue other-config:min-rate=8000000 other-config:max-rate=8000000
