@@ -167,28 +167,31 @@ class FlowMonitor:
 
 		#print "Initing queues for: " + str(interface_name)
 		queues_list=[]
-		qos_string='ovs-vsctl -- set Port ' + interface_name + ' qos=@fenceqos -- --id=@fenceqos create QoS type=linux-htb'
+		qos_string='ovs-vsctl -- set Port ' + interface_name + ' qos=@fenceqos -- --id=@fenceqos create QoS type=linux-htb other-config:max-rate=16000000 other-config:max-rate=16000000'
 		queues_string=''
+
+		# Example
+		# queues:0=@queue0 queues:1=@queue1
 
 		for j in range(len(bw_list)):
 			a_queue_dict=dict.fromkeys(['queueId','queueuuid','nw_src','nw_dst','bw'])
-			a_queue_dict['queueId']=j+1
+			a_queue_dict['queueId']=j
 			a_queue_dict['nw_src']=bw_list[j]['nw_src']
 			a_queue_dict['nw_dst']=bw_list[j]['nw_dst']
 			a_queue_dict['bw'] = bw_list[j]['bw']
-			a_queue= ',' + str(a_queue_dict['queueId']) +'=@queue' + str(a_queue_dict['queueId'])
+			a_queue= 'queues:' + str(a_queue_dict['queueId']) +'=@queue' + str(a_queue_dict['queueId']) + ' '
 			queues_string=queues_string+a_queue
 			#print "Created queue dict: " + str(a_queue_dict)
 			queues_list.append(a_queue_dict)
 
-		queues_string='queues=0=@queue0'+queues_string
+		#queues_string='queues=0=@queue0'+queues_string
 		#toDo: Check the string creation
 
-		queues_creation='-- --id=@queue0 create Queue other-config:max-rate=25000000 '
+		#queues_creation='-- --id=@queue0 create Queue other-config:max-rate=16000000 '
 		#toDo: Check the numqueues handling
 
 		for j in range(len(bw_list)):
-			a_creation='-- --id=@queue' + str(queues_list[j]['queueId']) + ' create Queue other-config:max-rate=25000000 '
+			a_creation='-- --id=@queue' + str(queues_list[j]['queueId']) + ' create Queue other-config:min-rate=16000000 other-config:max-rate=16000000 '
 			queues_creation=queues_creation+a_creation
 
 		command=qos_string + ' ' + queues_string + ' ' + queues_creation
