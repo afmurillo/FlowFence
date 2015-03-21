@@ -218,7 +218,7 @@ class FlowMonitor:
 		""" Sets the queue bw, according to the policy defined by the SDN controller """
 
 		for i in range(len(queues_list)):
-			subprocess.check_output("ovs-vsctl set queue " + queues_list[i]['queueuuid'] + " other-config:max-rate="+str(queues_list[i]['bw']), shell=True)
+			subprocess.check_output("ovs-vsctl set queue " + queues_list[i]['queueuuid'] + " other-config:max-rate="+str(queues_list[i]['bw'] + "other-config:min-rate="+str(queues_list[i]['bw']), shell=True)
 
         @classmethod
 	def get_uuid(cls):
