@@ -167,7 +167,7 @@ class FlowMonitor:
 
 		#print "Initing queues for: " + str(interface_name)
 		queues_list=[]
-		qos_string='ovs-vsctl -- set Port ' + interface_name + ' qos=@fenceqos -- --id=@fenceqos create QoS type=linux-htb other-config:min-rate=16000000 other-config:max-rate=16000000'
+		qos_string='ovs-vsctl -- set Port ' + interface_name + ' qos=@fenceqos -- --id=@fenceqos create QoS type=linux-htb other-config:max-rate=900000000'
 		queues_string=''
 
 		# Example
@@ -187,15 +187,15 @@ class FlowMonitor:
 			#print "Created queue dict: " + str(a_queue_dict)
 			queues_list.append(a_queue_dict)
 
-		#queues_string='queues=0=@queue0'+queues_string
+		queues_string='queues='+ queues_string
 		#toDo: Check the string creation
 
 		#queues_creation='-- --id=@queue0 create Queue other-config:max-rate=16000000 '
-		#queues_creation=''
+		queues_creation=''
 		#toDo: Check the numqueues handling
 
 		for j in range(len(bw_list)):
-			a_creation='-- --id=@queue' + str(queues_list[j]['queueId']) + ' create Queue other-config:min-rate=16000000 other-config:max-rate=16000000 '
+			a_creation='-- --id=@queue' + str(queues_list[j]['queueId']) + ' create Queue other-config:max-rate=100000000 '
 			queues_creation=queues_creation+a_creation
 
 		command=qos_string + ' ' + queues_string + ' ' + queues_creation
@@ -222,7 +222,7 @@ class FlowMonitor:
 		""" Sets the queue bw, according to the policy defined by the SDN controller """
 
 		for i in range(len(queues_list)):
-			subprocess.check_output("ovs-vsctl set queue " + queues_list[i]['queueuuid'] + " other-config:max-rate="+str(queues_list[i]['bw']) + " other-config:min-rate=" + str(queues_list[i]['bw']), shell=True)
+			subprocess.check_output("ovs-vsctl set queue " + queues_list[i]['queueuuid'] + " other-config:max-rate="+str(queues_list[i]['bw']), shell=True)
 
 	def ema(self, a_bar, series, period, prevma, smoothing=None):
             '''Returns the Exponential Moving Average of a series.
