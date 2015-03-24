@@ -67,5 +67,5 @@ porHacer.txt~
 pylintSwitchProperties.txt
 someFlows.txt
 TestsMarch/*.*
-./veryBasicTests/*.*
-./InitialResults/*.*
+veryBasicTests/
+/InitialResults/
