@@ -16,7 +16,7 @@ class SwitchSocket(Thread):
 	""" Class that listens for SDN controller messages  """
         def __init__(self, report_object, application_port):
                 Thread.__init__(self)
-                self.application_port = application_port
+                application_port.self = application_port
 		self.report_object = report_object
                 self.sock = socket.socket()     # Create a socket object
 
