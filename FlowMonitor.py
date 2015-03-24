@@ -54,7 +54,7 @@ class FlowMonitor:
 
             for i in range(len(self.complete_interface_list)):
 		subprocess.check_output('ovs-ofctl del-flows ' + self.complete_interface_list[i]['name'], shell=True)
-                subprocess.check_output('./clear_queues.sh ' + self.complete_interface_list[i]['name'], shell=True)
+                subprocess.check_output('./clear_queues.sh ', shell=True)
 
         def init_window(self):
 	    """ Inits samples window """
@@ -113,7 +113,7 @@ class FlowMonitor:
 
 	def stop_monitoring(self):
 
-		""" Unused """
+		""" Stops monitoring the output interface """
 		self.monitoring=0
 
 	#toDo: Handle
@@ -137,7 +137,7 @@ class FlowMonitor:
 					if (self.complete_interface_list[j]['is_congested'] == 0) and (self.complete_interface_list[j]['currentEma'] >= self.complete_interface_list[j]['threshold']):
 						#print "Congested"
 						self.complete_interface_list[j]['threshold'] = self.complete_interface_list[j]['lower_limit']
-						#print "Reporting congestion"
+						self.monitoring = 0
 						self.report_object.congestion_detected(self.complete_interface_list[j])
 
 					elif (self.complete_interface_list[j]['is_congested'] == 1) and (self.complete_interface_list[j]['currentEma'] <= self.complete_interface_list[j]['threshold']):
@@ -154,12 +154,10 @@ class FlowMonitor:
 	def create_queues(self, controller_message):
 
 		""" Creates the QoS queues, one queue is created for each flow """
-
-		for i in range(len(self.complete_interface_list)):
-			self.complete_interface_list[i]['queueList']=self.init_queues(self.complete_interface_list[i]['name'],controller_message['bw_list'])
-			self.set_queues_bw(self.complete_interface_list[i]['queueList'])
-			self.report_object.queues_ready(self.complete_interface_list[i],controller_message['bw_list'],self.complete_interface_list[i]['queueList'])
-			break
+		
+		self.complete_interface_list[0]['queueList']=self.init_queues(self.complete_interface_list[0]['name'],controller_message['bw_list'])
+		self.set_queues_bw(self.complete_interface_list[0]['queueList'])
+		self.report_object.queues_ready(self.complete_interface_list[0],controller_message['bw_list'],self.complete_interface_list[0]['queueList'])
 
         @classmethod
 	def init_queues(cls, interface_name, bw_list):
@@ -167,11 +165,8 @@ class FlowMonitor:
 
 		#print "Initing queues for: " + str(interface_name)
 		queues_list=[]
-		qos_string='ovs-vsctl -- set Port ' + interface_name + ' qos=@fenceqos -- --id=@fenceqos create QoS type=linux-htb other-config:max-rate=900000000'
+		qos_string='ovs-vsctl -- set Port ' + interface_name + ' qos=@fenceqos -- --id=@fenceqos create qos type=linux-htb other-config:max-rate=900000000'
 		queues_string=''
-
-		# Example
-		# queues:0=@queue0 queues:1=@queue1
 
 		for j in range(len(bw_list)):
 			a_queue_dict=dict.fromkeys(['queueId','queueuuid','nw_src','nw_dst','bw'])
@@ -179,20 +174,15 @@ class FlowMonitor:
 			a_queue_dict['nw_src']=bw_list[j]['nw_src']
 			a_queue_dict['nw_dst']=bw_list[j]['nw_dst']
 			a_queue_dict['bw'] = bw_list[j]['bw']
-			#a_queue= 'queues:' + str(a_queue_dict['queueId']) +'=@queue' + str(a_queue_dict['queueId']) + ' '
 			a_queue= str(a_queue_dict['queueId']) +'=@queue' + str(a_queue_dict['queueId']) 
 			if j < len(bw_list) - 1:
 				a_queue = a_queue + ','
 			queues_string=queues_string+a_queue
-			#print "Created queue dict: " + str(a_queue_dict)
 			queues_list.append(a_queue_dict)
 
 		queues_string='queues='+ queues_string
-		#toDo: Check the string creation
 
-		#queues_creation='-- --id=@queue0 create Queue other-config:max-rate=16000000 '
 		queues_creation=''
-		#toDo: Check the numqueues handling
 
 		for j in range(len(bw_list)):
 			a_creation='-- --id=@queue' + str(queues_list[j]['queueId']) + ' create Queue other-config:max-rate=100000000 '
@@ -201,8 +191,6 @@ class FlowMonitor:
 		command=qos_string + ' ' + queues_string + ' ' + queues_creation
 		print "Queue command: \n " + str(command)
 		subprocess.check_output(command, shell=True)
-
-		#print "Queues list " + str(queues_list)
 
 		# Getting uuid of each queue
 		queues_string = subprocess.check_output("ovs-vsctl list Queue", shell=True)
@@ -213,7 +201,6 @@ class FlowMonitor:
 		for j in range(len(queues_list)):
 			queues_list[j]['queueuuid']=allqueues_string.split(":")[1].split(",")[j].split("=")[1].split('}\n')[0].strip()
 
-		#print "Queue List: " + str(queues_list)
 		return queues_list
 
         @classmethod
