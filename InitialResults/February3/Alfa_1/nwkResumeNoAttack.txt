@@ -1,6 +1,0 @@
-No Attack
-
-meanNwkTwoNoAttack   =  11.8                         0
-meanNwkFourNoAttack  =  11.8                         0
-meanNwkSevenNoAttack =  11.8                         0
-meanNwkTenNoAttack   =  11.8                         0
