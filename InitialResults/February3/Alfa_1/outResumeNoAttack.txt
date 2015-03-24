@@ -1,6 +1,0 @@
-No Attack
-
-meanOutTwoNoAttack =     0     0
-meanOutTwoNoAttack =     0     0
-meanOutTwoNoAttack =     0     0
-meanOutTwoNoAttack =     0     0

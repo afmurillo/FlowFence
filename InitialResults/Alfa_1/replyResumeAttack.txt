@@ -1,8 +1,0 @@
-Attack 
-
-meanTwoAttack =    369.4800  229.3887
-meanFourAttack =   1660.82   918.077614910635
-meanSevenAttack =  1632.16   471.845894334157
-meanTenAttack =    2802.5    1235.85535561408
-
-

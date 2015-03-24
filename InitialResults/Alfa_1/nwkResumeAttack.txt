@@ -1,7 +1,0 @@
-Attack 
-
-
-meanNwkTwoAttack = 0.94         0.114017542509914
-meanNwkTwoAttack = 0.32         0.130384048104053
-meanNwkTwoAttack = 0.22         0.130384048104053
-meanNwkTwoAttack = 0.24         0.114017542509914
