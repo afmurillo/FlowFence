@@ -1,0 +1,63 @@
+------------------------------------------------------------
+Server listening on UDP port 5001
+Receiving 1470 byte datagrams
+UDP buffer size:  224 KByte (default)
+------------------------------------------------------------
+[  3] local 10.1.2.2 port 5001 connected with 10.1.1.3 port 58367
+[ ID] Interval       Transfer     Bandwidth        Jitter   Lost/Total Datagrams
+[  3]  0.0- 1.0 sec  2.50 MBytes  21.0 Mbits/sec   0.836 ms    0/ 1785 (0%)
+[  3]  1.0- 2.0 sec  2.38 MBytes  20.0 Mbits/sec   0.745 ms    0/ 1701 (0%)
+[  3]  2.0- 3.0 sec  2.31 MBytes  19.4 Mbits/sec   0.833 ms    0/ 1647 (0%)
+[  3]  3.0- 4.0 sec  2.38 MBytes  20.0 Mbits/sec   0.914 ms   27/ 1724 (1.6%)
+[  3]  4.0- 5.0 sec  2.12 MBytes  17.8 Mbits/sec   1.680 ms  231/ 1746 (13%)
+[  3]  4.0- 5.0 sec  1 datagrams received out-of-order
+[  3]  5.0- 6.0 sec  2.38 MBytes  20.0 Mbits/sec   0.335 ms    4/ 1701 (0.24%)
+[  3]  5.0- 6.0 sec  4 datagrams received out-of-order
+[  3]  6.0- 7.0 sec  2.36 MBytes  19.8 Mbits/sec   0.243 ms   20/ 1701 (1.2%)
+[  3]  7.0- 8.0 sec  2.37 MBytes  19.9 Mbits/sec   0.307 ms    7/ 1701 (0.41%)
+[  3]  8.0- 9.0 sec  2.38 MBytes  20.0 Mbits/sec   0.417 ms    1/ 1701 (0.059%)
+[  3]  9.0-10.0 sec  2.38 MBytes  20.0 Mbits/sec   0.448 ms    1/ 1700 (0.059%)
+[  3]  9.0-10.0 sec  1 datagrams received out-of-order
+[  3] 10.0-11.0 sec  2.38 MBytes  20.0 Mbits/sec   0.277 ms    2/ 1701 (0.12%)
+[  3] 10.0-11.0 sec  2 datagrams received out-of-order
+[  3] 11.0-12.0 sec  2.37 MBytes  19.9 Mbits/sec   0.234 ms   12/ 1701 (0.71%)
+[  3] 12.0-13.0 sec  2.38 MBytes  20.0 Mbits/sec   0.208 ms    1/ 1701 (0.059%)
+[  3] 13.0-14.0 sec  2.38 MBytes  20.0 Mbits/sec   0.297 ms    0/ 1700 (0%)
+[  3] 14.0-15.0 sec  2.35 MBytes  19.7 Mbits/sec   0.165 ms   23/ 1702 (1.4%)
+[  3] 15.0-16.0 sec  2.33 MBytes  19.5 Mbits/sec   0.282 ms   35/ 1694 (2.1%)
+[  3] 15.0-16.0 sec  1 datagrams received out-of-order
+[  3] 16.0-17.0 sec  2.38 MBytes  19.9 Mbits/sec   0.253 ms   12/ 1707 (0.7%)
+[  3] 17.0-18.0 sec  2.38 MBytes  20.0 Mbits/sec   0.288 ms    0/ 1701 (0%)
+[  3] 18.0-19.0 sec  2.38 MBytes  20.0 Mbits/sec   0.250 ms    0/ 1699 (0%)
+[  3] 19.0-20.0 sec  2.38 MBytes  20.0 Mbits/sec   0.210 ms    2/ 1701 (0.12%)
+[  3] 20.0-21.0 sec  2.38 MBytes  20.0 Mbits/sec   0.269 ms    2/ 1702 (0.12%)
+[  3] 20.0-21.0 sec  2 datagrams received out-of-order
+[  3] 21.0-22.0 sec  2.35 MBytes  19.7 Mbits/sec   0.268 ms   23/ 1699 (1.4%)
+[  3] 22.0-23.0 sec  2.38 MBytes  20.0 Mbits/sec   0.271 ms    5/ 1702 (0.29%)
+[  3] 23.0-24.0 sec  2.38 MBytes  19.9 Mbits/sec   0.270 ms    5/ 1701 (0.29%)
+[  3] 24.0-25.0 sec  2.37 MBytes  19.9 Mbits/sec   0.290 ms    6/ 1700 (0.35%)
+[  3] 25.0-26.0 sec  2.38 MBytes  19.9 Mbits/sec   0.253 ms    3/ 1699 (0.18%)
+[  3] 25.0-26.0 sec  3 datagrams received out-of-order
+[  3] 26.0-27.0 sec  2.34 MBytes  19.6 Mbits/sec   0.231 ms   35/ 1701 (2.1%)
+[  3] 27.0-28.0 sec  2.34 MBytes  19.6 Mbits/sec   0.205 ms   34/ 1700 (2%)
+[  3] 28.0-29.0 sec  2.36 MBytes  19.8 Mbits/sec   0.241 ms   17/ 1702 (1%)
+[  3] 29.0-30.0 sec  2.37 MBytes  19.9 Mbits/sec   0.204 ms    9/ 1702 (0.53%)
+[  3] 30.0-31.0 sec  2.35 MBytes  19.7 Mbits/sec   0.194 ms   23/ 1699 (1.4%)
+[  3] 30.0-31.0 sec  2 datagrams received out-of-order
+[  3] 31.0-32.0 sec  2.38 MBytes  20.0 Mbits/sec   0.229 ms    2/ 1701 (0.12%)
+[  3] 32.0-33.0 sec  2.36 MBytes  19.8 Mbits/sec   0.276 ms   18/ 1702 (1.1%)
+[  3] 33.0-34.0 sec  2.38 MBytes  20.0 Mbits/sec   0.279 ms    1/ 1699 (0.059%)
+[  3] 34.0-35.0 sec  2.38 MBytes  20.0 Mbits/sec   0.217 ms    1/ 1700 (0.059%)
+[  3] 35.0-36.0 sec  2.38 MBytes  20.0 Mbits/sec   0.242 ms    2/ 1702 (0.12%)
+[  3] 35.0-36.0 sec  4 datagrams received out-of-order
+[  3] 36.0-37.0 sec  2.32 MBytes  19.5 Mbits/sec   0.244 ms   43/ 1701 (2.5%)
+[  3] 37.0-38.0 sec  2.38 MBytes  20.0 Mbits/sec   0.288 ms    2/ 1701 (0.12%)
+[  3] 38.0-39.0 sec  2.35 MBytes  19.7 Mbits/sec   0.319 ms   20/ 1698 (1.2%)
+[  3] 39.0-40.0 sec  2.33 MBytes  19.6 Mbits/sec   0.276 ms   39/ 1703 (2.3%)
+[  3] 40.0-41.0 sec  2.36 MBytes  19.8 Mbits/sec   0.226 ms   19/ 1701 (1.1%)
+[  3] 40.0-41.0 sec  1 datagrams received out-of-order
+[  3]  0.0-41.2 sec  97.2 MBytes  19.8 Mbits/sec   4.629 ms  688/69994 (0.98%)
+[  3]  0.0-41.2 sec  22 datagrams received out-of-order
+^Croot@servernode:~# iperf -u -s -i 1
+------------------------------------------------------------
+

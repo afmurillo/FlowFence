@@ -1,0 +1,13 @@
+      - type: event
+        agent: attack_agent
+        method: setConfiguration
+        args:
+            dst: '10.1.2.2'
+            proto: 'udp'
+            length: 'minmax(800,1024)'
+            ratetype: 'flat'
+            lowrate: '10000'
+            highrate: '10000'
+            sport: '1010'
+            dport: '80'
+

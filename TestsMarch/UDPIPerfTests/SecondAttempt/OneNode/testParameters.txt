@@ -1,0 +1,18 @@
+  attackstream:
+
+      - type: event
+        agent: attack_agent
+        method: setConfiguration
+        args:
+            dst: '10.1.2.2'
+            proto: 'udp'
+            length: 'minmax(800,1024)'
+            ratetype: 'flat'
+            lowrate: '7500'
+            highrate: '7500'
+            sport: '1010'
+            dport: '80'
+
+
+Cuando se usan 10 nodos:
+Queues message sent: [{'reportedBw': 22558136, 'nw_dst': '10.1.2.2/32', 'bw': 0.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.2'}, {'reportedBw': 22580146, 'nw_dst': '10.1.2.2/32', 'bw': 0.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.7'}, {'reportedBw': 21495624, 'nw_dst': '10.1.2.2/32', 'bw': 0.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.5'}, {'reportedBw': 21738906, 'nw_dst': '10.1.2.2/32', 'bw': 0.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.1'}, {'reportedBw': 14932978, 'nw_dst': '10.1.2.2/32', 'bw': 0.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.11'}, {'reportedBw': 22582698, 'nw_dst': '10.1.2.2/32', 'bw': 0.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.10'}, {'reportedBw': 5431104, 'nw_dst': '10.1.2.2/32', 'bw': 25000000, 'action': 1, 'goodBehaved': True, 'nw_src': '10.1.1.3'}, {'reportedBw': 17549628, 'nw_dst': '10.1.2.2/32', 'bw': 0.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.9'}, {'reportedBw': 21494214, 'nw_dst': '10.1.2.2/32', 'bw': 0.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.6'}, {'reportedBw': 21502872, 'nw_dst': '10.1.2.2/32', 'bw': 0.0, 'action': 1, 'goodBehaved': False, 'nw_src': '10.1.1.4'}]
