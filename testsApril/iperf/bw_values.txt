@@ -2,6 +2,7 @@ One node
 bandas_defensa = [54.45, 28.06, 29.62]
 bandas_no_defensa = [19.71, 18.98, 18.06]
 
+
 Four nodes
 bandas_defensa = [21.73, 21.95, 17.27 ]
 bandas_no_defensa = [0.98, 1.18, 0.93]

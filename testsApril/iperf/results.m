@@ -4,6 +4,8 @@ clc
 
 %%% Iperf test with attackers doing iperf
 
+attackers = [50, 100, 150, 200];
+
 mean_defense_bw = zeros(1,4);
 mean_no_defense_bw = zeros(1,4);
 
@@ -34,19 +36,20 @@ mean_no_defense_bw(4) = mean(ten_nodes_no_defense);
 
 figure(1)
 
-plot(mean_defense_bw,'-b');
+plot(attackers, mean_defense_bw,'-b');
 
 hold on;
 grid on;
 
-plot(mean_no_defense_bw,'-r');
+plot(attackers, mean_no_defense_bw,'-r');
 
 txt = findobj(gca,'Type','text');
 set(findobj(gca,'Type','text'),'FontSize',20);
 set(txt(1:end),'VerticalAlignment', 'Middle');
 
-ylabel('Bandwidth (mbits/s)')
-title('Bandwidth Obtained by Legitimate Client')
+ylabel('Bandwidth Obtained by Legitimate Client (mbits/s)')
+xlabel('Bandwidth Used by Attackers (mbits/s)')
+title('Bandwidth Obtained by Legitimate Client using Iperf')
 
 
 
