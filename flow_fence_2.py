@@ -19,6 +19,7 @@ from threading import Thread
 import socket
 import json
 import math
+import time
 
 LOG = core.getLogger()
 CONTROLLER_IP = '10.1.4.1'
@@ -36,7 +37,7 @@ class ServerSocket(Thread):
 		host = CONTROLLER_IP
 		port = 12345               							# Reserve a port for own communication btwn switches and controller
 		#log.info("Binding to listen for switch messages")
-		print "Binding to listen for switch messages"
+		#print "Binding to listen for switch messages"
 		self.sock.bind((host, port))        				# Bind to the port
 		self.sock.listen(5)
 
@@ -45,7 +46,7 @@ class ServerSocket(Thread):
 
 				client, addr = self.sock.accept()
 				data = client.recv(4096)
-				print 'Message from', addr
+				#print 'Message from', addr
 				data_treatment = HandleMessage(data,self.connections, addr)
 				data_treatment.setDaemon(True)
 				data_treatment.start()
@@ -66,7 +67,7 @@ class HandleMessage(Thread):
 		self.alfa = 1
 		self.response_port = 23456
 		self.bw_for_new_flows = 0.1
-		print self.myconnections
+		#print self.myconnections
 
 	def run(self):
 
@@ -74,62 +75,67 @@ class HandleMessage(Thread):
 
 		try:
 			message = eval(json.loads(self.received))
-			print "Message received " + str(message)
+			#print "Message received " + str(message)
 		except:
 			print "An error ocurred processing the incoming message"
 
 		if message['Notification'] == 'Congestion':
+			global notification_time
+			notification_time = time.time()
+
 			self.handle_congestion_notification(message['Interface']['dpid'])
 		elif message['Notification'] == 'QueuesDone':
+			global queues_done_time
+			queues_done_time = time.time() - flow_stats_reply_time
+
 			self.handle_flows_redirection(message['Interface']['dpid'], self.myconnections, self.src_address, message)
 
 	def handle_congestion_notification(self, dpid):
 		""" Upon reception of a congestion notification, requests for flow stats in the congestioned switch """
-
                 dpid = dpid[:len(dpid)-1]
                 dpid = dpid[len(dpid)-12:]
-                print 'Received dpid: ' + str(dpid)
+                #print 'Received dpid: ' + str(dpid)
 
 		# We leave the 10% to handle new flows, during congestion.
 
 		# Request flow stats from switch
-		print "dpid parameter: " + str(dpid)
+		#print "dpid parameter: " + str(dpid)
 		for connection in self.myconnections:
 			connection_dpid = connection.dpid
-			print "Connection dpid: " + str(connection_dpid)
+			#print "Connection dpid: " + str(connection_dpid)
 			dpid_str = dpidToStr(connection_dpid)
 			dpid_str = dpid_str.replace("-", "")
-			print 'Real dpid_str: ' + dpid_str
+			#print 'Real dpid_str: ' + dpid_str
 			if dpid == dpid_str:
 				connection.send(of.ofp_stats_request(body=of.ofp_flow_stats_request()))
-				print 'Flow stats requets sent to: ' + str(connection)
+				#print 'Flow stats requets sent to: ' + str(connection)
 
 	@classmethod
 	def handle_flows_redirection(cls, dpid, connections, switch_addresss, message):
 
 		""" Sends flow mod messages to redirect flows to created queues """
-		print 'message from ' + str(switch_addresss)
-		print 'Connections ' + str(dir(connections))
+		#print 'message from ' + str(switch_addresss)
+		#print 'Connections ' + str(dir(connections))
 
 		dpid = dpid[:len(dpid)-1]
 		dpid = dpid[len(dpid)-12:]
-		print 'Received dpid: ' + str(dpid)
+		#print 'Received dpid: ' + str(dpid)
 
-		print "message to be used for redirection" + str(message)
+		#print "message to be used for redirection" + str(message)
 
 		msg = of.ofp_flow_mod(command=of.OFPFC_DELETE)
 		msg.priority = 65535
 
-		print "dpid parameter: " + str(dpid)
+		#print "dpid parameter: " + str(dpid)
 		for connection in connections:
 			connection_dpid = connection.dpid
 			dpid_str = dpidToStr(connection_dpid)
 			dpid_str = dpid_str.replace("-", "")
-			print 'Real dpid_str: ' + dpid_str
+			#print 'Real dpid_str: ' + dpid_str
 			if dpid == dpid_str:
 				connection.send(msg)
-				print 'Sent to: ' + str(connection)
-				print 'Well...done'
+				#print 'Sent to: ' + str(connection)
+				#print 'Well...done'
 
 		for i in range(len(message['bw_list'])):
 
@@ -138,7 +144,7 @@ class HandleMessage(Thread):
 
 				my_match = of.ofp_match(dl_type = 0x800,nw_src=message['bw_list'][i]['nw_src'],nw_dst=message['bw_list'][i]['nw_dst'])
 
-				print "Flow Match: " + str(my_match)
+				#print "Flow Match: " + str(my_match)
 				msg = of.ofp_flow_mod()
 				msg.match = my_match
 				msg.priority = 65535
@@ -146,21 +152,28 @@ class HandleMessage(Thread):
     				msg.hard_timeout = 0
 				msg.actions.append(of.ofp_action_enqueue(port=int(message['bw_list'][i]['action']), queue_id=int(message['queue_list'][i]['queueId'])))
 
-				print "Flow mod message: " + str(msg)
+				#print "Flow mod message: " + str(msg)
 
 	  	              	#toDo: Check a better way to do this
-				print "dpid parameter: " + str(dpid)
+				#print "dpid parameter: " + str(dpid)
 	                	for connection in connections:
         	        		connection_dpid=connection.dpid
-					print "Connection dpid: " + str(connection_dpid)
+					#print "Connection dpid: " + str(connection_dpid)
                 			dpid_str=dpidToStr(connection_dpid)
 	                		dpid_str=dpid_str.replace("-", "")
-        	        		print 'Real dpid_str: ' + dpid_str
+        	        		#print 'Real dpid_str: ' + dpid_str
 
 	                		if dpid == dpid_str:
         	        			connection.send(msg)
-						print 'Sent to: ' + str(connection)
-						print 'Well...done'
+							 	global flow_mod_time
+							 	flow_mod_time = time.time() - queues_done_time
+
+						print "Notification time: " + str(notification_time)
+						print "Flow stats reply: " + str(flow_stats_reply_time)
+						print "Queues done time: " + str(queues_done_time)
+						print "Flow mode time :" + str(flow_mod_time) 
+						#print 'Sent to: ' + str(connection)
+						#print 'Well...done'
 
 class ConnectTest(EventMixin):
 
@@ -169,7 +182,7 @@ class ConnectTest(EventMixin):
 	def __init__(self):
 		self.listenTo(core.openflow)
 		LOG.debug("Received connection from switch")
-		print "Received connection from switch"
+		#print "Received connection from switch"
 		self.myconnections = []		# a list of the connections
 		socket_server=ServerSocket(self.myconnections)	# send it to the socket with the connection
 		socket_server.setDaemon(True)		# establish the thread as a deamond, this will make to close the thread with the main program
@@ -186,6 +199,9 @@ class ConnectTest(EventMixin):
 def _handle_flowstats_received (event):
 
 	""" Calculates bw for each flow """
+
+	global flow_stats_reply_time
+	flow_stats_reply_time = time.time() - notification_time
 
 	flow_list = flow_stats_to_list(event.stats)
 	sending_dpid = event.connection.dpid
@@ -264,7 +280,7 @@ def _handle_flowstats_received (event):
 			flow_bw_list[i]['bw']= assign_bw_to_bad_behaved(capacity, remaining_bw, bad_flows, num_flows, flow_bw_list[i]['reportedBw'], alfa)
                         if flow_bw_list[i]['bw'] > 3000000:
 				flow_bw_list[i]['bw'] = 3000000
-			print "Bad behaved flow bw " +  str(flow_bw_list[i]['bw'])
+			#print "Bad behaved flow bw " +  str(flow_bw_list[i]['bw'])
 			remaining_bw = remaining_bw - flow_bw_list[i]['bw']
 
 	# Give remmaining bw between good flows
@@ -284,7 +300,7 @@ def _handle_flowstats_received (event):
 
 	response_message = json.dumps(str(queues_dict))
 
-	print "Response Message sent: " + str(response_message)
+	#print "Response Message sent: " + str(response_message)
 
 	response_socket = create_socket()
 	send_message(response_socket,sending_address, response_port, response_message)
@@ -306,8 +322,8 @@ def close_connection(a_socket):
 
 def classiy_flows(capacity, estimated_bw, num_flows):
 	""" Classifies flows """
-	print "Num Flows: " + str(num_flows)
-	print "Capacity: " + str(capacity)
+	#print "Num Flows: " + str(num_flows)
+	3print "Capacity: " + str(capacity)
 	if estimated_bw > (capacity/num_flows):
 		return False
 	else:
@@ -319,10 +335,10 @@ def assign_bw_to_bad_behaved(capacity, remaining_bw, num_bad_flows, num_total_fl
 	fair_rate = capacity/num_total_flows
 	bad_fair_rate = capacity / num_bad_flows
 	#print "remaining_bw: " + str(remaining_bw)
-	print "num bad flows : " + str(num_bad_flows)
-	print "fair rate: " + str(fair_rate)
-	print "bad fair: " + str(bad_fair_rate)
-	print "flow rate: " + str (flow_rate)
+	#print "num bad flows : " + str(num_bad_flows)
+	#print "fair rate: " + str(fair_rate)
+	#print "bad fair: " + str(bad_fair_rate)
+	#print "flow rate: " + str (flow_rate)
 	bw = bad_fair_rate - (1 - math.exp( - (flow_rate - fair_rate) )) * alfa * bad_fair_rate
 	return bw
 
