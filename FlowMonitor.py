@@ -22,7 +22,7 @@ class FlowMonitor:
 		self.interval_time = interval_time
 		self.switch_properties = SwitchProperties.SwitchProperties()
 		self.interfaces_list = self.switch_properties.get_interfaces()
-		self.complete_interface_list = []
+		self.complete_interface_list = []	
 
 		for i in range(len(self.interfaces_list)):
 			complete_interface_dict = dict.fromkeys(['name', 'dpid', 'capacity', 'lower_limit', 'upper_limit', 'threshold', 'samples', 'use_averages', 'monitoring', 'is_congested', 'queueList'])
@@ -106,6 +106,7 @@ class FlowMonitor:
 	def start_monitoring(self):
 		""" Starts the thread that monitors interface occupation """
 
+		self.startup_time = time.time()
 		self.report_object = application_switch_2.ApplicationSwitch()
 		self.monitoring=1
 		self.threads_id.append(threading.Thread(name = 'Monitor', target=self.monitor))
@@ -132,10 +133,11 @@ class FlowMonitor:
 				self.update_window()
 				for j in range(len(self.complete_interface_list)):
 
-					print "update, ema: " + str(self.complete_interface_list[j]['currentEma'])
-					print "current threshold: " + str(self.complete_interface_list[j]['threshold'])
+					#print "update, ema: " + str(self.complete_interface_list[j]['currentEma'])
+					#print "current threshold: " + str(self.complete_interface_list[j]['threshold'])
 					if (self.complete_interface_list[j]['is_congested'] == 0) and (self.complete_interface_list[j]['currentEma'] >= self.complete_interface_list[j]['threshold']):
 						#print "Congested"
+						self.detection_time = time.time() - self.startup_time
 						self.complete_interface_list[j]['threshold'] = self.complete_interface_list[j]['lower_limit']
 						self.monitoring = 0
 						self.report_object.congestion_detected(self.complete_interface_list[j])
@@ -155,9 +157,16 @@ class FlowMonitor:
 
 		""" Creates the QoS queues, one queue is created for each flow """
 		
+		self.queues_creation_time = time.time() - self.detection_time
 		self.complete_interface_list[0]['queueList']=self.init_queues(self.complete_interface_list[0]['name'],controller_message['bw_list'])
 		self.set_queues_bw(self.complete_interface_list[0]['queueList'])
 		self.report_object.queues_ready(self.complete_interface_list[0],controller_message['bw_list'],self.complete_interface_list[0]['queueList'])
+		self.queues_complete_time = time.time() - self.queues_creation_time
+
+		print "Startup time: " + str(sel.startup_time)
+		print "Detection time: " + str(self.detection_time)
+		print "Queues creation time: " + str(self.queues_creation_time)
+		print "Queues complete time: " + str(self.queues_complete_time)
 
         @classmethod
 	def init_queues(cls, interface_name, bw_list):
@@ -189,7 +198,7 @@ class FlowMonitor:
 			queues_creation=queues_creation+a_creation
 
 		command=qos_string + ' ' + queues_string + ' ' + queues_creation
-		print "Queue command: \n " + str(command)
+		#print "Queue command: \n " + str(command)
 		subprocess.check_output(command, shell=True)
 
 		# Getting uuid of each queue

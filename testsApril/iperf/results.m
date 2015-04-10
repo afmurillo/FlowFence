@@ -4,7 +4,7 @@ clc
 
 %%% Iperf test with attackers doing iperf
 
-attackers = [50, 100, 150, 200];
+attackers = [50, 150, 300, 450];
 
 mean_defense_bw = zeros(1,4);
 mean_no_defense_bw = zeros(1,4);
