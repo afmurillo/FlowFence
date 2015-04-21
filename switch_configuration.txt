@@ -1,0 +1,125 @@
+Output of ovs-vsctl in th SDN Switch 1
+
+One bridge is configured for each data plane interface. 
+
+root@pdc-1:~# ovs-vsctl show
+4fda1c9d-746f-4602-adff-c669a5bba7ed
+    Manager "ptcp:8282"
+    Bridge "eth1br"
+        Controller "tcp:10.1.4.1:2626"
+        Port "eth1br"
+            Interface "eth1br"
+                type: internal
+        Port "eth1"
+            Interface "eth1"
+    Bridge "eth0br"
+        Controller "tcp:10.1.4.1:2626"
+        Port "eth0"
+            Interface "eth0"
+        Port "eth0br"
+            Interface "eth0br"
+                type: internal
+    ovs_version: "2.3.0"
+
+
+Now, ip config in that switch returns:
+
+root@pdc-1:~# ifconfig 
+eth0      Link encap:Ethernet  HWaddr 00:b6:78:9f:7b:d2  
+          inet6 addr: fe80::2b6:78ff:fe9f:7bd2/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:41549401 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:9515026400 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:2950941855 (2.7 GiB)  TX bytes:6829205026437 (6.2 TiB)
+          Interrupt:25 
+
+eth1      Link encap:Ethernet  HWaddr 00:49:d0:b1:21:7c  
+          inet6 addr: fe80::249:d0ff:feb1:217c/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:13357142797 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:38884280 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:9290226407681 (8.4 TiB)  TX bytes:3354370356 (3.1 GiB)
+          Interrupt:26 
+
+eth2      Link encap:Ethernet  HWaddr 00:3a:79:7d:d4:94  
+          inet addr:192.168.254.3  Bcast:192.168.254.255  Mask:255.255.255.0
+          inet6 addr: fe80::23a:79ff:fe7d:d494/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:474073 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:495194 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:30436740 (29.0 MiB)  TX bytes:77357617 (73.7 MiB)
+          Interrupt:27 
+
+eth3      Link encap:Ethernet  HWaddr 00:b6:79:9e:7b:e1  
+          inet addr:10.1.4.2  Bcast:10.1.4.255  Mask:255.255.255.0
+          inet6 addr: fe80::2b6:79ff:fe9e:7be1/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:5818288 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:5318117 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:2231416604 (2.0 GiB)  TX bytes:2529059984 (2.3 GiB)
+          Interrupt:28 
+
+eth0br    Link encap:Ethernet  HWaddr 00:b6:78:9f:7b:d2  
+          inet addr:10.1.3.1  Bcast:10.1.3.255  Mask:255.255.255.0
+          inet6 addr: fe80::2b6:78ff:fe9f:7bd2/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:40492388 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:9527215056 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0 
+          RX bytes:3487668885 (3.2 GiB)  TX bytes:6840600922804 (6.2 TiB)
+
+eth1br    Link encap:Ethernet  HWaddr 00:49:d0:b1:21:7c  
+          inet addr:10.1.1.8  Bcast:10.1.1.255  Mask:255.255.255.0
+          inet6 addr: fe80::249:d0ff:feb1:217c/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:13286653405 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:38888825 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0 
+          RX bytes:9418282448870 (8.5 TiB)  TX bytes:3356713459 (3.1 GiB)
+
+lo        Link encap:Local Loopback  
+          inet addr:127.0.0.1  Mask:255.0.0.0
+          inet6 addr: ::1/128 Scope:Host
+          UP LOOPBACK RUNNING  MTU:16436  Metric:1
+          RX packets:114386 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:114386 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0 
+
+As you can see eth0 and eth1 do not have IPs, they are only "internal" interfaces. The "real" interfaces are eth0br and eth1br. 
+Ignore eth2, it is a "dom0back" interface that I use to make ssh from the Physical machine to the VM, using the hipervisor Xen.
+Finally, eth3 is a 'normal' interface that the switch uses to communicate with the controller.
+
+
+The following commands should help to create a configuration as seen above, please check the commands as I do not know for sure if they are the "right ones" corresponding to that configuration. I have sort of a mess o scripts here :(
+
+###########################		Openflow switches configuration
+
+#Create internal and external bridges for each interface
+ovs-vsctl add-br eth0br
+ovs-vsctl add-port eth0br eth0
+
+ovs-vsctl add-br eth1br
+ovs-vsctl add-port eth1br eth1
+
+# Get interfaces up and with ip (edit /etc/network/interfaces)
+ifconfig eth0br up
+ifconfig eth1br up
+
+# Flush ip addresses from erroneus interfaces
+ip address flush eth1
+ip address flush eth0
+
+
+#Get back internal interfaces
+ifconfig eth1 up
+ifconfig eth0 up
+
+#Configure bridge to aim to the controller
+ovs-vsctl set-controller eth0br tcp:10.1.4.1:2626
+ovs-vsctl set-controller eth1br tcp:10.1.4.1:2626
+
+
