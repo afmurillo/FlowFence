@@ -1,0 +1,33 @@
+At the controller side, I have the following output from ifconfig
+
+eth2      Link encap:Ethernet  HWaddr 00:3a:79:7d:d4:93  
+          inet addr:192.168.254.20  Bcast:192.168.254.255  Mask:255.255.255.0
+          inet6 addr: fe80::23a:79ff:fe7d:d493/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:411506 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:465042 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:27553114 (26.2 MiB)  TX bytes:68381797 (65.2 MiB)
+          Interrupt:27 
+
+eth3      Link encap:Ethernet  HWaddr 00:b6:28:cf:1b:d1  
+          inet addr:10.1.4.1  Bcast:10.1.4.255  Mask:255.255.255.0
+          inet6 addr: fe80::2b6:28ff:fecf:1bd1/64 Scope:Link
+          UP BROADCAST RUNNING MULTICAST  MTU:1500  Metric:1
+          RX packets:9548486 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:9592597 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:1000 
+          RX bytes:3238399706 (3.0 GiB)  TX bytes:2916026964 (2.7 GiB)
+          Interrupt:28 
+
+lo        Link encap:Local Loopback  
+          inet addr:127.0.0.1  Mask:255.0.0.0
+          inet6 addr: ::1/128 Scope:Host
+          UP LOOPBACK RUNNING  MTU:16436  Metric:1
+          RX packets:39152 errors:0 dropped:0 overruns:0 frame:0
+          TX packets:39152 errors:0 dropped:0 overruns:0 carrier:0
+          collisions:0 txqueuelen:0 
+          RX bytes:3288768 (3.1 MiB)  TX bytes:3288768 (3.1 MiB)
+
+
+Now that I've seen that configuration, I'm not sure if the experiments would work if the controller and the switches are allocated in different physical machines (You see, the open vswitch bridges are usefull for that stuf). But, as in my experiments only the attackers and cliens where on different machines, this configuration worked
