@@ -106,7 +106,6 @@ class FlowMonitor:
 	def start_monitoring(self):
 		""" Starts the thread that monitors interface occupation """
 
-		self.startup_time = time.time()
 		self.report_object = application_switch_2.ApplicationSwitch()
 		self.monitoring=1
 		self.threads_id.append(threading.Thread(name = 'Monitor', target=self.monitor))
@@ -127,43 +126,46 @@ class FlowMonitor:
 
 		""" Obtains a new sample of the interface occupation average, and in case of congestion, notifies the main module """
 
-		while self.monitoring == 1:
+		self.startup_time = time.time()
 
-			try:
-				self.update_window()
-				for j in range(len(self.complete_interface_list)):
+		while True:
+			if self.monitoring == 1:
 
-					#print "update, ema: " + str(self.complete_interface_list[j]['currentEma'])
-					#print "current threshold: " + str(self.complete_interface_list[j]['threshold'])
-					if (self.complete_interface_list[j]['is_congested'] == 0) and (self.complete_interface_list[j]['currentEma'] >= self.complete_interface_list[j]['threshold']):
-						#print "Congested"
-						self.detection_time = time.time() - self.startup_time
-						self.complete_interface_list[j]['threshold'] = self.complete_interface_list[j]['lower_limit']
-						self.monitoring = 0
-						self.report_object.congestion_detected(self.complete_interface_list[j])
+				try:
+					self.update_window()
+					for j in range(len(self.complete_interface_list)):
 
-					elif (self.complete_interface_list[j]['is_congested'] == 1) and (self.complete_interface_list[j]['currentEma'] <= self.complete_interface_list[j]['threshold']):
-						self.complete_interface_list[j]['is_congested'] = 0
-						self.complete_interface_list[j]['threshold'] = self.complete_interface_list[j]['upper_limit']
-						#print "Congestion ceased"
-						self.report_object.congestion_ceased()
+						#print "update, ema: " + str(self.complete_interface_list[j]['currentEma'])
+						#print "current threshold: " + str(self.complete_interface_list[j]['threshold'])
+						if (self.complete_interface_list[j]['is_congested'] == 0) and (self.complete_interface_list[j]['currentEma'] >= self.complete_interface_list[j]['threshold']):
+							#print "Congested"
+							self.detection_time = time.time()
+							self.complete_interface_list[j]['threshold'] = self.complete_interface_list[j]['lower_limit']
+							self.monitoring = 0
+							self.report_object.congestion_detected(self.complete_interface_list[j])
 
-			except KeyboardInterrupt:
-				print " \n *** So long and thanks for all the fish! *** "
-				self.monitoring = 0
-				break
+						elif (self.complete_interface_list[j]['is_congested'] == 1) and (self.complete_interface_list[j]['currentEma'] <= self.complete_interface_list[j]['threshold']):
+							self.complete_interface_list[j]['is_congested'] = 0
+							self.complete_interface_list[j]['threshold'] = self.complete_interface_list[j]['upper_limit']
+							#print "Congestion ceased"
+							self.report_object.congestion_ceased()
+
+				except KeyboardInterrupt:
+					print " \n *** So long and thanks for all the fish! *** "
+					self.monitoring = 0
+					break
 
 	def create_queues(self, controller_message):
 
 		""" Creates the QoS queues, one queue is created for each flow """
 		
-		self.queues_creation_time = time.time() - self.detection_time
+		self.queues_creation_time = time.time()
 		self.complete_interface_list[0]['queueList']=self.init_queues(self.complete_interface_list[0]['name'],controller_message['bw_list'])
 		self.set_queues_bw(self.complete_interface_list[0]['queueList'])
 		self.report_object.queues_ready(self.complete_interface_list[0],controller_message['bw_list'],self.complete_interface_list[0]['queueList'])
-		self.queues_complete_time = time.time() - self.queues_creation_time
+		self.queues_complete_time = time.time()
 
-		print "Startup time: " + str(sel.startup_time)
+		print "Startup time: " + str(self.startup_time)
 		print "Detection time: " + str(self.detection_time)
 		print "Queues creation time: " + str(self.queues_creation_time)
 		print "Queues complete time: " + str(self.queues_complete_time)
