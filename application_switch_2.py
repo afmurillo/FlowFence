@@ -16,12 +16,13 @@ class SwitchSocket(Thread):
 	""" Class that listens for SDN controller messages  """
         def __init__(self, report_object, application_port):
                 Thread.__init__(self)
-                application_port.self = application_port
+                self.application_port = application_port
 		self.report_object = report_object
                 self.sock = socket.socket()     # Create a socket object
 
         def run(self):
                 host = subprocess.check_output("ifconfig | grep 10.1.4 | awk '{print $2;}'", shell=True).split(':')[1].split('\n')[0]
+		print "Binding to " + str(host) + "in port " + str(self.application_port)
                 self.sock.bind((host, self.application_port))                                    # Bind to the port
                 self.sock.listen(5)
 
