@@ -1,3 +1,4 @@
+
 """
 DoS Mitigation - FlowFence component
 
@@ -86,7 +87,7 @@ class HandleMessage(Thread):
 			self.handle_congestion_notification(message['Interface']['dpid'])
 		elif message['Notification'] == 'QueuesDone':
 			global queues_done_time
-			queues_done_time = time.time() - flow_stats_reply_time
+			queues_done_time = time.time()
 
 			self.handle_flows_redirection(message['Interface']['dpid'], self.myconnections, self.src_address, message)
 
@@ -165,9 +166,8 @@ class HandleMessage(Thread):
 
 	                		if dpid == dpid_str:
         	        			connection.send(msg)
-							 	global flow_mod_time
-							 	flow_mod_time = time.time() - queues_done_time
-
+						global flow_mod_time
+						flow_mod_time = time.time() 
 						print "Notification time: " + str(notification_time)
 						print "Flow stats reply: " + str(flow_stats_reply_time)
 						print "Queues done time: " + str(queues_done_time)
@@ -201,7 +201,7 @@ def _handle_flowstats_received (event):
 	""" Calculates bw for each flow """
 
 	global flow_stats_reply_time
-	flow_stats_reply_time = time.time() - notification_time
+	flow_stats_reply_time = time.time()
 
 	flow_list = flow_stats_to_list(event.stats)
 	sending_dpid = event.connection.dpid
@@ -213,9 +213,9 @@ def _handle_flowstats_received (event):
 	# in bits, obtained experimentally using TCP - Iperf
 	capacity = 16000000				 
 	#bw_for_new_flows = 0.0
-	remaining_bw = 100000000 
+	remaining_bw = 700000000 
 	num_flows = 0
-	alfa =1.0
+	alfa =0.95
 	response_port = 23456
 
 	# Get indexes of flow_list
@@ -261,14 +261,32 @@ def _handle_flowstats_received (event):
 		# only for udp Iperf debugging purposes!
 		if flow_bw_list[i]['nw_src'] == '10.1.1.3':
 			flow_bw_list[i]['goodBehaved'] = True
+                if flow_bw_list[i]['nw_src'] == '10.1.1.2':
+                        flow_bw_list[i]['goodBehaved'] = True
+                if flow_bw_list[i]['nw_src'] == '10.1.1.1':
+                        flow_bw_list[i]['goodBehaved'] = True
+                if flow_bw_list[i]['nw_src'] == '10.1.1.4':
+                        flow_bw_list[i]['goodBehaved'] = True
+                if flow_bw_list[i]['nw_src'] == '10.1.1.5':
+                        flow_bw_list[i]['goodBehaved'] = True
+                if flow_bw_list[i]['nw_src'] == '10.1.1.6':
+                        flow_bw_list[i]['goodBehaved'] = True
+                if flow_bw_list[i]['nw_src'] == '10.1.1.7':
+                        flow_bw_list[i]['goodBehaved'] = True
+                if flow_bw_list[i]['nw_src'] == '10.1.1.8':
+                        flow_bw_list[i]['goodBehaved'] = True
+                if flow_bw_list[i]['nw_src'] == '10.1.1.9':
+                        flow_bw_list[i]['goodBehaved'] = True
+
+		
 		#else:
 		#flow_bw_list[i]['goodBehaved'] = False
 
 		if flow_bw_list[i]['goodBehaved'] == True:
 			flow_bw_list[i]['bw'] = flow_bw_list[i]['reportedBw']
 
-                        if flow_bw_list[i]['bw'] > 900000000:
-                                flow_bw_list[i]['bw'] = 900000000 
+                        if flow_bw_list[i]['bw'] > 700000000:
+                                flow_bw_list[i]['bw'] = 700000000 
 
 			remaining_bw = remaining_bw -  flow_bw_list[i]['bw']
 		else:
@@ -278,8 +296,6 @@ def _handle_flowstats_received (event):
 	for i in range(len(flow_bw_list)):
 		if flow_bw_list[i]['goodBehaved'] == False:
 			flow_bw_list[i]['bw']= assign_bw_to_bad_behaved(capacity, remaining_bw, bad_flows, num_flows, flow_bw_list[i]['reportedBw'], alfa)
-                        if flow_bw_list[i]['bw'] > 3000000:
-				flow_bw_list[i]['bw'] = 3000000
 			#print "Bad behaved flow bw " +  str(flow_bw_list[i]['bw'])
 			remaining_bw = remaining_bw - flow_bw_list[i]['bw']
 
@@ -290,8 +306,12 @@ def _handle_flowstats_received (event):
         	        if flow_bw_list[i]['goodBehaved'] == True:
                 	        flow_bw_list[i]['bw'] =  flow_bw_list[i]['bw'] + extra_bw
                         	#print "Good behaved flow bw: " + str(flow_bw_list[i]['bw'])
-	                        if flow_bw_list[i]['bw'] > 900000000:
-        	                        flow_bw_list[i]['bw'] = 900000000
+	                        if flow_bw_list[i]['bw'] > 700000000:
+        	                        flow_bw_list[i]['bw'] = 700000000
+			if flow_bw_list[i]['goodBehaved'] != True: 
+                               if flow_bw_list[i]['bw'] < 20000000:
+                                        flow_bw_list[i]['bw'] = 20000000
+
 
 	queues_dict = dict.fromkeys(['Response','dpid','bw_list'])
 	queues_dict['dpid'] = sending_dpid
@@ -323,7 +343,7 @@ def close_connection(a_socket):
 def classiy_flows(capacity, estimated_bw, num_flows):
 	""" Classifies flows """
 	#print "Num Flows: " + str(num_flows)
-	3print "Capacity: " + str(capacity)
+	#print "Capacity: " + str(capacity)
 	if estimated_bw > (capacity/num_flows):
 		return False
 	else:
