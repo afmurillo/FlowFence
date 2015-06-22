@@ -22,11 +22,12 @@ import math
 import statistics as st
 import time
 from random import randint
+from pox.lib.recoco import Timer
 
 
 
 LOG = core.getLogger()
-CONTROLLER_IP = '10.1.4.1'
+CONTROLLER_IP = '10.4.1.1'
 switch_states = []
 # in bits, obtained experimentally using TCP - Iperf
 capacity = 16000000				 
@@ -111,7 +112,7 @@ class HandleMessage(Thread):
 
 	def handle_congestion_notification(self, dpid):
 		""" Upon reception of a congestion notification, requests for flow stats in the congestioned switch """
-				dpid = dpid[:len(dpid)-1]
+		dpid = dpid[:len(dpid)-1]
                 dpid = dpid[len(dpid)-12:]
                 #print 'Received dpid: ' + str(dpid)
 
@@ -148,7 +149,8 @@ class HandleMessage(Thread):
 					drop_flow = switch_states[i]['flow_stats'][drop_index]
 
 				elif switch_states[i]['drop_policy'] == 'MOF': 	
-					sorted_flows = sorted(switch_states[i]['flow_stats'], key=lambda switch_states[i]['flow_stats']: switch_states[i]['flow_stats']['reportedBw']) 
+					#sorted_flows = sorted(switch_states[i]['flow_stats'], key=lambda k[i]['flow_stats']: k[i]['flow_stats']['reportedBw']) 
+					drop_index = randint(0,len(switch_states[i]['flow_stats']))
 					drop_flow = sorted_flows[-1]
 
 					# 1. Sort the flow_stats list
@@ -227,8 +229,8 @@ class HandleMessage(Thread):
 
 	                		if dpid == dpid_str:
         	        			connection.send(msg)
-							 	global flow_mod_time
-							 	flow_mod_time = time.time() - queues_done_time
+					 	global flow_mod_time
+					 	flow_mod_time = time.time() - queues_done_time
 
 						print "Notification time: " + str(notification_time)
 						print "Flow stats reply: " + str(flow_stats_reply_time)
@@ -350,15 +352,15 @@ def _handle_flowstats_received (event):
 			for j in range(len(current_flow_stats)):
 				# Flow still exists, getting bw/s
 				for k in range(len(switch_states[i][flow_stats])):
-				if (current_flow_stats[j]['nw_src'] == switch_states[i]['flow_stats'][k]['nw_src']) and (current_flow_stats[j]'nw_src'] == switch_states[i]['flow_stats'][k]['nw_src']):
-					switch_states[i]['flow_stats'][k]['reportedBw'] = current_flow_stats[j]['reportedBw'] - switch_states[i]['flow_stats'][k]['reportedBw']
-					break
+					if (current_flow_stats[j]['nw_src'] == switch_states[i]['flow_stats'][k]['nw_src']) and (current_flow_stats[j]['nw_src'] == switch_states[i]['flow_stats'][k]['nw_src']):
+						switch_states[i]['flow_stats'][k]['reportedBw'] = current_flow_stats[j]['reportedBw'] - switch_states[i]['flow_stats'][k]['reportedBw']
+						break
 
-				# If it wasn't in k-1 and k we could have a) flow ceased b) flow is a new one
-				#if (not any(src['nw_src'] ==  current_flow_stats[j]['nw_src'] for src in switch_states[i]['flow_stats'])) and ((not any(dst['nw_dst'] ==  current_flow_stats[j]['nw_dst'] for dst in switch_states[i]['flow_stats']))):
-				# New flow does not exist in the old flow stats, append it
-				#new_flows_indexes.append(j)
-				#continue
+					# If it wasn't in k-1 and k we could have a) flow ceased b) flow is a new one
+					#if (not any(src['nw_src'] ==  current_flow_stats[j]['nw_src'] for src in switch_states[i]['flow_stats'])) and ((not any(dst['nw_dst'] ==  current_flow_stats[j]['nw_dst'] for dst in switch_states[i]['flow_stats']))):
+					# New flow does not exist in the old flow stats, append it
+					#new_flows_indexes.append(j)
+					#continue
 
 			#for j in range(len(switch_states[i]['flow_stats'])):
 			#if (not any(src['nw_src'] ==  switch_states[i]['flow_stats'][j]['nw_src'] for src in current_flow_stats)) and ((not any(dst['nw_dst'] ==  switch_states[i]['flow_stats'][j]['nw_dst'] for dst in current_flow_stats))):
@@ -391,9 +393,8 @@ def _handle_flowstats_received (event):
 					if switch_states[i]['flow_stats'][j]['goodBehaved'] == True:
 						switch_states[i]['flow_stats'][j]['bw'] = switch_states[i]['flow_stats'][j]['reportedBw']
 
-	                    if switch_states[i]['flow_stats'][j]['bw'] > 900000000:
-	                            switch_states[i]['flow_stats'][j]['bw'] = 900000000 
-
+	                    		if switch_states[i]['flow_stats'][j]['bw'] > 900000000:
+						switch_states[i]['flow_stats'][j]['bw'] = 900000000 
 						remaining_bw = remaining_bw -  switch_states[i]['flow_stats'][j]['bw']
 					else:
 						bad_flows = bad_flows + 1
@@ -402,21 +403,21 @@ def _handle_flowstats_received (event):
 				# Bad Flows
 				for j in range(len(bad_flows_indexes)):
 					switch_states[i]['flow_stats'][bad_flows_indexes[j]]
-						switch_states[i]['flow_stats'][bad_flows_indexes[j]]['reportedBw'] = assign_bw_to_bad_behaved(capacity, remaining_bw, bad_flows, num_flows, switch_states[i]['flow_stats'][bad_flows_indexes[j]]['reportedBw'], alfa)
-						if switch_states[i]['flow_stats'][bad_flows_indexes[j]]['reportedBw'] > 3000000:
-							switch_states[i]['flow_stats'][bad_flows_indexes[j]]['reportedBw'] = 3000000
+					switch_states[i]['flow_stats'][bad_flows_indexes[j]]['reportedBw'] = assign_bw_to_bad_behaved(capacity, remaining_bw, bad_flows, num_flows, switch_states[i]['flow_stats'][bad_flows_indexes[j]]['reportedBw'], alfa)
+					if switch_states[i]['flow_stats'][bad_flows_indexes[j]]['reportedBw'] > 3000000:
+						switch_states[i]['flow_stats'][bad_flows_indexes[j]]['reportedBw'] = 3000000
 						#print "Bad behaved flow bw " +  str(flow_bw_list[i]['bw'])
 						remaining_bw = remaining_bw - switch_states[i]['flow_stats'][bad_flows_indexes[j]]['reportedBw']
 
 				# Give remmaining bw between good flows
 				if bad_flows < num_flows:
 					extra_bw = remaining_bw/(num_flows - bad_flows)
-				    for j in range(len(num_flows)):
-				    	if switch_states[i]['flow_stats'][j]['goodBehaved'] == True:
-				    		switch_states[i]['flow_stats'][j]['bw'] =  switch_states[i]['flow_stats'][j]['bw'] + extra_bw
-			                #print "Good behaved flow bw: " + str(flow_bw_list[i]['bw'])
-				            if switch_states[i]['flow_stats'][j]['bw'] > 900000000:
-				            	switch_states[i]['flow_stats'][j]['bw'] = 900000000
+					for j in range(len(num_flows)):
+						if switch_states[i]['flow_stats'][j]['goodBehaved'] == True:
+				    			switch_states[i]['flow_stats'][j]['bw'] =  switch_states[i]['flow_stats'][j]['bw'] + extra_bw
+				                #print "Good behaved flow bw: " + str(flow_bw_list[i]['bw']
+						if switch_states[i]['flow_stats'][j]['bw'] > 900000000:
+							switch_states[i]['flow_stats'][j]['bw'] = 900000000
 
 			if (switch_states[i]['bw_policy'] == 'Equal'):
 				simple_bw = capacity/num_flows
@@ -472,7 +473,7 @@ def assign_bw_to_bad_behaved(capacity, remaining_bw, num_bad_flows, num_total_fl
 	bw = bad_fair_rate - (1 - math.exp( - (flow_rate - fair_rate) )) * alfa * bad_fair_rate
 	return bw
 
-def check_policy_time():
+def check_policies():
 
 	if not switch_states:
 		return
