@@ -1,7 +1,0 @@
-# String to create two queues with 1mb/s and 8mb/s
-'ovs-vsctl -- set Port $1 qos=@fenceqos -- --id=@fenceqos create QoS type=linux-htb'
-'other-config:max-rate=1000000000 queues=0=@queue0 -- --id=@queue0 create Queue 'other-config:max-rate=200000000 -- --id=@queue0 create Queue'other-config:max-rate=25000000'
-
-ovs-vsctl -- set Port $1 qos=@fenceqos -- --id=@fenceqos create QoS type=linux-htb other-config:max-rate=1000000000 queues=0=@queue0 -- --id=@queue0 create Queue 
-'other-config:max-rate=1000000 -- --id=@queue0 create Queue other-config:min-rate=8000000'
-'other-config:max-rate=8000000'
