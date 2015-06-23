@@ -150,18 +150,18 @@ class HandleMessage(Thread):
 		msg = of.ofp_flow_mod(command=of.OFPFC_DELETE)
 		msg.priority = 65535
 
-		send_command_to_switch(dpid, msg)
+		send_command_to_switch(dpid, connections, msg)
 
 		msg = of.ofp_flow_mod()
 		msg.priority = 65535
 		msg.idle_timeout = 0
 		msg.hard_timeout = 0
 
-		send_command_to_switch(dpid, msg)
+		send_command_to_switch(dpid, connections, msg)
 
 
 	@classmethod
-	def send_command_to_switch(dpid, msg):
+	def send_command_to_switch(self,dpid, connections, msg):
 		for connection in connections:
 			connection_dpid = connection.dpid
 			dpid_str = dpidToStr(connection_dpid)
@@ -180,7 +180,7 @@ class HandleMessage(Thread):
 		msg = of.ofp_flow_mod(command=of.OFPFC_DELETE)
 		msg.priority = 65535
 
-		send_command_to_switch(dpid, msg)
+		cls.send_command_to_switch(dpid,connections, msg)
 		for i in range(len(message['bw_list'])):
 
 			# We only want to redirect outgoing flows
@@ -250,7 +250,14 @@ def get_bw_flow_list(flow_list, indexes_to_process):
 		acc_bw = 0
 
 		for i in range(len(processing_indexes)):
-			acc_bw = acc_bw + float(flow_list[processing_indexes[i]]['byte_count']/flow_list[processing_indexes[i]]['duration_sec'])
+			# We could actually perform the ns to s conversion to increase accuracy, but trading of performance
+			flow_duration = float(float(flow_list[processing_indexes[i]]['duration_nsec']/1000000000)  + flow_list[processing_indexes[i]]['duration_sec'])
+			print "Flow duration: ", flow_duration
+			if flow_duration > 0.0:
+				acc_bw = acc_bw + float(flow_list[processing_indexes[i]]['byte_count']/flow_duration)
+			else:
+				# just for now!
+				acc_bw = 1
 
 		# Expressed in bits
 		flow_bw_dictt['reportedBw'] = acc_bw * 8
@@ -307,11 +314,11 @@ def _handle_flowstats_received (event):
 						switch_states[i]['flow_stats'][j]['bw'] = switch_states[i]['flow_stats'][j]['reportedBw']
 
               		if switch_states[i]['flow_stats'][j]['bw'] > 900000000:
-						switch_states[i]['flow_stats'][j]['bw'] = 900000000 
-						remaining_bw = remaining_bw -  switch_states[i]['flow_stats'][j]['bw']
-					else:
-						bad_flows = bad_flows + 1
-						bad_flows_indexes.append(j)
+				switch_states[i]['flow_stats'][j]['bw'] = 900000000 
+				remaining_bw = remaining_bw -  switch_states[i]['flow_stats'][j]['bw']
+			else:
+				bad_flows = bad_flows + 1
+				bad_flows_indexes.append(j)
 
 				# Bad Flows
 				for j in range(len(bad_flows_indexes)):
@@ -364,7 +371,11 @@ def close_connection(a_socket):
 
 def classiy_flows(capacity, estimated_bw, num_flows):
 	""" Classifies flows """
-	if estimated_bw > (capacity/num_flows):
+
+	print "Classifying flow with: Capacity " + str(capacity) + " Estimated bw: " + str(estimated_bw) + " num flows: " + str(num_flows)
+	fair_rate = capacity/num_flows
+	print "Fair rate: " + str(fair_rate)
+	if estimated_bw > fair_rate:
 		return False
 	else:
 		return True
@@ -373,7 +384,7 @@ def assign_bw_to_bad_behaved(capacity, remaining_bw, num_bad_flows, num_total_fl
 	""" Assigns bw to each flow """
 	#return flow_rate - (1 - math.exp(-(flow_rate-(capacity/num_total_flows))))*alfa*flow_rate
  	print "Bad behaved with: " + "capacity :" + str(capacity) + " remaining bw: " + str(remaining_bw) + " bad flows: " + str(num_bad_flows)
-	print "Total flows: " + str(num_total_flows) + "flow rate : " + str(flow_rate) + "alfa: " + str(alfa)
+	print "Total flows: " + str(num_total_flows) + " Flow rate : " + str(flow_rate) + " Alfa: " + str(alfa)
 	fair_rate = capacity/num_total_flows
 	bad_fair_rate = capacity / num_bad_flows
 	bw = bad_fair_rate - (1 - math.exp( - (flow_rate - fair_rate) )) * alfa * bad_fair_rate
