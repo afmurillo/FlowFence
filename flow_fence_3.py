@@ -27,7 +27,7 @@ from pox.lib.recoco import Timer
 
 
 LOG = core.getLogger()
-CONTROLLER_IP = '10.4.1.1'
+CONTROLLER_IP = '10.1.4.1'
 switch_states = []
 # in bits, obtained experimentally using TCP - Iperf
 capacity = 16000000				 
@@ -136,7 +136,7 @@ class HandleMessage(Thread):
 			#print 'Real dpid_str: ' + dpid_str
 			if dpid == dpid_str:
 				connection.send(of.ofp_stats_request(body=of.ofp_flow_stats_request()))
-				#print 'Flow stats requets sent to: ' + str(connection)
+				print 'Flow stats requets sent to: ' + str(connection)
 
 	@classmethod
 	def handle_queues_full(cls, dpid, connections, switch_addresss, message):
@@ -260,18 +260,18 @@ class ConnectTest(EventMixin):
 
 #######################################
 
-def request_flows_stats_timer(dpid):
+def request_flows_stats_timer(connection, switch_index):
 
-	for connection in self.myconnections:
-		connection_dpid = connection.dpid
-		dpid_str = dpidToStr(connection_dpid)
-		dpid_str = dpid_str.replace("-", "")
-		if dpid == dpid_str:
-			# Request again the flows
-			connection.send(of.ofp_stats_request(body=of.ofp_flow_stats_request()))
-			#print 'Flow stats requets sent to: ' + str(connection)
+	connection.send(of.ofp_stats_request(body=of.ofp_flow_stats_request()))
+	switch_states[switch_index]['wait_flag'] = 1
+
+	return
 
 def get_bw_flow_list(flow_list, indexes_to_process):
+
+	flow_bw_list = []
+	num_flows = 0
+
 	while len(indexes_to_process) > 0 :
 
 		#print "Remaining indexes: " + str(indexes_to_process)
@@ -293,7 +293,7 @@ def get_bw_flow_list(flow_list, indexes_to_process):
 		acc_bw = 0
 
 		for i in range(len(processing_indexes)):
-			acc_bw = acc_bw + flow_list[processing_indexes[i]]['byte_count']
+			acc_bw = acc_bw + float(flow_list[processing_indexes[i]]['byte_count']/flow_list[processing_indexes[i]]['duration_sec'])
 
 		# Expressed in bits
 		flow_bw_dictt['reportedBw'] = acc_bw * 8
@@ -322,23 +322,32 @@ def _handle_flowstats_received (event):
 	dpid = str(dpidToStr(event.dpid))
 
 	# Get indexes of flow_list
-
+	print "Flow stats received from: " , dpid
+	dpid_str = dpid.replace("-", "")
+	print "Sending dpid: ", sending_dpid
+	
 	for i in range(len(switch_states)):
 
-		if (switch_states[i]['wait_flag'] == 0) and (switch_states[i]['dpid'] == sending_dpid):
+		print "switch stats dpid: ", switch_states[i]['dpid']
+		remaining_bw = 100000000	
+
+		if (switch_states[i]['wait_flag'] == 0) and (switch_states[i]['dpid'] == dpid_str):
 				# First print to make sure we're doing it alright
 			# 1. Store in the switch state dict list
 			# 2. Request again the flow stats
 			#switch_states[i]['flow_stats']  = flow_stats_to_list(event.stats)
-			switch_states[i]['wait_flag'] = 1
+			print "First flow stats received"
+			#switch_states[i]['wait_flag'] = 1
 
 			flow_list = flow_stats_to_list(event.stats)
 			indexes_to_process = [flow_index for flow_index, flow in enumerate(flow_list) if str(flow['match']['nw_dst'])==server_target]
 
 			switch_states[i]['flow_stats'] = get_bw_flow_list(flow_list, indexes_to_process)
-			Timer(1, request_flows_stats_timer, recurring = False, args=[dpid])
+			print "Flow stats: "  + str(switch_states[i]['flow_stats'])
+			Timer(5, request_flows_stats_timer, recurring = False, args=[event.connection, i])
 
-		if (switch_states[i]['wait_flag']) == 1 and (switch_states[i]['dpid'] == sending_dpid):			
+		if (switch_states[i]['wait_flag']) == 1 and (switch_states[i]['dpid'] == dpid_str):			
+			print "Second flow stats received"
 			# Process the flows
 			# We should 1. Mark the flow stats flag as 0 again
 			#		    2. store in a temporal variable the flow stats, and for recurrent flows, update flow bw 
@@ -348,10 +357,11 @@ def _handle_flowstats_received (event):
 			current_flow_stats = get_bw_flow_list(flow_list, indexes_to_process)
 			#new_flows_indexes = []
 			#stopped_flows_indexes = []
+			print "Flow stats " + str(current_flow_stats)
 
 			for j in range(len(current_flow_stats)):
 				# Flow still exists, getting bw/s
-				for k in range(len(switch_states[i][flow_stats])):
+				for k in range(len(switch_states[i]['flow_stats'])):
 					if (current_flow_stats[j]['nw_src'] == switch_states[i]['flow_stats'][k]['nw_src']) and (current_flow_stats[j]['nw_src'] == switch_states[i]['flow_stats'][k]['nw_src']):
 						switch_states[i]['flow_stats'][k]['reportedBw'] = current_flow_stats[j]['reportedBw'] - switch_states[i]['flow_stats'][k]['reportedBw']
 						break
@@ -463,6 +473,8 @@ def classiy_flows(capacity, estimated_bw, num_flows):
 def assign_bw_to_bad_behaved(capacity, remaining_bw, num_bad_flows, num_total_flows, flow_rate, alfa):
 	""" Assigns bw to each flow """
 	#return flow_rate - (1 - math.exp(-(flow_rate-(capacity/num_total_flows))))*alfa*flow_rate
+ 	print "Bad behaved with: " + "capacity :" + str(capacity) + " remaining bw: " + str(remaining_bw) + " bad flows: " + str(num_bad_flows)
+	print "Total flows: " + str(num_total_flows) + "flow rate : " + str(flow_rate) + "alfa: " + str(alfa)
 	fair_rate = capacity/num_total_flows
 	bad_fair_rate = capacity / num_bad_flows
 	#print "remaining_bw: " + str(remaining_bw)
@@ -494,11 +506,12 @@ def check_policies():
 			else:
 				switch_states[i]['bw_policy'] = 'Penalty'
 
-			bw_dev = st.stdev(bw_list)
-			if bw_dev < min_sla:
-				switch_states[i]['drop_policy'] = 'MOF'				
-			else:
-				switch_states[i]['drop_policy'] = 'Random'
+			if len(bw_list) > 1:
+				bw_dev = st.stdev(bw_list)
+				if bw_dev < min_sla:
+					switch_states[i]['drop_policy'] = 'MOF'				
+				else:
+					switch_states[i]['drop_policy'] = 'Random'
 
 def launch ():
 	""" First method called """
