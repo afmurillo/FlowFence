@@ -373,29 +373,29 @@ def _handle_flowstats_received (event):
 				indexes_to_process = [flow_index for flow_index, flow in enumerate(flow_list) if str(flow['match']['nw_dst'])==server_target]
 			
 				current_flows = get_bw_flow_list(flow_list, indexes_to_process)
-				new_flows_indexes = []
-				stopped_flows_indexes = []
-				uptaded_indexes = []
+				#new_flows_indexes = []
+				#stopped_flows_indexes = []
+				#uptaded_indexes = []
 
-				queues_dict = dict.fromkeys(['Response','dpid','delete_queue', 'update_queue', 'create_queue'])
-				queues_dict['dpid'] = sending_dpid
-				queues_dict['Response'] = "Update"
-				queues_dict['delete_queue'] = []
-				queues_dict['update_queue'] = []
-				queues_dict['create_queue'] = []
+				#queues_dict = dict.fromkeys(['Response','dpid','delete_queue', 'update_queue', 'create_queue'])
+				#queues_dict['dpid'] = sending_dpid
+				#queues_dict['Response'] = "Update"
+				#queues_dict['delete_queue'] = []
+				#queues_dict['update_queue'] = []
+				#queues_dict['create_queue'] = []
 
 				for j in range(len(current_flows)):
 					# Flow still exists, getting bw/s
 					for k in range(len(switch_states[i]['flow_stats'])):
 						if (current_flows[j]['nw_src'] == switch_states[i]['flow_stats'][k]['nw_src']) and (current_flows[j]['nw_src'] == switch_states[i]['flow_stats'][k]['nw_src']):
 							switch_states[i]['flow_stats'][k]['reportedBw'] = current_flows[j]['reportedBw']
-							uptaded_indexes.append(k)
+							#uptaded_indexes.append(k)
 							break
 
 						# If it wasn't in k-1 and k we could have a) flow ceased b) flow is a new one
 					if (not any(src['nw_src'] ==  current_flows[j]['nw_src'] for src in switch_states[i]['flow_stats'])) and ((not any(dst['nw_dst'] ==  current_flows[j]['nw_dst'] for dst in switch_states[i]['flow_stats']))):
 						# New flow does not exist in the old flow stats, append it
-						new_flows_indexes.append(j)
+						#new_flows_indexes.append(j)
 						switch_states[i]['flow_stats'].append(current_flows[j])
 						continue
 
@@ -411,16 +411,10 @@ def _handle_flowstats_received (event):
 					
 				switch_states[i]['flow_stats'] = assign_bw(switch_states[i]['flow_stats'], switch_states[i]['bw_policy'])
 
-				# In the switch, update the queues
-
-				for j in range(len(uptaded_indexes)):
-					queues_dict['update_queue'].append(switch_states[i]['flow_stats'][uptaded_indexes[j]])
-
-				for j in range(len(new_flows_indexes)):
-					queues_dict['create_queue'].append(switch_states[i]['flow_stats'][new_flows_indexes[j]])
-
-				for j in range(len(new_flows_indexes)):
-					queues_dict['delete_queue'].append(switch_states[i]['flow_stats'][stopped_flows_indexes[j]])
+				queues_dict = dict.fromkeys(['Response','dpid','bw_list'])
+				queues_dict['dpid'] = sending_dpid
+				queues_dict['Response'] = "Decrement"
+				queues_dict['bw_list'] = switch_states[i]['flow_stats']
 
 				response_message = json.dumps(str(queues_dict))
 
