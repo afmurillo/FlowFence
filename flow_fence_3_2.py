@@ -25,7 +25,6 @@ from random import randint
 from pox.lib.recoco import Timer
 
 
-
 LOG = core.getLogger()
 CONTROLLER_IP = '10.1.4.1'
 switch_states = []
@@ -43,7 +42,9 @@ bad_flow_count_th = 0.9
 # toDo: CHECK THIS VALUE!!!
 min_sla = 100
 flow_update_time = 30
-uptading = 0
+
+global updating
+updating = 0
 
 class ServerSocket(Thread):
 
@@ -98,7 +99,7 @@ class HandleMessage(Thread):
 			global notification_time
 			notification_time = time.time()
 
-			self.handle_congestion_notification(message['Interface']['dpid'])
+			self.handle_congestion_notification(self.myconnections, message['Interface']['dpid'])
 
 		elif message['Notification'] == 'QueuesDone':
 			global queues_done_time
@@ -119,16 +120,17 @@ class HandleMessage(Thread):
 		switch['dpid'] = dpid		
 		switch['flow_stats'] = []
 		switch_states.append(switch)
-		Timer(flow_update_time, self.update_flow_stats, recurring = True)
+		Timer(flow_update_time, self.update_flow_stats, recurring = True, args=[dpid, connections])
 		msg = of.ofp_stats_request(body=of.ofp_flow_stats_request())
-		print 'Flow stats requets sent to: ' + str(connection)		
-		self.send_command_to_switch(connections, msg):
+		print 'Flow stats requets sent to: ' + str(connections)		
+		self.send_command_to_switch(dpid, connections, msg)
 
-	def update_flow_stats(self):
-		uptading = 1
+	def update_flow_stats(self, dpid, connections):
+		global updating
+		updating = 1
 		print "updating flows"
 		msg = of.ofp_stats_request(body=of.ofp_flow_stats_request())
-		self.send_command_to_switch(connections, msg):
+		self.send_command_to_switch(dpid, connections, msg)
 
 	@classmethod
 	def handle_queues_full(cls, dpid, connections, switch_addresss, message):
@@ -160,14 +162,14 @@ class HandleMessage(Thread):
 		msg = of.ofp_flow_mod(command=of.OFPFC_DELETE)
 		msg.priority = 65535
 
-		cls.send_command_to_switch(dpid, msg)
+		cls.send_command_to_switch(dpid, connections, msg)
 
 		msg = of.ofp_flow_mod()
 		msg.priority = 65535
 		msg.idle_timeout = 0
 		msg.hard_timeout = 0
 
-		cls.send_command_to_switch(dpid, msg)
+		cls.send_command_to_switch(dpid, connections, msg)
 
 		#delete_dict = dict.fromkeys(['dpid', 'Response', 'src_ip', 'dst_ip'])
 		#delete_dict['Response'] = 'delete_a_queue'
@@ -183,13 +185,14 @@ class HandleMessage(Thread):
 		del switch_states[switch_index]['flow_stats'][drop_index]	
 
 	@classmethod
-	def send_command_to_switch(connections, msg):
+	def send_command_to_switch(cls, dpid, connections, msg):
 		for connection in connections:
 			connection_dpid = connection.dpid
 			dpid_str = dpidToStr(connection_dpid)
 			dpid_str = dpid_str.replace("-", "")
 			if dpid == dpid_str:
 				connection.send(msg)
+
 
 	@classmethod
 	def handle_flows_redirection(cls, dpid, connections, switch_addresss, message):
@@ -202,7 +205,7 @@ class HandleMessage(Thread):
 		msg = of.ofp_flow_mod(command=of.OFPFC_DELETE)
 		msg.priority = 65535
 
-		send_command_to_switch(connections, msg)
+		cls.send_command_to_switch(dpid, connections, msg)
 		for i in range(len(message['bw_list'])):
 
 			# We only want to redirect outgoing flows
@@ -272,8 +275,11 @@ def get_bw_flow_list(flow_list, indexes_to_process):
 		acc_bw = 0
 
 		for i in range(len(processing_indexes)):
-			acc_bw = acc_bw + float(flow_list[processing_indexes[i]]['byte_count']/flow_list[processing_indexes[i]]['duration_sec'])
-
+			duration = float(flow_list[processing_indexes[i]]['duration_sec'] + float(flow_list[processing_indexes[i]]['duration_nsec'] /1000000000))
+			if duration > 0:
+				acc_bw = acc_bw + float(flow_list[processing_indexes[i]]['byte_count']/duration)
+			else: 
+				acc_bw = acc_bw + 1
 		# Expressed in bits
 		flow_bw_dictt['reportedBw'] = acc_bw * 8
 		flow_bw_list.append(flow_bw_dictt)
@@ -289,21 +295,23 @@ def assign_bw(flow_stats, policy):
 	num_flows = len(flow_stats)	
 	bad_flows_indexes = []
 	bad_flows = 0
+	remaining_bw = 100000000
 
 	if (policy == 'Penalty'):
 		# Good flows
+		
 		for j in range(num_flows):
-			flow_stats = classiy_flows(capacity, flow_stats, num_flows)
+			flow_stats[j]['goodBehaved'] = classiy_flows(capacity, flow_stats, num_flows)
 
 			if flow_stats[j]['goodBehaved'] == True:
 				flow_stats[j]['bw'] = flow_stats[j]['reportedBw']
 
       		if flow_stats[j]['bw'] > 900000000:
-				flow_stats[j]['bw'] = 900000000 
-				remaining_bw = remaining_bw - flow_stats[j]['bw']
-			else:
-				bad_flows = bad_flows + 1
-				bad_flows_indexes.append(j)
+			flow_stats[j]['bw'] = 900000000 
+			remaining_bw = remaining_bw - flow_stats[j]['bw']
+		else:
+			bad_flows = bad_flows + 1
+			bad_flows_indexes.append(j)
 
 		# Bad Flows
 		for j in range(len(bad_flows_indexes)):
@@ -359,7 +367,7 @@ def _handle_flowstats_received (event):
 
 		if switch_states[i]['dpid'] == dpid_str:
 
-			if uptading = 1:
+			if updating == 1:
 
 				flow_list = flow_stats_to_list(event.stats)
 				indexes_to_process = [flow_index for flow_index, flow in enumerate(flow_list) if str(flow['match']['nw_dst'])==server_target]
@@ -442,6 +450,7 @@ def _handle_flowstats_received (event):
 				close_connection(response_socket)
 				
 			if updating == 1:
+				global updating
 				updating = 0
 				response_message = json.dumps(str(queues_dict))
 
