@@ -162,8 +162,7 @@ class FlowMonitor:
 		# 2. Update the updated queues
 		# 3 . Delete de deleted queues
 
-		# Create lit with new queues
-		new_queue_list = self.init_queues(self.complete_interface_list[0]['name'],controller_message['create_queue'])
+		# Create lit with new queue
 		
 		# Update queue list
 		for i in range(len(controller_message['update_queue'])):
@@ -185,6 +184,8 @@ class FlowMonitor:
 		for i in range(len(delete_indexes)):
 			del self.complete_interface_list[0]['queueList'][delete_indexes[i]]
 
+
+		new_queue_list = self.init_queues(self.complete_interface_list[0]['name'],controller_message['create_queue'])
 		self.set_queues_bw(self.complete_interface_list[0]['queueList'])
 		self.report_object.queues_ready(self.complete_interface_list[0],controller_message['bw_list'],self.complete_interface_list[0]['queueList'])
 

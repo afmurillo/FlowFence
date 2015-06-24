@@ -8,6 +8,7 @@ import json
 import subprocess
 
 import socket
+from threading import Timer
 from threading import Thread
 
 
@@ -81,6 +82,10 @@ class ApplicationSwitch:
                         self.interfaces_list = self.switch_properties.get_interfaces()
 
                         self.application_port = 23456
+
+                        # toDo: change for the formula:
+                        # min(((Interface Capacity)/(Minimum Bandwidth SLA));(Maximum SO queue number))
+                        self.max_queue_limit = 100
 
                         #print self.interfaces_list
 
