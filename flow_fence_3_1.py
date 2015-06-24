@@ -42,6 +42,8 @@ bad_flow_count_th = 0.9
 
 # toDo: CHECK THIS VALUE!!!
 min_sla = 100
+flow_update_time = 30
+uptading = 0
 
 class ServerSocket(Thread):
 
@@ -106,8 +108,7 @@ class HandleMessage(Thread):
 		elif message['Notification'] == 'QueuesFull':			
 			self.handle_queues_full(message['Interface']['dpid'], self.myconnections, self.src_address, message)			
 
-
-	def handle_congestion_notification(self, dpid):
+	def handle_congestion_notification(self, connections, dpid):
 		""" Upon reception of a congestion notification, requests for flow stats in the congestioned switch """
 		dpid = dpid[:len(dpid)-1]
                 dpid = dpid[len(dpid)-12:]
@@ -118,28 +119,37 @@ class HandleMessage(Thread):
 		switch['dpid'] = dpid		
 		switch['flow_stats'] = []
 		switch_states.append(switch)
+		Timer(flow_update_time, self.update_flow_stats, recurring = True)
+		msg = of.ofp_stats_request(body=of.ofp_flow_stats_request())
+		print 'Flow stats requets sent to: ' + str(connection)		
+		self.send_command_to_switch(connections, msg):
 
-		for connection in self.myconnections:
-			connection_dpid = connection.dpid
-			dpid_str = dpidToStr(connection_dpid)
-			dpid_str = dpid_str.replace("-", "")
-			print 'Real dpid_str: ' + dpid_str
-			if dpid == dpid_str:
-				connection.send(of.ofp_stats_request(body=of.ofp_flow_stats_request()))
-				print 'Flow stats requets sent to: ' + str(connection)
+	def update_flow_stats(self):
+		uptading = 1
+		print "updating flows"
+		msg = of.ofp_stats_request(body=of.ofp_flow_stats_request())
+		self.send_command_to_switch(connections, msg):
 
 	@classmethod
 	def handle_queues_full(cls, dpid, connections, switch_addresss, message):
-		# todo IMPLEMENT THIS!
+
+		# We need to perform 4 operations:
+		# 1. Select a flow to be dropped according to our policy
+		# 2. Delete the flow entry in the flowtable
+		# 3. Send a command to remove that flow queue in th switch
+		# 4. Delete the flow entry in the flow_stats dictionary
+
 		for i in range(len(switch_states)):
 			if dpid == switch_states['dpid']:
 				if switch_states[i]['drop_policy'] == 'Random':
 					# Select and index at random
+					switch_index = i
 					drop_index = randint(0,len(switch_states[i]['flow_stats']))
 					drop_flow = switch_states[i]['flow_stats'][drop_index]
 
 				elif switch_states[i]['drop_policy'] == 'MOF': 	
 					#sorted_flows = sorted(switch_states[i]['flow_stats'], key=lambda k[i]['flow_stats']: k[i]['flow_stats']['reportedBw']) 
+					switch_index = i
 					drop_index = randint(0,len(switch_states[i]['flow_stats']))
 					drop_flow = sorted_flows[-1]
 
@@ -150,18 +160,30 @@ class HandleMessage(Thread):
 		msg = of.ofp_flow_mod(command=of.OFPFC_DELETE)
 		msg.priority = 65535
 
-		send_command_to_switch(dpid, msg)
+		cls.send_command_to_switch(dpid, msg)
 
 		msg = of.ofp_flow_mod()
 		msg.priority = 65535
 		msg.idle_timeout = 0
 		msg.hard_timeout = 0
 
-		send_command_to_switch(dpid, msg)
+		cls.send_command_to_switch(dpid, msg)
 
+		#delete_dict = dict.fromkeys(['dpid', 'Response', 'src_ip', 'dst_ip'])
+		#delete_dict['Response'] = 'delete_a_queue'
+		#delete_dict['dpid'] = dpid
+		#delete_dict['src_ip'] = drop_flow['nw_src']
+		#delete_dict['dst_ip'] = drop_flow['nw_dst']
+		#response_message = json.dumps(str(delete_dict))
+
+		#response_socket = create_socket()
+		#send_message(response_socket, switch_addresss, self.response_port, response_message)
+		#close_connection(response_socket)	
+
+		del switch_states[switch_index]['flow_stats'][drop_index]	
 
 	@classmethod
-	def send_command_to_switch(dpid, msg):
+	def send_command_to_switch(connections, msg):
 		for connection in connections:
 			connection_dpid = connection.dpid
 			dpid_str = dpidToStr(connection_dpid)
@@ -180,7 +202,7 @@ class HandleMessage(Thread):
 		msg = of.ofp_flow_mod(command=of.OFPFC_DELETE)
 		msg.priority = 65535
 
-		send_command_to_switch(dpid, msg)
+		send_command_to_switch(connections, msg)
 		for i in range(len(message['bw_list'])):
 
 			# We only want to redirect outgoing flows
@@ -262,6 +284,54 @@ def get_bw_flow_list(flow_list, indexes_to_process):
 
 		return flow_bw_list
 
+def assign_bw(flow_stats, policy):
+
+	num_flows = len(flow_stats)	
+	bad_flows_indexes = []
+	bad_flows = 0
+
+	if (policy == 'Penalty'):
+		# Good flows
+		for j in range(num_flows):
+			flow_stats = classiy_flows(capacity, flow_stats, num_flows)
+
+			if flow_stats[j]['goodBehaved'] == True:
+				flow_stats[j]['bw'] = flow_stats[j]['reportedBw']
+
+      		if flow_stats[j]['bw'] > 900000000:
+				flow_stats[j]['bw'] = 900000000 
+				remaining_bw = remaining_bw - flow_stats[j]['bw']
+			else:
+				bad_flows = bad_flows + 1
+				bad_flows_indexes.append(j)
+
+		# Bad Flows
+		for j in range(len(bad_flows_indexes)):
+			flow_stats[bad_flows_indexes[j]]
+			flow_stats[bad_flows_indexes[j]]['reportedBw'] = assign_bw_to_bad_behaved(capacity, remaining_bw, bad_flows, num_flows, flow_stats[bad_flows_indexes[j]]['reportedBw'], alfa)
+			if flow_stats[bad_flows_indexes[j]]['reportedBw'] > 3000000:
+				flow_stats[bad_flows_indexes[j]]['reportedBw'] = 3000000
+				#print "Bad behaved flow bw " +  str(flow_bw_list[i]['bw'])
+				remaining_bw = remaining_bw - flow_stats[bad_flows_indexes[j]]['reportedBw']
+
+		# Give remmaining bw between good flows
+		if bad_flows < num_flows:
+			extra_bw = remaining_bw/(num_flows - bad_flows)
+			for j in range(len(num_flows)):
+				if flow_stats[j]['goodBehaved'] == True:
+		    			flow_stats[j]['bw'] =  flow_stats[j]['bw'] + extra_bw
+		                #print "Good behaved flow bw: " + str(flow_bw_list[i]['bw']
+				if flow_stats[j]['bw'] > 900000000:
+					flow_stats[j]['bw'] = 900000000
+
+	if (policy == 'Equal'):
+		simple_bw = capacity/num_flows
+		for j in range(num_flows):
+			flow_stats[j]['bw'] = simple_bw
+
+	return flow_stats
+
+
 def _handle_flowstats_received (event):
 
 	""" Calculates bw for each flow """
@@ -289,64 +359,97 @@ def _handle_flowstats_received (event):
 
 		if switch_states[i]['dpid'] == dpid_str:
 
-			flow_list = flow_stats_to_list(event.stats)
-			indexes_to_process = [flow_index for flow_index, flow in enumerate(flow_list) if str(flow['match']['nw_dst'])==server_target]
+			if uptading = 1:
 
-			switch_states[i]['flow_stats'] = get_bw_flow_list(flow_list, indexes_to_process)
-			print "Flow stats: "  + str(switch_states[i]['flow_stats'])
+				flow_list = flow_stats_to_list(event.stats)
+				indexes_to_process = [flow_index for flow_index, flow in enumerate(flow_list) if str(flow['match']['nw_dst'])==server_target]
 			
-			num_flows = len(switch_states[i]['flow_stats'])	
+				current_flows = get_bw_flow_list(flow_list, indexes_to_process)
+				new_flows_indexes = []
+				stopped_flows_indexes = []
+				uptaded_indexes = []
 
-			bad_flows_indexes = []
-			if (switch_states[i]['bw_policy'] == 'Penalty'):
-				# Good flows
-				for j in range(num_flows):
-					switch_states[i]['flow_stats'][j]['goodBehaved'] = classiy_flows(capacity, switch_states[i]['flow_stats'][j]['reportedBw'], num_flows)
+				queues_dict = dict.fromkeys(['Response','dpid','delete_queue', 'update_queue', 'create_queue'])
+				queues_dict['dpid'] = sending_dpid
+				queues_dict['Response'] = "Update"
+				queues_dict['delete_queue'] = []
+				queues_dict['update_queue'] = []
+				queues_dict['create_queue'] = []
 
-					if switch_states[i]['flow_stats'][j]['goodBehaved'] == True:
-						switch_states[i]['flow_stats'][j]['bw'] = switch_states[i]['flow_stats'][j]['reportedBw']
+				for j in range(len(current_flows)):
+					# Flow still exists, getting bw/s
+					for k in range(len(switch_states[i]['flow_stats'])):
+						if (current_flows[j]['nw_src'] == switch_states[i]['flow_stats'][k]['nw_src']) and (current_flows[j]['nw_src'] == switch_states[i]['flow_stats'][k]['nw_src']):
+							switch_states[i]['flow_stats'][k]['reportedBw'] = current_flows[j]['reportedBw']
+							uptaded_indexes.append(k)
+							break
 
-              		if switch_states[i]['flow_stats'][j]['bw'] > 900000000:
-						switch_states[i]['flow_stats'][j]['bw'] = 900000000 
-						remaining_bw = remaining_bw -  switch_states[i]['flow_stats'][j]['bw']
-					else:
-						bad_flows = bad_flows + 1
-						bad_flows_indexes.append(j)
+						# If it wasn't in k-1 and k we could have a) flow ceased b) flow is a new one
+					if (not any(src['nw_src'] ==  current_flows[j]['nw_src'] for src in switch_states[i]['flow_stats'])) and ((not any(dst['nw_dst'] ==  current_flows[j]['nw_dst'] for dst in switch_states[i]['flow_stats']))):
+						# New flow does not exist in the old flow stats, append it
+						new_flows_indexes.append(j)
+						switch_states[i]['flow_stats'].append(current_flows[j])
+						continue
 
-				# Bad Flows
-				for j in range(len(bad_flows_indexes)):
-					switch_states[i]['flow_stats'][bad_flows_indexes[j]]
-					switch_states[i]['flow_stats'][bad_flows_indexes[j]]['reportedBw'] = assign_bw_to_bad_behaved(capacity, remaining_bw, bad_flows, num_flows, switch_states[i]['flow_stats'][bad_flows_indexes[j]]['reportedBw'], alfa)
-					if switch_states[i]['flow_stats'][bad_flows_indexes[j]]['reportedBw'] > 3000000:
-						switch_states[i]['flow_stats'][bad_flows_indexes[j]]['reportedBw'] = 3000000
-						#print "Bad behaved flow bw " +  str(flow_bw_list[i]['bw'])
-						remaining_bw = remaining_bw - switch_states[i]['flow_stats'][bad_flows_indexes[j]]['reportedBw']
+				for j in range(len(switch_states[i]['flow_stats'])):
+					if (not any(src['nw_src'] ==  switch_states[i]['flow_stats'][j]['nw_src'] for src in current_flows)) and ((not any(dst['nw_dst'] ==  switch_states[i]['flow_stats'][j]['nw_dst'] for dst in current_flows))):
+					# New flow does not exist in the old flow stats, append it
+						stopped_flows_indexes.append(j)
+						continue
+					
+				# Remove the flows that stopped from the global flow list
+				for j in range(len(stopped_flows_indexes)):
+					del switch_states[i]['flow_stats'][stopped_flows_indexes[j]]
+					
+				switch_states[i]['flow_stats'] = assign_bw(switch_states[i]['flow_stats'], switch_states[i]['bw_policy'])
 
-				# Give remmaining bw between good flows
-				if bad_flows < num_flows:
-					extra_bw = remaining_bw/(num_flows - bad_flows)
-					for j in range(len(num_flows)):
-						if switch_states[i]['flow_stats'][j]['goodBehaved'] == True:
-				    			switch_states[i]['flow_stats'][j]['bw'] =  switch_states[i]['flow_stats'][j]['bw'] + extra_bw
-				                #print "Good behaved flow bw: " + str(flow_bw_list[i]['bw']
-						if switch_states[i]['flow_stats'][j]['bw'] > 900000000:
-							switch_states[i]['flow_stats'][j]['bw'] = 900000000
+				# In the switch, update the queues
 
-			if (switch_states[i]['bw_policy'] == 'Equal'):
-				simple_bw = capacity/num_flows
-				for j in range(num_flows):
-					switch_states[i]['flow_stats'][j]['bw'] = simple_bw
+				for j in range(len(uptaded_indexes)):
+					queues_dict['update_queue'].append(switch_states[i]['flow_stats'][uptaded_indexes[j]])
 
-			queues_dict = dict.fromkeys(['Response','dpid','bw_list'])
-			queues_dict['dpid'] = sending_dpid
-			queues_dict['Response'] = "Decrement"
-			queues_dict['bw_list'] = switch_states[i]['flow_stats']
+				for j in range(len(new_flows_indexes)):
+					queues_dict['create_queue'].append(switch_states[i]['flow_stats'][new_flows_indexes[j]])
 
-			response_message = json.dumps(str(queues_dict))
+				for j in range(len(new_flows_indexes)):
+					queues_dict['delete_queue'].append(switch_states[i]['flow_stats'][stopped_flows_indexes[j]])
 
-			response_socket = create_socket()
-			send_message(response_socket,sending_address, response_port, response_message)
-			close_connection(response_socket)
+				response_message = json.dumps(str(queues_dict))
+
+				response_socket = create_socket()
+				send_message(response_socket,sending_address, response_port, response_message)
+				close_connection(response_socket)
+
+			else:
+
+				flow_list = flow_stats_to_list(event.stats)
+				indexes_to_process = [flow_index for flow_index, flow in enumerate(flow_list) if str(flow['match']['nw_dst'])==server_target]
+
+				switch_states[i]['flow_stats'] = get_bw_flow_list(flow_list, indexes_to_process)
+				print "Flow stats: "  + str(switch_states[i]['flow_stats'])
+						
+				switch_states[i]['flow_stats'] = assign_bw(switch_states[i]['flow_stats'], switch_states[i]['bw_policy'])	
+
+				queues_dict = dict.fromkeys(['Response','dpid','bw_list'])
+				queues_dict['dpid'] = sending_dpid
+				queues_dict['Response'] = "Decrement"
+				queues_dict['bw_list'] = switch_states[i]['flow_stats']
+
+				response_message = json.dumps(str(queues_dict))
+
+				response_socket = create_socket()
+				send_message(response_socket,sending_address, response_port, response_message)
+				close_connection(response_socket)
+				
+			if updating == 1:
+				updating = 0
+				response_message = json.dumps(str(queues_dict))
+
+				response_socket = create_socket()
+				send_message(response_socket,sending_address, response_port, response_message)
+				close_connection(response_socket)
+
+
 
 def create_socket():
 	""" Creates a socket """
