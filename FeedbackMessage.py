@@ -1,6 +1,7 @@
 """ Module that handles client socket to report congestions and receive commands """
 
 import socket
+import select
 
 class FeedbackMessage:
 		"""
@@ -17,9 +18,24 @@ class FeedbackMessage:
 			""" Sends a message to the controller """
 
 			self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-
 			self.socket.connect((an_ip, a_port))
-			self.socket.send(message)
+
+			try:
+				ready_to_read, ready_to_write, in_error = select.select([self.socket,], [self.socket,], [], 5)
+			except select.error:
+				#self.socket.shutdown(2)
+				#self.close_connection()	
+				print "Error with receiving socket"
+				return
+			except: 
+				#self.socket.shutdown(2)
+				#self.close_connection()
+				print "Socket error"
+				return
+			if len(ready_to_write) > 0:
+
+				self.socket.send(message)
+				self.close_connection()
 
 		def close_connection(self):
 			""" Closes the connection with the SDN controller """

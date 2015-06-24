@@ -10,7 +10,7 @@ import application_switch_2
 import SwitchProperties
 import time
 
-class FlowMonitor:
+class FlowMonitor_2:
 
 
 	""" Class that monitors network interface occupation """
@@ -199,10 +199,10 @@ class FlowMonitor:
 		self.report_object.queues_ready(self.complete_interface_list[0],controller_message['bw_list'],self.complete_interface_list[0]['queueList'])
 		self.queues_complete_time = time.time()
 
-		print "Startup time: " + str(self.startup_time)
-		print "Detection time: " + str(self.detection_time)
-		print "Queues creation time: " + str(self.queues_creation_time)
-		print "Queues complete time: " + str(self.queues_complete_time)
+		#print "Startup time: " + str(self.startup_time)
+		#print "Detection time: " + str(self.detection_time)
+		#print "Queues creation time: " + str(self.queues_creation_time)
+		#print "Queues complete time: " + str(self.queues_complete_time)
 
         @classmethod
 	def init_queues(cls, interface_name, bw_list):
@@ -332,5 +332,5 @@ if __name__ == "__main__":
     LOWER_LIMIT = 0.41
 
     USE_AVERAGES = deque( maxlen=SOME_SAMPLES )
-    CODE = FlowMonitor(SOME_SAMPLES, AN_INTERVAL_TIME, AN_UPPER_LIMIT)
+    CODE = FlowMonitor_2(SOME_SAMPLES, AN_INTERVAL_TIME, AN_UPPER_LIMIT)
     CODE.start_monitoring()
