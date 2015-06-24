@@ -374,7 +374,7 @@ def _handle_flowstats_received (event):
 			
 				current_flows = get_bw_flow_list(flow_list, indexes_to_process)
 				#new_flows_indexes = []
-				#stopped_flows_indexes = []
+				stopped_flows_indexes = []
 				#uptaded_indexes = []
 
 				#queues_dict = dict.fromkeys(['Response','dpid','delete_queue', 'update_queue', 'create_queue'])
