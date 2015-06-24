@@ -1,7 +1,7 @@
 """ Main Switch module, monitors interface bandwidth usage and applies the QoS policies specified by the SDN Controller """
 
 import FeedbackMessage
-import FlowMonitor
+import FlowMonitor_2
 import SwitchProperties
 
 import json
@@ -10,7 +10,7 @@ import subprocess
 import socket
 from threading import Timer
 from threading import Thread
-
+from threading import Lock
 
 class SwitchSocket(Thread):
 
@@ -113,7 +113,7 @@ class ApplicationSwitch:
 				notification_message = json.dumps(str(feedback_dict))
 				#print 'Message sent: ' + notification_message
 				self.msg_sender.send_message(notification_message, self.controller_ip, self.flowfence_port)
-				self.msg_sender.close_connection()
+				#self.msg_sender.close_connection()
 
 				self.control_in_process = 1
 
@@ -141,8 +141,14 @@ class ApplicationSwitch:
                         notification_message = json.dumps(str(feedback_dict))
 
 			print 'Queues message sent: ' + str(feedback_dict['bw_list'])
-			self.msg_sender.send_message(notification_message, self.controller_ip, self.flowfence_port)
-                        self.msg_sender.close_connection()
+			print "Message sent to: " + str(self.controller_ip,) + " Port: " + str(self.flowfence_port)
+			lock = Lock()
+			lock.acquire()
+			try:
+				self.msg_sender.send_message(notification_message, self.controller_ip, self.flowfence_port)
+        	                #self.msg_sender.close_connection()
+			finally:
+				lock.release()
 
 
 		def message_from_controller(self, message):
@@ -156,8 +162,6 @@ class ApplicationSwitch:
                         # Luego recibiremos un flowmod enviando los flujos a las filas respectivas
                         if message_dict['Response'] == "Decrement":
 				self.link_state.create_queues(message_dict)
-                        if message_dict['Response'] == "Update":
-                                self.link_state.update_queues(message_dict)
 
 		@classmethod
 		def get_instance(cls):
@@ -171,7 +175,7 @@ if __name__ == "__main__":
 	CODE = ApplicationSwitch()
 
         CODE.listen_socket = SwitchSocket(CODE, CODE.application_port)
-        CODE.link_state = FlowMonitor.FlowMonitor(CODE.samples, CODE.interval_time, CODE.upper_limit, CODE.lower_limit)
+        CODE.link_state = FlowMonitor_2.FlowMonitor_2(CODE.samples, CODE.interval_time, CODE.upper_limit, CODE.lower_limit)
         print "Init Finished"
 
         CODE.listen_socket.setDaemon(True)
