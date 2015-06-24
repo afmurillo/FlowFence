@@ -1,3 +1,4 @@
+
 """
 DoS Mitigation - FlowFence component
 
@@ -94,6 +95,7 @@ class HandleMessage(Thread):
 			message = eval(json.loads(self.received))
 		except:
 			print "An error ocurred processing the incoming message"
+			return
 
 		if message['Notification'] == 'Congestion':
 			global notification_time
@@ -278,8 +280,9 @@ def get_bw_flow_list(flow_list, indexes_to_process):
 			duration = float(flow_list[processing_indexes[i]]['duration_sec'] + float(flow_list[processing_indexes[i]]['duration_nsec'] /1000000000))
 			if duration > 0:
 				acc_bw = acc_bw + float(flow_list[processing_indexes[i]]['byte_count']/duration)
+				print "Acc bw: ", acc_bw
 			else: 
-				acc_bw = acc_bw + 1
+				acc_bw = acc_bw + flow_list[processing_indexes[i]]['byte_count']
 		# Expressed in bits
 		flow_bw_dictt['reportedBw'] = acc_bw * 8
 		flow_bw_list.append(flow_bw_dictt)
@@ -288,7 +291,7 @@ def get_bw_flow_list(flow_list, indexes_to_process):
 		for i in range(len(processing_indexes)):
 			indexes_to_process.remove(processing_indexes[i])
 
-		return flow_bw_list
+	return flow_bw_list
 
 def assign_bw(flow_stats, policy):
 
@@ -299,19 +302,19 @@ def assign_bw(flow_stats, policy):
 
 	if (policy == 'Penalty'):
 		# Good flows
-		
 		for j in range(num_flows):
-			flow_stats[j]['goodBehaved'] = classiy_flows(capacity, flow_stats, num_flows)
+			flow_stats[j]['goodBehaved'] = classiy_flows(capacity, flow_stats[j]['reportedBw'], num_flows)
 
 			if flow_stats[j]['goodBehaved'] == True:
+				print "Giving bw to good behaved"
 				flow_stats[j]['bw'] = flow_stats[j]['reportedBw']
+	                else:
+        	                bad_flows = bad_flows + 1
+                	        bad_flows_indexes.append(j)
 
-      		if flow_stats[j]['bw'] > 900000000:
-			flow_stats[j]['bw'] = 900000000 
-			remaining_bw = remaining_bw - flow_stats[j]['bw']
-		else:
-			bad_flows = bad_flows + 1
-			bad_flows_indexes.append(j)
+	      		if flow_stats[j]['bw'] > 900000000:
+				flow_stats[j]['bw'] = 900000000 
+				remaining_bw = remaining_bw - flow_stats[j]['bw']
 
 		# Bad Flows
 		for j in range(len(bad_flows_indexes)):
@@ -325,7 +328,7 @@ def assign_bw(flow_stats, policy):
 		# Give remmaining bw between good flows
 		if bad_flows < num_flows:
 			extra_bw = remaining_bw/(num_flows - bad_flows)
-			for j in range(len(num_flows)):
+			for j in range(num_flows):
 				if flow_stats[j]['goodBehaved'] == True:
 		    			flow_stats[j]['bw'] =  flow_stats[j]['bw'] + extra_bw
 		                #print "Good behaved flow bw: " + str(flow_bw_list[i]['bw']
@@ -410,7 +413,8 @@ def _handle_flowstats_received (event):
 					del switch_states[i]['flow_stats'][stopped_flows_indexes[j]]
 					
 				switch_states[i]['flow_stats'] = assign_bw(switch_states[i]['flow_stats'], switch_states[i]['bw_policy'])
-
+				print "Flow stats: " + str(switch_states[i]['flow_stats'])
+			
 				queues_dict = dict.fromkeys(['Response','dpid','bw_list'])
 				queues_dict['dpid'] = sending_dpid
 				queues_dict['Response'] = "Decrement"
@@ -427,8 +431,13 @@ def _handle_flowstats_received (event):
 				flow_list = flow_stats_to_list(event.stats)
 				indexes_to_process = [flow_index for flow_index, flow in enumerate(flow_list) if str(flow['match']['nw_dst'])==server_target]
 
+				print "Raw flow list: ", flow_list
+
 				switch_states[i]['flow_stats'] = get_bw_flow_list(flow_list, indexes_to_process)
 				print "Flow stats: "  + str(switch_states[i]['flow_stats'])
+
+				if not switch_states[i]['flow_stats']:
+					return
 						
 				switch_states[i]['flow_stats'] = assign_bw(switch_states[i]['flow_stats'], switch_states[i]['bw_policy'])	
 
@@ -469,13 +478,21 @@ def close_connection(a_socket):
 	a_socket.close()
 
 def classiy_flows(capacity, estimated_bw, num_flows):
+
 	""" Classifies flows """
-	if estimated_bw > (capacity/num_flows):
+	fair_rate = float(capacity/num_flows)
+	#print "fair rate: " + str(fair_rate)
+	#print "estimated: " + str(estimated_bw,) + " num flows: " + str(num_flows)
+	
+	if estimated_bw > fair_rate:
+		#print "Bad behaved"
 		return False
 	else:
+		#print "good behaved"
 		return True
 
 def assign_bw_to_bad_behaved(capacity, remaining_bw, num_bad_flows, num_total_flows, flow_rate, alfa):
+
 	""" Assigns bw to each flow """
 	#return flow_rate - (1 - math.exp(-(flow_rate-(capacity/num_total_flows))))*alfa*flow_rate
  	print "Bad behaved with: " + "capacity :" + str(capacity) + " remaining bw: " + str(remaining_bw) + " bad flows: " + str(num_bad_flows)
