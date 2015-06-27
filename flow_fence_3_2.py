@@ -218,8 +218,8 @@ class HandleMessage(Thread):
 				msg = of.ofp_flow_mod()
 				msg.match = my_match
 				msg.priority = 65535
-				msg.idle_timeout = 0
-    				msg.hard_timeout = 0
+				msg.idle_timeout = 25
+    				#msg.hard_timeout = 0
 				msg.actions.append(of.ofp_action_enqueue(port=int(message['bw_list'][i]['action']), queue_id=int(message['queue_list'][i]['queueId'])))
 
 	                	for connection in connections:
@@ -272,7 +272,7 @@ def get_bw_flow_list(flow_list, indexes_to_process):
 
 		flow_bw_dictt=dict.fromkeys(['nw_src', 'nw_dst', 'reportedBw', 'goodBehaved', 'bw', 'action'])
 		flow_bw_dictt['nw_src'] = str(flow_list[processing_indexes[0]]['match']['nw_src'])
-		flow_bw_dictt['nw_dst'] = str(flow_list[processing_indexes[0]]['match']['nw_dst'])
+		flow_bw_dictt['nw_dst'] = str(flow_list[processing_indexes[0]]['match']['nw_dst']).split('/')[0]
 		flow_bw_dictt['action'] = flow_list[processing_indexes[0]]['actions'][0]['port']
 		acc_bw = 0
 
@@ -302,6 +302,7 @@ def assign_bw(flow_stats, policy):
 
 	if (policy == 'Penalty'):
 		# Good flows
+		print "Bw Policy: Penalty"
 		for j in range(num_flows):
 			flow_stats[j]['goodBehaved'] = classiy_flows(capacity, flow_stats[j]['reportedBw'], num_flows)
 
@@ -336,6 +337,7 @@ def assign_bw(flow_stats, policy):
 					flow_stats[j]['bw'] = 900000000
 
 	if (policy == 'Equal'):
+		print "Bw policy: Equal"
 		simple_bw = capacity/num_flows
 		for j in range(num_flows):
 			flow_stats[j]['bw'] = simple_bw
@@ -373,9 +375,27 @@ def _handle_flowstats_received (event):
 			if updating == 1:
 
 				flow_list = flow_stats_to_list(event.stats)
+				print "Raw flow list received: ", flow_list
+				print "Old flow list: ", switch_states[i]['flow_stats']
+
+				if not flow_list:
+					print "Flow list empty!"
+	                                queues_dict = dict.fromkeys(['Response','dpid'])
+                                	queues_dict['dpid'] = sending_dpid
+                        	        queues_dict['Response'] = "Clear"
+
+        	                        response_message = json.dumps(str(queues_dict))
+	
+                	                response_socket = create_socket()
+        	                        send_message(response_socket,sending_address, response_port, response_message)
+	                                close_connection(response_socket)
+
+					return
+
 				indexes_to_process = [flow_index for flow_index, flow in enumerate(flow_list) if str(flow['match']['nw_dst'])==server_target]
 			
 				current_flows = get_bw_flow_list(flow_list, indexes_to_process)
+				print "current flows: ", current_flows
 				#new_flows_indexes = []
 				stopped_flows_indexes = []
 				#uptaded_indexes = []
@@ -396,14 +416,14 @@ def _handle_flowstats_received (event):
 							break
 
 						# If it wasn't in k-1 and k we could have a) flow ceased b) flow is a new one
-					if (not any(src['nw_src'] ==  current_flows[j]['nw_src'] for src in switch_states[i]['flow_stats'])) and ((not any(dst['nw_dst'] ==  current_flows[j]['nw_dst'] for dst in switch_states[i]['flow_stats']))):
+					if (not any(src['nw_src'] ==  current_flows[j]['nw_src'] for src in switch_states[i]['flow_stats'])):
 						# New flow does not exist in the old flow stats, append it
 						#new_flows_indexes.append(j)
 						switch_states[i]['flow_stats'].append(current_flows[j])
 						continue
 
 				for j in range(len(switch_states[i]['flow_stats'])):
-					if (not any(src['nw_src'] ==  switch_states[i]['flow_stats'][j]['nw_src'] for src in current_flows)) and ((not any(dst['nw_dst'] ==  switch_states[i]['flow_stats'][j]['nw_dst'] for dst in current_flows))):
+					if (not any(src['nw_src'] ==  switch_states[i]['flow_stats'][j]['nw_src'] for src in current_flows)):
 					# New flow does not exist in the old flow stats, append it
 						stopped_flows_indexes.append(j)
 						continue
@@ -413,7 +433,7 @@ def _handle_flowstats_received (event):
 					del switch_states[i]['flow_stats'][stopped_flows_indexes[j]]
 					
 				switch_states[i]['flow_stats'] = assign_bw(switch_states[i]['flow_stats'], switch_states[i]['bw_policy'])
-				print "Flow stats: " + str(switch_states[i]['flow_stats'])
+				print "Updating: Flow stats: " + str(switch_states[i]['flow_stats'])
 			
 				queues_dict = dict.fromkeys(['Response','dpid','bw_list'])
 				queues_dict['dpid'] = sending_dpid
@@ -480,7 +500,10 @@ def close_connection(a_socket):
 def classiy_flows(capacity, estimated_bw, num_flows):
 
 	""" Classifies flows """
-	fair_rate = float(capacity/num_flows)
+	#fair_rate = float(capacity/num_flows)
+	# JUST TO CHECK BW POLICY SWITCH!!!!!o
+
+	fair_rate = 0
 	#print "fair rate: " + str(fair_rate)
 	#print "estimated: " + str(estimated_bw,) + " num flows: " + str(num_flows)
 	
@@ -499,7 +522,7 @@ def assign_bw_to_bad_behaved(capacity, remaining_bw, num_bad_flows, num_total_fl
 	print "Total flows: " + str(num_total_flows) + "flow rate : " + str(flow_rate) + "alfa: " + str(alfa)
 	fair_rate = capacity/num_total_flows
 	bad_fair_rate = capacity / num_bad_flows
-	bw = bad_fair_rate - (1 - math.exp( - (flow_rate - fair_rate) )) * alfa * bad_fair_rate
+	bw = bad_fair_rate - (1 - math.exp( - abs(flow_rate - fair_rate) )) * alfa * bad_fair_rate
 	return bw
 
 def check_policies():
@@ -513,7 +536,7 @@ def check_policies():
 			bw_list = []
 			for j in range(num_flows):
 
-				bw_list.append(switch_states[i]['flow_stats'][j]['bw'])
+				bw_list.append(switch_states[i]['flow_stats'][j]['reportedBw'])
 				if switch_states[i]['flow_stats'][j]['goodBehaved'] == False:
 					bad_flow_count = bad_flow_count + 1
 
@@ -524,11 +547,17 @@ def check_policies():
 				switch_states[i]['bw_policy'] = 'Penalty'
 
 			if len(bw_list) > 1:
-				bw_dev = st.stdev(bw_list)
-				if bw_dev < min_sla:
-					switch_states[i]['drop_policy'] = 'MOF'				
+				if any(e is None for e in bw_list):
+					return
 				else:
-					switch_states[i]['drop_policy'] = 'Random'
+					print "bw_list: ", bw_list
+					bw_dev = st.stdev(bw_list)
+					if bw_dev > min_sla:
+						print "Drop Policy: MOF "
+						switch_states[i]['drop_policy'] = 'MOF'				
+					else:
+						print "Drop POlicy: Random"
+						switch_states[i]['drop_policy'] = 'Random'
 
 def launch ():
 	""" First method called """
