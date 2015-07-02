@@ -1,0 +1,63 @@
+agents:
+
+  digAgent:
+    group: dig_group
+    path: /share/magi/modules/MAGIAgents/Agents/digAgent/
+    execargs: []
+
+  httpAgent:
+    group: http_group
+    code: /share/magi/modules/MAGIAgents/Agents/httpClient/
+    execargs: []
+
+  pingAgent:
+    group: attack_group
+    code: /share/magi/modules/MAGIAgents/Agents/hPingAgent/
+    execargs: []
+
+
+## The mapping from the AAL procedure to the experiment apparatus
+groups:
+ 
+  #attack_group: [attackNode-1]
+  #attack_group: [attackNode-1 attackNode-2]
+  #attack_group: [attackNode-2, attackNode-1, attackNode-4]
+  #attack_group: [attackNode-2, attackNode-1, attackNode-4, attackNode-5]
+  #attack_group: [attackNode-2, attackNode-1, attackNode-4, attackNode-5, attackNode-6]
+  #attack_group: [attackNode-2, attackNode-1, attackNode-4, attackNode-5, attackNode-6, attackNode-7]
+  #attack_group: [attackNode-2, attackNode-1, attackNode-4, attackNode-5, attackNode-6, attackNode-7, attackNode-8]
+  #attack_group: [attackNode-2, attackNode-1, attackNode-4, attackNode-5, attackNode-6, attackNode-7, attackNode-8, attackNode-9]
+  #attack_group: [attackNode-2, attackNode-1, attackNode-4, attackNode-5, attackNode-6, attackNode-7, attackNode-8, attackNode-9, attackNode-10]
+  attack_group: [attackNode-2, attackNode-1, attackNode-4, attackNode-5, attackNode-6, attackNode-7, attackNode-8, attackNode-9, attackNode-10 attackNode-11]
+  
+  dig_group: [digClient-1]
+  http_group: [attackNode-3]
+
+streamstarts: [ digstream, httpstream, attackstream, cleanupstream ]
+
+eventstreams:
+
+  digstream:
+       - type: event
+         agent: digAgent
+         method: startDig
+         args: { }
+
+  httpstream:
+       - type: event
+         agent: httpAgent
+         method: startHttp     
+         args: { }  
+
+  attackstream:
+       - type: event
+         agent: pingAgent
+         method: startPing
+         trigger: finished
+         args: { }
+
+  cleanupstream:
+      - type: trigger
+        triggers: [ {event: finished, target: exit} ]
+
+################################################
