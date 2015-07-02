@@ -155,6 +155,11 @@ class FlowMonitor_2:
 					break
 
 
+	def clear_queues(self, controller_message):
+		subprocess.check_output('./clear_queues.sh ', shell=True)		
+	
+
+
 	def update_queues(self, controller_message):
 		""" Updates the QoS queues, one queue is created for each flow """
 		# Here we should:
@@ -192,7 +197,8 @@ class FlowMonitor_2:
 	def create_queues(self, controller_message):
 
 		""" Creates the QoS queues, one queue is created for each flow """
-		
+
+		self.clear_queues(controller_message)
 		self.queues_creation_time = time.time()
 		self.complete_interface_list[0]['queueList']=self.init_queues(self.complete_interface_list[0]['name'],controller_message['bw_list'])
 		self.set_queues_bw(self.complete_interface_list[0]['queueList'])

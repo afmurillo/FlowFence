@@ -163,6 +163,9 @@ class ApplicationSwitch:
                         if message_dict['Response'] == "Decrement":
 				self.link_state.create_queues(message_dict)
 
+			if message_dict['Response'] == "Clear":
+				self.link_state.clear_queues(message_dict)
+
 		@classmethod
 		def get_instance(cls):
 
