@@ -30,7 +30,7 @@ class SwitchSocket(Thread):
                 while True:
                         try:
                                 client, addr = self.sock.accept()                               # Establish connection with client
-                                data = client.recv(4096)                                                # Get data from the client
+                                data = client.recv(10240)                                                # Get data from the client
                                 #print 'Message from', addr                                              # Print a message confirming
                                 data_treatment = HandleMessage(self.report_object, data, addr)    # Call the thread to work with the data received
                                 data_treatment.setDaemon(True)                                  # Set the thread as a demond
