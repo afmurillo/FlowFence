@@ -23,6 +23,7 @@ import math
 import statistics as st
 import time
 from random import randint
+from operator import itemgetter
 from pox.lib.recoco import Timer
 
 
@@ -153,9 +154,10 @@ class HandleMessage(Thread):
 
 				elif switch_states[i]['drop_policy'] == 'MOF': 	
 					#sorted_flows = sorted(switch_states[i]['flow_stats'], key=lambda k[i]['flow_stats']: k[i]['flow_stats']['reportedBw']) 
+					sorted_flows = sorted(switch_states[i]['flow_stats'], key=itemgetter('reportedBw'), reverse=True)
 					switch_index = i
-					drop_index = randint(0,len(switch_states[i]['flow_stats']))
-					drop_flow = sorted_flows[-1]
+					#drop_index = randint(0,len(switch_states[i]['flow_stats']))
+					drop_flow = sorted_flows[0]
 
 					# 1. Sort the flow_stats list
 					# Get the index = 1
@@ -168,8 +170,8 @@ class HandleMessage(Thread):
 
 		msg = of.ofp_flow_mod()
 		msg.priority = 65535
-		msg.idle_timeout = 0
-		msg.hard_timeout = 0
+		msg.idle_timeout = 60
+		#msg.hard_timeout = 60
 
 		cls.send_command_to_switch(dpid, connections, msg)
 
@@ -218,7 +220,7 @@ class HandleMessage(Thread):
 				msg = of.ofp_flow_mod()
 				msg.match = my_match
 				msg.priority = 65535
-				msg.idle_timeout = 25
+				msg.idle_timeout = 60
     				#msg.hard_timeout = 0
 				msg.actions.append(of.ofp_action_enqueue(port=int(message['bw_list'][i]['action']), queue_id=int(message['queue_list'][i]['queueId'])))
 
@@ -232,10 +234,10 @@ class HandleMessage(Thread):
 					 	global flow_mod_time
 					 	flow_mod_time = time.time() - queues_done_time
 
-						print "Notification time: " + str(notification_time)
-						print "Flow stats reply: " + str(flow_stats_reply_time)
-						print "Queues done time: " + str(queues_done_time)
-						print "Flow mode time :" + str(flow_mod_time) 
+						#print "Notification time: " + str(notification_time)
+						#print "Flow stats reply: " + str(flow_stats_reply_time)
+						#print "Queues done time: " + str(queues_done_time)
+						#print "Flow mode time :" + str(flow_mod_time) 
 
 class ConnectTest(EventMixin):
 
@@ -280,7 +282,7 @@ def get_bw_flow_list(flow_list, indexes_to_process):
 			duration = float(flow_list[processing_indexes[i]]['duration_sec'] + float(flow_list[processing_indexes[i]]['duration_nsec'] /1000000000))
 			if duration > 0:
 				acc_bw = acc_bw + float(flow_list[processing_indexes[i]]['byte_count']/duration)
-				print "Acc bw: ", acc_bw
+				#print "Acc bw: ", acc_bw
 			else: 
 				acc_bw = acc_bw + flow_list[processing_indexes[i]]['byte_count']
 		# Expressed in bits
@@ -320,11 +322,11 @@ def assign_bw(flow_stats, policy):
 		# Bad Flows
 		for j in range(len(bad_flows_indexes)):
 			flow_stats[bad_flows_indexes[j]]
-			flow_stats[bad_flows_indexes[j]]['reportedBw'] = assign_bw_to_bad_behaved(capacity, remaining_bw, bad_flows, num_flows, flow_stats[bad_flows_indexes[j]]['reportedBw'], alfa)
-			if flow_stats[bad_flows_indexes[j]]['reportedBw'] > 3000000:
-				flow_stats[bad_flows_indexes[j]]['reportedBw'] = 3000000
+			flow_stats[bad_flows_indexes[j]]['bw'] = assign_bw_to_bad_behaved(capacity, remaining_bw, bad_flows, num_flows, flow_stats[bad_flows_indexes[j]]['reportedBw'], alfa)
+			if flow_stats[bad_flows_indexes[j]]['bw'] > 3000000:
+				flow_stats[bad_flows_indexes[j]]['bw'] = 3000000
 				#print "Bad behaved flow bw " +  str(flow_bw_list[i]['bw'])
-				remaining_bw = remaining_bw - flow_stats[bad_flows_indexes[j]]['reportedBw']
+				remaining_bw = remaining_bw - flow_stats[bad_flows_indexes[j]]['bw']
 
 		# Give remmaining bw between good flows
 		if bad_flows < num_flows:
@@ -500,11 +502,8 @@ def close_connection(a_socket):
 def classiy_flows(capacity, estimated_bw, num_flows):
 
 	""" Classifies flows """
-	#fair_rate = float(capacity/num_flows)
-	# JUST TO CHECK BW POLICY SWITCH!!!!!o
+	fair_rate = float(capacity/num_flows)
 
-	fair_rate = 0
-	#print "fair rate: " + str(fair_rate)
 	#print "estimated: " + str(estimated_bw,) + " num flows: " + str(num_flows)
 	
 	if estimated_bw > fair_rate:
