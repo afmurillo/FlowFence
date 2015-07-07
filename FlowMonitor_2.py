@@ -6,7 +6,7 @@ import subprocess
 from collections import deque
 import threading
 
-import application_switch_2
+import application_switch_3
 import SwitchProperties
 import time
 
@@ -105,7 +105,7 @@ class FlowMonitor_2:
 	def start_monitoring(self):
 		""" Starts the thread that monitors interface occupation """
 
-		self.report_object = application_switch_2.ApplicationSwitch()
+		self.report_object = application_switch_3.ApplicationSwitch()
 		self.monitoring=1
 		self.threads_id.append(threading.Thread(name = 'Monitor', target=self.monitor))
 		self.threads_id[0].start()

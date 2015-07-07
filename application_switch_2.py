@@ -135,7 +135,7 @@ class ApplicationSwitch:
 
                         notification_message = json.dumps(str(feedback_dict))
 
-			print 'Queues message sent: ' + str(feedback_dict['bw_list'])
+			#print 'Queues message sent: ' + str(feedback_dict['bw_list'])
 			self.msg_sender.send_message(notification_message, self.controller_ip, self.flowfence_port)
                         self.msg_sender.close_connection()
 
