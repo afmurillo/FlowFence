@@ -31,18 +31,18 @@ LOG = core.getLogger()
 CONTROLLER_IP = '10.1.4.1'
 switch_states = []
 # in bits, obtained experimentally using TCP - Iperf
-capacity = 16000000				 
+capacity = 1000000000				 
 #bw_for_new_flows = 0.0
-remaining_bw = 100000000 
+remaining_bw = 1000000000 
 num_flows = 0
-alfa =1.0
+alfa =0.9
 response_port = 23456
 server_target = '10.1.2.1/32'
 check_policy_time = 30
 bad_flow_count_th = 0.9
 
 # toDo: CHECK THIS VALUE!!!
-min_sla = 100
+min_sla = 10000000
 flow_update_time = 30
 
 global updating
@@ -239,6 +239,10 @@ class HandleMessage(Thread):
 						#print "Queues done time: " + str(queues_done_time)
 						#print "Flow mode time :" + str(flow_mod_time) 
 
+		#if len(message['bw_list']) > capacity/min_sla:
+		if len(message['bw_list']) > capacity/min_sla:
+			self.handle_queues_full(dpid, connections, switch_addresss, message)
+
 class ConnectTest(EventMixin):
 
 	""" Waits for OpenFlow switches to connect and makes them learning switches. """
@@ -323,8 +327,8 @@ def assign_bw(flow_stats, policy):
 		for j in range(len(bad_flows_indexes)):
 			flow_stats[bad_flows_indexes[j]]
 			flow_stats[bad_flows_indexes[j]]['bw'] = assign_bw_to_bad_behaved(capacity, remaining_bw, bad_flows, num_flows, flow_stats[bad_flows_indexes[j]]['reportedBw'], alfa)
-			if flow_stats[bad_flows_indexes[j]]['bw'] > 3000000:
-				flow_stats[bad_flows_indexes[j]]['bw'] = 3000000
+			if flow_stats[bad_flows_indexes[j]]['bw'] < 20000000:
+				flow_stats[bad_flows_indexes[j]]['bw'] = 20000000
 				#print "Bad behaved flow bw " +  str(flow_bw_list[i]['bw'])
 				remaining_bw = remaining_bw - flow_stats[bad_flows_indexes[j]]['bw']
 
