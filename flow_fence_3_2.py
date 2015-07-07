@@ -435,8 +435,13 @@ def _handle_flowstats_received (event):
 						continue
 					
 				# Remove the flows that stopped from the global flow list
-				for j in range(len(stopped_flows_indexes)):
-					del switch_states[i]['flow_stats'][stopped_flows_indexes[j]]
+				removeset = set(stopped_flows_indexes)
+				newlist = [v for k, v in enumerate(switch_states[i]['flow_stats']) if k not in removeset]
+				del switch_states[i]['flow_stats'][:]
+				for j in range(len(newlist)):
+					switch_states[i]['flow_stats'].append(newlist[j])
+				#for j in range(len(stopped_flows_indexes)):
+				#del switch_states[i]['flow_stats'][stopped_flows_indexes[j]]
 					
 				switch_states[i]['flow_stats'] = assign_bw(switch_states[i]['flow_stats'], switch_states[i]['bw_policy'])
 				print "Updating: Flow stats: " + str(switch_states[i]['flow_stats'])
