@@ -30,7 +30,7 @@ class SwitchSocket(Thread):
                 while True:
                         try:
                                 client, addr = self.sock.accept()                               # Establish connection with client
-                                data = client.recv(4096)                                                # Get data from the client
+                                data = client.recv(10240)                                                # Get data from the client
                                 #print 'Message from', addr                                              # Print a message confirming
                                 data_treatment = HandleMessage(self.report_object, data, addr)    # Call the thread to work with the data received
                                 data_treatment.setDaemon(True)                                  # Set the thread as a demond
@@ -162,6 +162,9 @@ class ApplicationSwitch:
                         # Luego recibiremos un flowmod enviando los flujos a las filas respectivas
                         if message_dict['Response'] == "Decrement":
 				self.link_state.create_queues(message_dict)
+
+			if message_dict['Response'] == "Clear":
+				self.link_state.clear_queues(message_dict)
 
 		@classmethod
 		def get_instance(cls):
