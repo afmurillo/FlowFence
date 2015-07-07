@@ -416,7 +416,7 @@ def _handle_flowstats_received (event):
 				for j in range(len(current_flows)):
 					# Flow still exists, getting bw/s
 					for k in range(len(switch_states[i]['flow_stats'])):
-						if (current_flows[j]['nw_src'] == switch_states[i]['flow_stats'][k]['nw_src']) and (current_flows[j]['nw_src'] == switch_states[i]['flow_stats'][k]['nw_src']):
+						if (current_flows[j]['nw_src'] == switch_states[i]['flow_stats'][k]['nw_src']) and (current_flows[j]['nw_src'] == switch_states[i]['flow_stats'][k]['nw_src']) and (switch_states[i]['flow_stats'][k]['goodBehaved'] == True):
 							switch_states[i]['flow_stats'][k]['reportedBw'] = current_flows[j]['reportedBw']
 							#uptaded_indexes.append(k)
 							break
