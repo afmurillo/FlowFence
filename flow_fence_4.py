@@ -444,18 +444,21 @@ class HandleMessage(Thread):
 
         #my_match = of.ofp_match(dl_type = 0x800,nw_src=message['bw_list'][i]['nw_src'],nw_dst=message['bw_list'][i]['nw_dst'])
         for j in range(len(switch_states[switch_index]['flow_stats'])):
-          if (message['bw_list'][i]['nw_src'] == switch_states[switch_index]['flow_stats'][j]['nw_src']) and (message['bw_list'][i]['nw_dst'] == switch_states[switch_index]['flow_stats'][j]['nw_dst']):
-            flow_index = j
+		if (message['bw_list'][i]['nw_src'] == switch_states[switch_index]['flow_stats'][j]['nw_src']) and (message['bw_list'][i]['nw_dst'] == switch_states[switch_index]['flow_stats'][j]['nw_dst']):
+			flow_index = j
+			break
 
-        msg = of.ofp_flow_mod()
-        my_match = of.ofp_match(dl_type = switch_states[switch_index]['flow_stats'][j]['dl_type'], \
-          nw_src = switch_states[switch_index]['flow_stats'][j]['nw_src'], nw_dst = switch_states[switch_index]['flow_stats'][j]['nw_dst'], \
-          dl_src = switch_states[switch_index]['flow_stats'][j]['dl_src'], dl_dst = switch_states[switch_index]['flow_stats'][j]['dl_dst'], \
-          dl_vlan = switch_states[switch_index]['flow_stats'][j]['dl_vlan'], \
-          nw_tos = switch_states[switch_index]['flow_stats'][j]['nw_tos'], nw_proto = switch_states[switch_index]['flow_stats'][j]['nw_proto'], \
-          tp_src = switch_states[switch_index]['flow_stats'][j]['tp_src'], tp_dst = switch_states[switch_index]['flow_stats'][j]['tp_dst'])
+	msg = of.ofp_flow_mod()
+        my_match = of.ofp_match(dl_type = 0x800, \
+          dl_src = switch_states[switch_index]['flow_stats'][flow_index]['dl_src'], dl_dst = switch_states[switch_index]['flow_stats'][flow_index]['dl_dst'],\
+	  nw_src = switch_states[switch_index]['flow_stats'][flow_index]['nw_src'], nw_dst = switch_states[switch_index]['flow_stats'][flow_index]['nw_dst'], \
+          dl_vlan = switch_states[switch_index]['flow_stats'][flow_index]['dl_vlan'], \
+          nw_tos = switch_states[switch_index]['flow_stats'][flow_index]['nw_tos'], nw_proto = switch_states[switch_index]['flow_stats'][flow_index]['nw_proto'], \
+          tp_src = switch_states[switch_index]['flow_stats'][flow_index]['tp_src'], tp_dst = switch_states[switch_index]['flow_stats'][flow_index]['tp_dst'])
         
         msg.match = my_match
+	print "Match for flow: ", msg.match
+
         msg.priority = 65535
         msg.idle_timeout = 60
         msg.actions.append(of.ofp_action_enqueue(port=int(message['bw_list'][i]['action']), queue_id=int(message['queue_list'][i]['queueId'])))
