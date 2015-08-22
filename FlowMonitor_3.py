@@ -185,9 +185,12 @@ class FlowMonitor_3:
 		if self.qos_register['uuid'] == None:
 			self.create_qos_register(self.complete_interface_list[0]['name'])
 
+		print "received bw list: ", controller_message['bw_list']
+		print "old bw list: ", self.old_queue_list
+
 		for j in range(len(controller_message['bw_list'])):
 			# Flow still exists, getting bw/s
-			for k in range(len(self.old_queue_list):
+			for k in range(len(self.old_queue_list)):
 				if (controller_message['bw_list'][j]['nw_src'] == self.old_queue_list[k]['nw_src']) and (controller_message['bw_list'][j]['nw_dst'] == self.old_queue_list[k]['nw_dst']):
 						self.set_queue_bw(self.complete_interface_list[0]['name'], k, controller_message['bw_list'][j]['bw'])
 						break
@@ -199,11 +202,19 @@ class FlowMonitor_3:
 					to_create.append(controller_message['bw_list'][j])
 					continue
 
-        for j in range(len(old_queue_list)):
-        	if (not any(src['nw_src'] ==  self.old_queue_list[j]['nw_src'] for src in controller_message['bw_list'])):
-        		# New flow does not exist in the old flow stats, append it
-        		to_delete.append(j)
-        		continue		
+			if not self.old_queue_list:
+				print "Empty old list!"
+				to_create.append(controller_message['bw_list'][j])
+
+		self.create_individual_queues(self.complete_interface_list[0]['name'], to_create)
+
+	        for j in range(len(self.old_queue_list)):
+        		if (not any(src['nw_src'] ==  self.old_queue_list[j]['nw_src'] for src in controller_message['bw_list'])):
+        			# New flow does not exist in the old flow stats, append it
+	        		to_delete.append(j)
+	        		continue		
+	
+		self.delete_individual_queue(self.complete_interface_list[0]['name'], to_delete)
 		
 		self.report_object.queues_ready(self.complete_interface_list[0],controller_message['bw_list'], self.old_queue_list)
 
@@ -228,7 +239,8 @@ class FlowMonitor_3:
 		subprocess.check_output(command, shell=True)					
 
 		self.queues_ids.remove(self.old_queue_list[delete_index]['queueId'])
-        del self.old_queue_list[delete_index]  
+	        del self.old_queue_list[delete_index]  
+
 
 	def delete_individual_queue(self, interface_name, to_delete):
 
@@ -241,50 +253,57 @@ class FlowMonitor_3:
 
 			self.queues_ids.remove(self.old_queue_list[to_delete[i]]['queueId'])
 
-        removeset = set(to_delete)
-        newlist = [v for k, v in enumerate(self.old_queue_list if k not in removeset]
-        del self.old_queue_list[:]
-        for j in range(len(newlist)):
-        	self.old_queue_list.append(newlist[j])        	
+	        removeset = set(to_delete)
+	        newlist = [v for k, v in enumerate(self.old_queue_list) if k not in removeset]
+	        del self.old_queue_list[:]
 
-    def create_individual_queues(self, interface_name, to_create):
+	        for j in range(len(newlist)):
+	        	self.old_queue_list.append(newlist[j])        	
 
-    	#queue_list = []
+	def create_individual_queues(self, interface_name, to_create):
 
-    	for i in range(len(to_create)):
-    		a_queue_dict = dict.fromkeys(['uuid', 'queueId', 'nw_src', 'nw_dst', 'bw'])
-    		a = 0
+	    	#queue_list = []
 
-    		while (a<100000):
-    			if (a != self.queues_ids[a]):
-    				break
+	    	for i in range(len(to_create)):
+    			a_queue_dict = dict.fromkeys(['uuid', 'queueId', 'nw_src', 'nw_dst', 'bw'])
+	    		a = 0
 
-    		self.queues_ids.append(a)
+    			while (a<100000):
 
-    		command = 'ovs-vsctl create Queue other-config:max-rate=' + str(to_create[i]['bw'])
-    		an_uuid = subprocess.check_output(command, shell=True)
+				if not self.queues_ids:
+					a = 0
+					break
 
-    		command = 'ovs-vsctl add Qos ' + self.qos_register['uuid'] + ' queues ' + str(a) '=' + an_uuid
+	    			if (a != self.queues_ids[a]):
+    					break
+
+	    		self.queues_ids.append(a)
+
+    			command = 'ovs-vsctl create Queue other-config:max-rate=' + str(to_create[i]['bw'])
+	    		an_uuid = subprocess.check_output(command, shell=True)
+
+    			command = 'ovs-vsctl add Qos ' + self.qos_register['uuid'] + ' queues ' + str(a) + '=' + an_uuid
 			subprocess.check_output(command, shell=True)  	
 
 			a_queue_dict['uuid'] = an_uuid
 			a_queue_dict['queueId'] = a
-			a_queue_dict['nw_src'] = to_create['nw_src']
-			a_queue_dict['nw_dst'] = to_create['nw_dst']
-			a_queue_dict['bw'] = to_create['bw']                                                                                                                                                                                                         
+			a_queue_dict['nw_src'] = to_create[i]['nw_src']
+			a_queue_dict['nw_dst'] = to_create[i]['nw_dst']
+			a_queue_dict['bw'] = to_create[i]['bw']                                                                                                                                                                                                         
 			self.old_queue_list.append(a_queue_dict)
 
 	def create_qos_register(self, interface_name):
-    	#ovs-vsctl -- set Port eth0br qos=@fenceqos -- --id=@fenceqos create QoS type=linux-htb
-    	#self.qos_register = dict.fromkeys(['uuid','port', 'id', 'min-rate', 'max-rate'] )
-    	command = 'ovs-vsctl -- set Port ' + interface_name + ' qos=@fenceqos -- --id=@fenceqos create QoS type=linux-htb'
-    	self.qos_register['uuid'] = subprocess.check_output(command, shell=True)
-    	self.qos_register['port'] = interface_name
-    	self.qos_register['id'] = 'fenceqos'
-		self.qos_register['max-rate'] = 900000000
+	    	#ovs-vsctl -- set Port eth0br qos=@fenceqos -- --id=@fenceqos create QoS type=linux-htb
+	    	#self.qos_register = dict.fromkeys(['uuid','port', 'id', 'min-rate', 'max-rate'] )
+	    	command = 'ovs-vsctl -- set Port ' + interface_name + ' qos=@fenceqos -- --id=@fenceqos create QoS type=linux-htb'
+	    	self.qos_register['uuid'] = subprocess.check_output(command, shell=True).split('\n')[0]
+	    	self.qos_register['port'] = interface_name
+	    	self.qos_register['id'] = 'fenceqos'
+		self.qos_register['max-rate'] = '900000000'
 
 		#ovs-vsctl set Qos 016d2315-6305-4692-ae89-c2a3e680e874 other-config:max-rate=1000000
-		command = 'ovs-vsctl set Qos ' + self.qos_register['uuid'] + ' other-config:max-rate=' + str(self.qos_register['max-rate'])
+		print "QoS uuid: ", self.qos_register['uuid']  
+		command = 'ovs-vsctl set Qos ' + self.qos_register['uuid'] + ' other-config:max-rate=900000000'
 		subprocess.check_output(command, shell=True)
 
 	def create_queues(self, controller_message):

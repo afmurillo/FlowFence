@@ -1,7 +1,7 @@
 """ Main Switch module, monitors interface bandwidth usage and applies the QoS policies specified by the SDN Controller """
 
 import FeedbackMessage
-import FlowMonitor_2
+import FlowMonitor_3
 import SwitchProperties
 
 import json
@@ -160,10 +160,14 @@ class ApplicationSwitch:
                         # En caso que el mensaje sea una indicacion de congestion, debemos preparar las filas y reportar que han sido inicializadas exitosamente
                         # Luego recibiremos un flowmod enviando los flujos a las filas respectivas
                         if message_dict['Response'] == "Decrement":
-				self.link_state.create_queues(message_dict)
+				#self.link_state.create_queues(message_dict)
+                                self.link_state.update_queues(message_dict)
 
 			if message_dict['Response'] == "Clear":
 				self.link_state.clear_queues(message_dict)
+
+                        if message_dict['Response'] == "Delete_queue":
+                                self.link_state.delete_a_queue(message_dict)
 
 		@classmethod
 		def get_instance(cls):
@@ -177,7 +181,7 @@ if __name__ == "__main__":
 	CODE = ApplicationSwitch()
 
         CODE.listen_socket = SwitchSocket(CODE, CODE.application_port)
-        CODE.link_state = FlowMonitor_2.FlowMonitor_2(CODE.samples, CODE.interval_time, CODE.upper_limit, CODE.lower_limit)
+        CODE.link_state = FlowMonitor_3.FlowMonitor_3(CODE.samples, CODE.interval_time, CODE.upper_limit, CODE.lower_limit)
         print "Init Finished"
 
         CODE.listen_socket.setDaemon(True)
