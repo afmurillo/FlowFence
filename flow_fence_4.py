@@ -184,6 +184,7 @@ class LearningSwitch (object):
 
     print "Packet dst to: ", ip_dst
 
+    # To avoid the recreation of a flow while flowfence is controlling
     if (controlled == 1) and (ip_dst = '10.1.2.1'):
       return
 
@@ -220,8 +221,6 @@ class LearningSwitch (object):
 
         dpid = str(dpidToStr(event.dpid))
         dpid_str = dpid.replace("-", "")
-
-        # ,udp,in_port=LOCAL,vlan_tci=0x0000,dl_src=00:b6:78:9f:7b:d2,dl_dst=00:b5:73:9f:7b:d1,nw_src=10.1.1.47,nw_dst=10.1.2.1,nw_tos=0,tp_src=5629,tp_dst=80 actions=output:1
 
         # Create a new entry in our flow state table for the new flow
         for i in range(len(switch_states)):
@@ -389,18 +388,20 @@ class HandleMessage(Thread):
     msg.idle_timeout = 60
     #msg.hard_timeout = 60
 
+
     cls.send_command_to_switch(dpid, connections, msg)
 
-    #delete_dict = dict.fromkeys(['dpid', 'Response', 'src_ip', 'dst_ip'])
-    #delete_dict['Response'] = 'delete_a_queue'
-    #delete_dict['dpid'] = dpid
-    #delete_dict['src_ip'] = drop_flow['nw_src']
-    #delete_dict['dst_ip'] = drop_flow['nw_dst']
-    #response_message = json.dumps(str(delete_dict))
+    drop_flow
 
-    #response_socket = create_socket()
-    #send_message(response_socket, switch_addresss, self.response_port, response_message)
-    #close_connection(response_socket)  
+    queues_dict = dict.fromkeys(['Response','dpid','drop_flow'])
+    queues_dict['dpid'] = dpid
+    queues_dict['Response'] = "Delete_queue"
+    queues_dict['drop_flow'] = drop_flow
+
+    response_message = json.dumps(str(queues_dict))
+    response_socket = create_socket()
+    send_message(response_socket, sending_address, response_port, response_message)
+    close_connection(response_socket)
 
     del switch_states[switch_index]['flow_stats'][drop_index] 
 
@@ -504,12 +505,7 @@ def get_bw_flow_list(flow_list, indexes_to_process):
     flow_bw_dictt['tp_src'] = flow_list[processing_indexes[0]]['match']['tp_src']
     flow_bw_dictt['tp_dst'] = flow_list[processing_indexes[0]]['match']['tp_dst']
     flow_bw_dictt['action'] = flow_list[processing_indexes[0]]['actions'][0]['port']
-    #switch_states[i]['flow_stats'].append(flow_bw_dictt)
 
-    #flow_bw_dictt=dict.fromkeys(['nw_src', 'nw_dst', 'reportedBw', 'goodBehaved', 'bw', 'action'])
-    #flow_bw_dictt['nw_src'] = str(flow_list[processing_indexes[0]]['match']['nw_src'])
-    #flow_bw_dictt['nw_dst'] = str(flow_list[processing_indexes[0]]['match']['nw_dst']).split('/')[0]
-    #flow_bw_dictt['action'] = flow_list[processing_indexes[0]]['actions'][0]['port']
     acc_bw = 0
 
     for i in range(len(processing_indexes)):
@@ -635,13 +631,6 @@ def _handle_flowstats_received (event):
         #new_flows_indexes = []
         stopped_flows_indexes = []
         #uptaded_indexes = []
-
-        #queues_dict = dict.fromkeys(['Response','dpid','delete_queue', 'update_queue', 'create_queue'])
-        #queues_dict['dpid'] = sending_dpid
-        #queues_dict['Response'] = "Update"
-        #queues_dict['delete_queue'] = []
-        #queues_dict['update_queue'] = []
-        #queues_dict['create_queue'] = []
 
         for j in range(len(current_flows)):
           # Flow still exists, getting bw/s
