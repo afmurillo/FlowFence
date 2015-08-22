@@ -179,13 +179,20 @@ class LearningSwitch (object):
         msg.in_port = event.port
         self.connection.send(msg)
 
-    ip_packet = event.parsed.find("ipv4")
-    ip_dst = ip_packet.dstip
+    tcpp = event.parsed.find('tcp')	
+    ip_dst = 0
+    if tcpp:
+	    ip_packet = event.parsed.find("ipv4")
+	    ip_dst = ip_packet.dstip
 
+<<<<<<< HEAD
     print "Packet dst to: ", ip_dst
 
     # To avoid the recreation of a flow while flowfence is controlling
     if (controlled == 1) and (ip_dst = '10.1.2.1'):
+=======
+    if (controlled == 1) and (ip_dst == '10.1.2.1'):
+>>>>>>> 74ad3685d0c1c51c2961e6b2f9a3551cb8e3c2aa
       return
 
     self.macToPort[packet.src] = event.port # 1
@@ -213,7 +220,6 @@ class LearningSwitch (object):
                   (packet.src, event.port, packet.dst, port))
         msg = of.ofp_flow_mod()
         msg.match = of.ofp_match.from_packet(packet, event.port)
-        print "Packet match: ", msg.match
         msg.idle_timeout = 10
         msg.hard_timeout = 30
         msg.actions.append(of.ofp_action_output(port = port))
@@ -224,20 +230,21 @@ class LearningSwitch (object):
 
         # Create a new entry in our flow state table for the new flow
         for i in range(len(switch_states)):
-          if switch_states[i]['dpid'] == dpid_str:
-            flow_bw_dictt=dict.fromkeys(['nw_src', 'nw_dst', 'dl_src','dl_dst','dl_vlan','dl_vlan_pcp','dl_type','nw_tos','nw_proto','tp_src','tp_dst','reportedBw', 'goodBehaved', 'bw', 'action'])
-            flow_bw_dictt['nw_src'] = msg.match.nw_src
-            flow_bw_dictt['nw_dst'] = msg.match.nw_dst
+          if (switch_states[i]['dpid'] == dpid_str) and (msg.match.dl_type == 'IP'):
+	    flow_bw_dictt=dict.fromkeys(['nw_src', 'nw_dst', 'dl_src','dl_dst','dl_vlan','dl_vlan_pcp','dl_type','nw_tos','nw_proto','tp_src','tp_dst','reportedBw', 'goodBehaved', 'bw', 'action'])
+            flow_bw_dictt['nw_src'] = str(msg.match.nw_src)
+            flow_bw_dictt['nw_dst'] = str(msg.match.nw_dst)
             flow_bw_dictt['dl_src'] = msg.match.dl_src
             flow_bw_dictt['dl_dst'] = msg.match.dl_dst
             flow_bw_dictt['dl_vlan'] = msg.match.dl_vlan
-            flow_bw_dictt['dl_vlan_pcp'] = msg.match.dl_vlan_pcp
+            #flow_bw_dictt['dl_vlan_pcp'] = msg.match.dl_vlan_pcp
             flow_bw_dictt['dl_type'] = msg.match.dl_type
             flow_bw_dictt['nw_tos'] = msg.match.nw_tos
             flow_bw_dictt['nw_proto'] = msg.match.nw_proto
             flow_bw_dictt['tp_src'] = msg.match.tp_src
             flow_bw_dictt['tp_dst'] = msg.match.tp_dst
-            flow_bw_dictt['action'] = msg.match.action[0]['port']
+            flow_bw_dictt['action'] = port
+	    print "Built packet in dict: ", flow_bw_dictt
             switch_states[i]['flow_stats'].append(flow_bw_dictt)
          
         self.connection.send(msg)
@@ -250,7 +257,7 @@ class flow_fence (object):
   def __init__ (self, transparent):
     core.openflow.addListeners(self)
     self.transparent = transparent
-    self.listenTo(core.openflow)
+    #self.listenTo(core.openflow)
     LOG.debug("Received connection from switch")
     #print "Received connection from switch"
     self.myconnections = []   # a list of the connections
@@ -330,7 +337,7 @@ class HandleMessage(Thread):
   def handle_congestion_notification(self, connections, dpid):
     """ Upon reception of a congestion notification, requests for flow stats in the congestioned switch """
     dpid = dpid[:len(dpid)-1]
-                dpid = dpid[len(dpid)-12:]
+    dpid = dpid[len(dpid)-12:]
 
     switch=dict.fromkeys(['dpid', 'flow_stats', 'drop_policy', 'bw_policy'])
     switch['drop_policy'] = 'Random'
@@ -428,12 +435,13 @@ class HandleMessage(Thread):
 
     #cls.send_command_to_switch(dpid, connections, msg)
 
-    dpid_a = str(dpidToStr(event.dpid))
-    dpid_str = dpid_a.replace("-", "")
+    #dpid_a = str(dpidToStr(event.dpid))
+    #dpid_str = dpid_a.replace("-", "")
     switch_index = 0
     # Create a new entry in our flow state table for the new flow
     for i in range(len(switch_states)):
-      if switch_states[i]['dpid'] == dpid_str:
+      if switch_states[i]['dpid'] == dpid:
+	print "found switch"
         switch_index = i
 
     for i in range(len(message['bw_list'])):
@@ -443,37 +451,35 @@ class HandleMessage(Thread):
 
         #my_match = of.ofp_match(dl_type = 0x800,nw_src=message['bw_list'][i]['nw_src'],nw_dst=message['bw_list'][i]['nw_dst'])
         for j in range(len(switch_states[switch_index]['flow_stats'])):
-          if (message['bw_list'][i]['nw_src'] == switch_states[switch_index]['flow_stats'][j]['nw_src']) and (message['bw_list'][i]['nw_dst']) == switch_states[switch_index]['flow_stats'][j]['nw_dst'])
-            flow_index = j
+		if (message['bw_list'][i]['nw_src'] == switch_states[switch_index]['flow_stats'][j]['nw_src']) and (message['bw_list'][i]['nw_dst'] == switch_states[switch_index]['flow_stats'][j]['nw_dst']):
+			flow_index = j
+			break
 
-        msg = of.ofp_flow_mod()
-        my_match = of.ofp_match(dl_type = switch_states[switch_index]['flow_stats'][j]['dl_type'], \
-          nw_src = switch_states[switch_index]['flow_stats'][j]['nw_src'], nw_dst = switch_states[switch_index]['flow_stats'][j]['nw_dst'], \
-          dl_src = switch_states[switch_index]['flow_stats'][j]['dl_src'], dl_dst = switch_states[switch_index]['flow_stats'][j]['dl_dst'], \
-          dl_vlan = switch_states[switch_index]['flow_stats'][j]['dl_vlan'], dl_vlan_pcp = switch_states[switch_index]['flow_stats'][j]['dl_vlan_pcp'], \
-          dl_type = switch_states[switch_index]['flow_stats'][j]['dl_type'], \
-          nw_tos = switch_states[switch_index]['flow_stats'][j]['nw_tos'], nw_proto = switch_states[switch_index]['flow_stats'][j]['nw_proto'], \
-          tcp_src = switch_states[switch_index]['flow_stats'][j]['tcp_src'], tcp_dst = switch_states[switch_index]['flow_stats'][j]['tcp_dst'])
+	msg = of.ofp_flow_mod()
+        my_match = of.ofp_match(dl_type = 0x800, \
+          dl_src = switch_states[switch_index]['flow_stats'][flow_index]['dl_src'], dl_dst = switch_states[switch_index]['flow_stats'][flow_index]['dl_dst'],\
+	  nw_src = switch_states[switch_index]['flow_stats'][flow_index]['nw_src'], nw_dst = switch_states[switch_index]['flow_stats'][flow_index]['nw_dst'], \
+          dl_vlan = switch_states[switch_index]['flow_stats'][flow_index]['dl_vlan'], \
+          nw_tos = switch_states[switch_index]['flow_stats'][flow_index]['nw_tos'], nw_proto = switch_states[switch_index]['flow_stats'][flow_index]['nw_proto'], \
+          tp_src = switch_states[switch_index]['flow_stats'][flow_index]['tp_src'], tp_dst = switch_states[switch_index]['flow_stats'][flow_index]['tp_dst'])
         
-        mg.match = my_match
+        msg.match = my_match
+	print "Match for flow: ", msg.match
+
         msg.priority = 65535
         msg.idle_timeout = 60
         msg.actions.append(of.ofp_action_enqueue(port=int(message['bw_list'][i]['action']), queue_id=int(message['queue_list'][i]['queueId'])))
 
-                    for connection in connections:
-                      connection_dpid=connection.dpid
-                      dpid_str=dpidToStr(connection_dpid)
-                      dpid_str=dpid_str.replace("-", "")
+	for connection in connections:
+		connection_dpid=connection.dpid
+		dpid_str=dpidToStr(connection_dpid)
+		dpid_str=dpid_str.replace("-", "")
 
-                      if dpid == dpid_str:
-                        connection.send(msg)
-            global flow_mod_time
-            flow_mod_time = time.time() - queues_done_time
+		if dpid == dpid_str:
+			connection.send(msg)
 
-            #print "Notification time: " + str(notification_time)
-            #print "Flow stats reply: " + str(flow_stats_reply_time)
-            #print "Queues done time: " + str(queues_done_time)
-            #print "Flow mode time :" + str(flow_mod_time) 
+	global flow_mod_time
+	flow_mod_time = time.time() - queues_done_time
 
     #if len(message['bw_list']) > capacity/min_sla:
     if len(message['bw_list']) > capacity/min_sla:
@@ -489,18 +495,23 @@ def get_bw_flow_list(flow_list, indexes_to_process):
   while len(indexes_to_process) > 0 :
 
     # Get src of first flow
+    print "handling for flow: ", flow_list[indexes_to_process[0]]
     nw_src = str(flow_list[indexes_to_process[0]]['match']['nw_src'])
 
     processing_indexes = [flow_index for flow_index, flow in enumerate(flow_list) if str(flow['match']['nw_src']) == nw_src ]
+
     flow_bw_dictt=dict.fromkeys(['nw_src', 'nw_dst', 'dl_src','dl_dst','dl_vlan','dl_vlan_pcp','dl_type','nw_tos','nw_proto','tp_src','tp_dst','reportedBw', 'goodBehaved', 'bw', 'action'])
     flow_bw_dictt['nw_src'] = str(flow_list[processing_indexes[0]]['match']['nw_src'])
     flow_bw_dictt['nw_dst'] = str(flow_list[processing_indexes[0]]['match']['nw_dst']).split('/')[0]
     flow_bw_dictt['dl_src'] = flow_list[processing_indexes[0]]['match']['dl_src']
     flow_bw_dictt['dl_dst'] = flow_list[processing_indexes[0]]['match']['dl_dst']
     flow_bw_dictt['dl_vlan'] = flow_list[processing_indexes[0]]['match']['dl_vlan']
-    flow_bw_dictt['dl_vlan_pcp'] = flow_list[processing_indexes[0]]['match']['dl_vlan_pcp']
+    #flow_bw_dictt['dl_vlan_pcp'] = flow_list[processing_indexes[0]]['match']['dl_vlan_pcp']
     flow_bw_dictt['dl_type'] = flow_list[processing_indexes[0]]['match']['dl_type']
-    flow_bw_dictt['nw_tos'] = flow_list[processing_indexes[0]]['match']['nw_tos']
+
+    if 'nw_tos' in flow_list[processing_indexes[0]]['match']:
+	flow_bw_dictt['nw_tos'] = flow_list[processing_indexes[0]]['match']['nw_tos']
+
     flow_bw_dictt['nw_proto'] = flow_list[processing_indexes[0]]['match']['nw_proto']
     flow_bw_dictt['tp_src'] = flow_list[processing_indexes[0]]['match']['tp_src']
     flow_bw_dictt['tp_dst'] = flow_list[processing_indexes[0]]['match']['tp_dst']
@@ -536,43 +547,45 @@ def assign_bw(flow_stats, policy):
     # Good flows
     print "Bw Policy: Penalty"
     for j in range(num_flows):
-      flow_stats[j]['goodBehaved'] = classiy_flows(capacity, flow_stats[j]['reportedBw'], num_flows)
+	flow_stats[j]['goodBehaved'] = classiy_flows(capacity, flow_stats[j]['reportedBw'], num_flows)
 
-      if flow_stats[j]['goodBehaved'] == True:
-        print "Giving bw to good behaved"
-        flow_stats[j]['bw'] = flow_stats[j]['reportedBw']
-                  else:
-                          bad_flows = bad_flows + 1
-                          bad_flows_indexes.append(j)
+	if flow_stats[j]['goodBehaved'] == True:
+		print "Giving bw to good behaved"
+		flow_stats[j]['bw'] = flow_stats[j]['reportedBw']
+		print "good behaved flow bw: ", flow_stats[j]['bw']
+	else:
+		bad_flows = bad_flows + 1
+		bad_flows_indexes.append(j)
 
-            if flow_stats[j]['bw'] > 900000000:
-        flow_stats[j]['bw'] = 900000000 
-        remaining_bw = remaining_bw - flow_stats[j]['bw']
+	if flow_stats[j]['bw'] > 900000000:
+	        flow_stats[j]['bw'] = 900000000 
+        	remaining_bw = remaining_bw - flow_stats[j]['bw']
 
     # Bad Flows
     for j in range(len(bad_flows_indexes)):
-      flow_stats[bad_flows_indexes[j]]
-      flow_stats[bad_flows_indexes[j]]['bw'] = assign_bw_to_bad_behaved(capacity, remaining_bw, bad_flows, num_flows, flow_stats[bad_flows_indexes[j]]['reportedBw'], alfa)
-      if flow_stats[bad_flows_indexes[j]]['bw'] < 20000000:
-        flow_stats[bad_flows_indexes[j]]['bw'] = 20000000
-        #print "Bad behaved flow bw " +  str(flow_bw_list[i]['bw'])
-        remaining_bw = remaining_bw - flow_stats[bad_flows_indexes[j]]['bw']
+	flow_stats[bad_flows_indexes[j]]
+	flow_stats[bad_flows_indexes[j]]['bw'] = assign_bw_to_bad_behaved(capacity, remaining_bw, bad_flows, num_flows, flow_stats[bad_flows_indexes[j]]['reportedBw'], alfa)
+
+	if flow_stats[bad_flows_indexes[j]]['bw'] < 2000000:
+		flow_stats[bad_flows_indexes[j]]['bw'] = 2000000
+	        #print "Bad behaved flow bw " +  str(flow_bw_list[i]['bw'])
+        	remaining_bw = remaining_bw - flow_stats[bad_flows_indexes[j]]['bw']
 
     # Give remmaining bw between good flows
     if bad_flows < num_flows:
-      extra_bw = remaining_bw/(num_flows - bad_flows)
-      for j in range(num_flows):
-        if flow_stats[j]['goodBehaved'] == True:
-              flow_stats[j]['bw'] =  flow_stats[j]['bw'] + extra_bw
-                    #print "Good behaved flow bw: " + str(flow_bw_list[i]['bw']
-        if flow_stats[j]['bw'] > 900000000:
-          flow_stats[j]['bw'] = 900000000
+	extra_bw = remaining_bw/(num_flows - bad_flows)
+	for j in range(num_flows):
+		if flow_stats[j]['goodBehaved'] == True:
+			flow_stats[j]['bw'] =  flow_stats[j]['bw'] + extra_bw
+			#print "Good behaved flow bw: " + str(flow_bw_list[i]['bw']
+		        if flow_stats[j]['bw'] > 900000000:
+				flow_stats[j]['bw'] = 900000000
 
-  if (policy == 'Equal'):
-    print "Bw policy: Equal"
-    simple_bw = capacity/num_flows
-    for j in range(num_flows):
-      flow_stats[j]['bw'] = simple_bw
+    if (policy == 'Equal'):
+	print "Bw policy: Equal"
+	simple_bw = capacity/num_flows
+	for j in range(num_flows):
+		flow_stats[j]['bw'] = simple_bw
 
   return flow_stats
 
@@ -611,18 +624,16 @@ def _handle_flowstats_received (event):
         print "Old flow list: ", switch_states[i]['flow_stats']
 
         if not flow_list:
-          print "Flow list empty!"
-                                  queues_dict = dict.fromkeys(['Response','dpid'])
-                                  queues_dict['dpid'] = sending_dpid
-                                  queues_dict['Response'] = "Clear"
-
-                                  response_message = json.dumps(str(queues_dict))
+		print "Flow list empty!"
+		queues_dict = dict.fromkeys(['Response','dpid'])
+                queues_dict['dpid'] = sending_dpid
+                queues_dict['Response'] = "Clear"
+	        response_message = json.dumps(str(queues_dict))
   
-                                  response_socket = create_socket()
-                                  send_message(response_socket,sending_address, response_port, response_message)
-                                  close_connection(response_socket)
-
-          return
+                response_socket = create_socket()
+                send_message(response_socket,sending_address, response_port, response_message)
+                close_connection(response_socket)
+		return
 
         indexes_to_process = [flow_index for flow_index, flow in enumerate(flow_list) if str(flow['match']['nw_dst'])==server_target]
       
@@ -661,13 +672,15 @@ def _handle_flowstats_received (event):
           switch_states[i]['flow_stats'].append(newlist[j])
         #for j in range(len(stopped_flows_indexes)):
         #del switch_states[i]['flow_stats'][stopped_flows_indexes[j]]
-          
+        
+	print "Giving bw to: ", switch_states[i]['flow_stats']  
         switch_states[i]['flow_stats'] = assign_bw(switch_states[i]['flow_stats'], switch_states[i]['bw_policy'])
         print "Updating: Flow stats: " + str(switch_states[i]['flow_stats'])
       
         queues_dict = dict.fromkeys(['Response','dpid','bw_list'])
         queues_dict['dpid'] = sending_dpid
         queues_dict['Response'] = "Decrement"
+	queues_dict['bw_list'] = []
         
         for j in range(len(switch_states[i]['flow_stats'])):
           bw_dict = dict.fromkeys(['nw_src', 'nw_dst', 'bw', 'action']) 
