@@ -164,6 +164,7 @@ class ApplicationSwitch:
                                 self.link_state.update_queues(message_dict)
 
 			if message_dict['Response'] == "Clear":
+				print "Warning clearing all queues!"
 				self.link_state.clear_queues(message_dict)
 
                         if message_dict['Response'] == "Delete_queue":
