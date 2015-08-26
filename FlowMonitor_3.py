@@ -162,6 +162,10 @@ class FlowMonitor_3:
 
 	def clear_queues(self, controller_message):
 		subprocess.check_output('./clear_queues.sh ', shell=True)		
+		del self.old_queue_list[:]
+		self.qos_register['uuid'] = None
+		del self.queues_ids[:]
+		
 	
 
 
@@ -178,11 +182,14 @@ class FlowMonitor_3:
 
 		# Queues are at (controller_message['bw_list'])
 
+		self.lock.acquire()
+
 		to_create = []
 		#to_update =[]
 		to_delete = []
 
 		# Check if qos exists
+
 		if self.qos_register['uuid'] == None:
 			self.create_qos_register(self.complete_interface_list[0]['name'])
 
@@ -193,10 +200,10 @@ class FlowMonitor_3:
 			# Flow still exists, getting bw/s
 			for k in range(len(self.old_queue_list)):
 				if (controller_message['bw_list'][j]['nw_src'] == self.old_queue_list[k]['nw_src']) and (controller_message['bw_list'][j]['nw_dst'] == self.old_queue_list[k]['nw_dst']):
-						self.set_queue_bw(self.complete_interface_list[0]['name'], k, controller_message['bw_list'][j]['bw'])
-						break
+					self.set_queue_bw(self.complete_interface_list[0]['name'], k, controller_message['bw_list'][j]['bw'])
+					break
 
-				# If it wasn't in k-1 and k we could have a) flow ceased b) flow is a new one
+			# If it wasn't in k-1 and k we could have a) flow ceased b) flow is a new one
 			if (not any(src['nw_src'] ==  controller_message['bw_list'][j]['nw_src'] for src in self.old_queue_list)):
 				# New flow does not exist in the old flow stats, append it
 				#new_flows_indexes.append(j)
@@ -210,13 +217,16 @@ class FlowMonitor_3:
 
 	        for j in range(len(self.old_queue_list)):
         		if (not any(src['nw_src'] ==  self.old_queue_list[j]['nw_src'] for src in controller_message['bw_list'])):
-        			# New flow does not exist in the old flow stats, append it
+	       			# New flow does not exist in the old flow stats, append it
+				print "Old flows to delete: ", self.old_queue_list[j]
 	        		to_delete.append(j)
 	        		continue		
 
 		self.create_individual_queues(self.complete_interface_list[0]['name'], to_create)	
 		self.delete_individual_queue(self.complete_interface_list[0]['name'], to_delete)
 		self.report_object.queues_ready(self.complete_interface_list[0],controller_message['bw_list'], self.old_queue_list)
+
+		self.lock.release()
 
 	def set_queue_bw(self, interface_name, queue_index, bw):
 		#ovs-vsctl set Queue e059add5-ea8d-4c05-a9be-895ab217d2b4 other-config:max-rate=99
@@ -247,7 +257,6 @@ class FlowMonitor_3:
 
 		for i in range(len(to_delete)):
 
-			self.lock.acquire()
 
 			command = 'ovs-vsctl list Queue ' + '| grep ' + str(self.old_queue_list[to_delete[i]]['uuid'])
 			result = subprocess.check_output(command, shell=True).split('\n')[0]
@@ -264,7 +273,6 @@ class FlowMonitor_3:
 
 			self.queues_ids.remove(self.old_queue_list[to_delete[i]]['queueId'])
 	
-			self.lock.release()
 
 	        removeset = set(to_delete)
 	        newlist = [v for k, v in enumerate(self.old_queue_list) if k not in removeset]
