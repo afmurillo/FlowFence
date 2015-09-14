@@ -1,0 +1,23 @@
+httperf --hog --timeout=7 --client=0/1 --server=pdc-2 --port=80 --uri=http://10.1.2.1/index.html --rate=10 --send-buffer=4096 --recv-buffer=16384 --num-conns=100 --num-calls=1
+Maximum connect burst length: 1
+
+Total: connections 100 requests 100 replies 100 test-duration 10.943 s
+
+Connection rate: 9.1 conn/s (109.4 ms/conn, <=11 concurrent connections)
+Connection time [ms]: min 16.8 avg 213.1 max 1889.3 median 47.5 stddev 467.8
+Connection time [ms]: connect 211.2
+Connection length [replies/conn]: 1.000
+
+Request rate: 9.1 req/s (109.4 ms/req)
+Request size [B]: 83.0
+
+Reply rate [replies/s]: min 7.8 avg 8.9 max 10.0 stddev 1.6 (2 samples)
+Reply time [ms]: response 1.9 transfer 0.0
+Reply size [B]: header 283.0 content 177.0 footer 0.0 (total 460.0)
+Reply status: 1xx=0 2xx=100 3xx=0 4xx=0 5xx=0
+
+CPU time [s]: user 2.69 system 8.21 (user 24.6% system 75.0% total 99.7%)
+Net I/O: 4.8 KB/s (0.0*10^6 bps)
+
+Errors: total 0 client-timo 0 socket-timo 0 connrefused 0 connreset 0
+Errors: fd-unavail 0 addrunavail 0 ftab-full 0 other 0
