@@ -185,14 +185,7 @@ class LearningSwitch (object):
 	    ip_packet = event.parsed.find("ipv4")
 	    ip_dst = ip_packet.dstip
 
-<<<<<<< HEAD
-    print "Packet dst to: ", ip_dst
-
-    # To avoid the recreation of a flow while flowfence is controlling
-    if (controlled == 1) and (ip_dst = '10.1.2.1'):
-=======
     if (controlled == 1) and (ip_dst == '10.1.2.1'):
->>>>>>> 74ad3685d0c1c51c2961e6b2f9a3551cb8e3c2aa
       return
 
     self.macToPort[packet.src] = event.port # 1
