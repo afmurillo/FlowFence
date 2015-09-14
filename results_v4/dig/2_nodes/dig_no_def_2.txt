@@ -1,0 +1,510 @@
+
+; <<>> DiG 9.8.1-P1 <<>> @10.1.2.1 www.flowfence.com
+; (1 server found)
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: SERVFAIL, id: 32636
+;; flags: qr rd; QUERY: 1, ANSWER: 0, AUTHORITY: 0, ADDITIONAL: 0
+;; WARNING: recursion requested but not available
+
+;; QUESTION SECTION:
+;www.flowfence.com.		IN	A
+
+;; Query time: 2 msec
+;; SERVER: 10.1.2.1#53(10.1.2.1)
+;; WHEN: Mon Sep 14 15:08:03 2015
+;; MSG SIZE  rcvd: 35
+
+
+; <<>> DiG 9.8.1-P1 <<>> @10.1.2.1 www.flowfence.com
+; (1 server found)
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: SERVFAIL, id: 4854
+;; flags: qr rd; QUERY: 1, ANSWER: 0, AUTHORITY: 0, ADDITIONAL: 0
+;; WARNING: recursion requested but not available
+
+;; QUESTION SECTION:
+;www.flowfence.com.		IN	A
+
+;; Query time: 2 msec
+;; SERVER: 10.1.2.1#53(10.1.2.1)
+;; WHEN: Mon Sep 14 15:08:05 2015
+;; MSG SIZE  rcvd: 35
+
+
+; <<>> DiG 9.8.1-P1 <<>> @10.1.2.1 www.flowfence.com
+; (1 server found)
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: SERVFAIL, id: 63364
+;; flags: qr rd; QUERY: 1, ANSWER: 0, AUTHORITY: 0, ADDITIONAL: 0
+;; WARNING: recursion requested but not available
+
+;; QUESTION SECTION:
+;www.flowfence.com.		IN	A
+
+;; Query time: 2 msec
+;; SERVER: 10.1.2.1#53(10.1.2.1)
+;; WHEN: Mon Sep 14 15:08:07 2015
+;; MSG SIZE  rcvd: 35
+
+
+; <<>> DiG 9.8.1-P1 <<>> @10.1.2.1 www.flowfence.com
+; (1 server found)
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: SERVFAIL, id: 64138
+;; flags: qr rd; QUERY: 1, ANSWER: 0, AUTHORITY: 0, ADDITIONAL: 0
+;; WARNING: recursion requested but not available
+
+;; QUESTION SECTION:
+;www.flowfence.com.		IN	A
+
+;; Query time: 2 msec
+;; SERVER: 10.1.2.1#53(10.1.2.1)
+;; WHEN: Mon Sep 14 15:08:09 2015
+;; MSG SIZE  rcvd: 35
+
+
+; <<>> DiG 9.8.1-P1 <<>> @10.1.2.1 www.flowfence.com
+; (1 server found)
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: SERVFAIL, id: 43089
+;; flags: qr rd; QUERY: 1, ANSWER: 0, AUTHORITY: 0, ADDITIONAL: 0
+;; WARNING: recursion requested but not available
+
+;; QUESTION SECTION:
+;www.flowfence.com.		IN	A
+
+;; Query time: 2 msec
+;; SERVER: 10.1.2.1#53(10.1.2.1)
+;; WHEN: Mon Sep 14 15:08:11 2015
+;; MSG SIZE  rcvd: 35
+
+
+; <<>> DiG 9.8.1-P1 <<>> @10.1.2.1 www.flowfence.com
+; (1 server found)
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: SERVFAIL, id: 56786
+;; flags: qr rd; QUERY: 1, ANSWER: 0, AUTHORITY: 0, ADDITIONAL: 0
+;; WARNING: recursion requested but not available
+
+;; QUESTION SECTION:
+;www.flowfence.com.		IN	A
+
+;; Query time: 2 msec
+;; SERVER: 10.1.2.1#53(10.1.2.1)
+;; WHEN: Mon Sep 14 15:08:13 2015
+;; MSG SIZE  rcvd: 35
+
+
+; <<>> DiG 9.8.1-P1 <<>> @10.1.2.1 www.flowfence.com
+; (1 server found)
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: SERVFAIL, id: 53626
+;; flags: qr rd; QUERY: 1, ANSWER: 0, AUTHORITY: 0, ADDITIONAL: 0
+;; WARNING: recursion requested but not available
+
+;; QUESTION SECTION:
+;www.flowfence.com.		IN	A
+
+;; Query time: 2 msec
+;; SERVER: 10.1.2.1#53(10.1.2.1)
+;; WHEN: Mon Sep 14 15:08:15 2015
+;; MSG SIZE  rcvd: 35
+
+
+; <<>> DiG 9.8.1-P1 <<>> @10.1.2.1 www.flowfence.com
+; (1 server found)
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: SERVFAIL, id: 46810
+;; flags: qr rd; QUERY: 1, ANSWER: 0, AUTHORITY: 0, ADDITIONAL: 0
+;; WARNING: recursion requested but not available
+
+;; QUESTION SECTION:
+;www.flowfence.com.		IN	A
+
+;; Query time: 2 msec
+;; SERVER: 10.1.2.1#53(10.1.2.1)
+;; WHEN: Mon Sep 14 15:08:17 2015
+;; MSG SIZE  rcvd: 35
+
+
+; <<>> DiG 9.8.1-P1 <<>> @10.1.2.1 www.flowfence.com
+; (1 server found)
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: SERVFAIL, id: 11674
+;; flags: qr rd; QUERY: 1, ANSWER: 0, AUTHORITY: 0, ADDITIONAL: 0
+;; WARNING: recursion requested but not available
+
+;; QUESTION SECTION:
+;www.flowfence.com.		IN	A
+
+;; Query time: 2 msec
+;; SERVER: 10.1.2.1#53(10.1.2.1)
+;; WHEN: Mon Sep 14 15:08:24 2015
+;; MSG SIZE  rcvd: 35
+
+
+; <<>> DiG 9.8.1-P1 <<>> @10.1.2.1 www.flowfence.com
+; (1 server found)
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: SERVFAIL, id: 58624
+;; flags: qr rd; QUERY: 1, ANSWER: 0, AUTHORITY: 0, ADDITIONAL: 0
+;; WARNING: recursion requested but not available
+
+;; QUESTION SECTION:
+;www.flowfence.com.		IN	A
+
+;; Query time: 2 msec
+;; SERVER: 10.1.2.1#53(10.1.2.1)
+;; WHEN: Mon Sep 14 15:08:26 2015
+;; MSG SIZE  rcvd: 35
+
+
+; <<>> DiG 9.8.1-P1 <<>> @10.1.2.1 www.flowfence.com
+; (1 server found)
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: SERVFAIL, id: 17357
+;; flags: qr rd; QUERY: 1, ANSWER: 0, AUTHORITY: 0, ADDITIONAL: 0
+;; WARNING: recursion requested but not available
+
+;; QUESTION SECTION:
+;www.flowfence.com.		IN	A
+
+;; Query time: 2 msec
+;; SERVER: 10.1.2.1#53(10.1.2.1)
+;; WHEN: Mon Sep 14 15:08:28 2015
+;; MSG SIZE  rcvd: 35
+
+
+; <<>> DiG 9.8.1-P1 <<>> @10.1.2.1 www.flowfence.com
+; (1 server found)
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: SERVFAIL, id: 51380
+;; flags: qr rd; QUERY: 1, ANSWER: 0, AUTHORITY: 0, ADDITIONAL: 0
+;; WARNING: recursion requested but not available
+
+;; QUESTION SECTION:
+;www.flowfence.com.		IN	A
+
+;; Query time: 2 msec
+;; SERVER: 10.1.2.1#53(10.1.2.1)
+;; WHEN: Mon Sep 14 15:08:30 2015
+;; MSG SIZE  rcvd: 35
+
+
+; <<>> DiG 9.8.1-P1 <<>> @10.1.2.1 www.flowfence.com
+; (1 server found)
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: SERVFAIL, id: 17691
+;; flags: qr rd; QUERY: 1, ANSWER: 0, AUTHORITY: 0, ADDITIONAL: 0
+;; WARNING: recursion requested but not available
+
+;; QUESTION SECTION:
+;www.flowfence.com.		IN	A
+
+;; Query time: 2 msec
+;; SERVER: 10.1.2.1#53(10.1.2.1)
+;; WHEN: Mon Sep 14 15:08:32 2015
+;; MSG SIZE  rcvd: 35
+
+
+; <<>> DiG 9.8.1-P1 <<>> @10.1.2.1 www.flowfence.com
+; (1 server found)
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: SERVFAIL, id: 944
+;; flags: qr rd; QUERY: 1, ANSWER: 0, AUTHORITY: 0, ADDITIONAL: 0
+;; WARNING: recursion requested but not available
+
+;; QUESTION SECTION:
+;www.flowfence.com.		IN	A
+
+;; Query time: 2 msec
+;; SERVER: 10.1.2.1#53(10.1.2.1)
+;; WHEN: Mon Sep 14 15:08:34 2015
+;; MSG SIZE  rcvd: 35
+
+
+; <<>> DiG 9.8.1-P1 <<>> @10.1.2.1 www.flowfence.com
+; (1 server found)
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: SERVFAIL, id: 10463
+;; flags: qr rd; QUERY: 1, ANSWER: 0, AUTHORITY: 0, ADDITIONAL: 0
+;; WARNING: recursion requested but not available
+
+;; QUESTION SECTION:
+;www.flowfence.com.		IN	A
+
+;; Query time: 2 msec
+;; SERVER: 10.1.2.1#53(10.1.2.1)
+;; WHEN: Mon Sep 14 15:08:36 2015
+;; MSG SIZE  rcvd: 35
+
+
+; <<>> DiG 9.8.1-P1 <<>> @10.1.2.1 www.flowfence.com
+; (1 server found)
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: SERVFAIL, id: 5788
+;; flags: qr rd; QUERY: 1, ANSWER: 0, AUTHORITY: 0, ADDITIONAL: 0
+;; WARNING: recursion requested but not available
+
+;; QUESTION SECTION:
+;www.flowfence.com.		IN	A
+
+;; Query time: 2 msec
+;; SERVER: 10.1.2.1#53(10.1.2.1)
+;; WHEN: Mon Sep 14 15:08:38 2015
+;; MSG SIZE  rcvd: 35
+
+
+; <<>> DiG 9.8.1-P1 <<>> @10.1.2.1 www.flowfence.com
+; (1 server found)
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: SERVFAIL, id: 2576
+;; flags: qr rd; QUERY: 1, ANSWER: 0, AUTHORITY: 0, ADDITIONAL: 0
+;; WARNING: recursion requested but not available
+
+;; QUESTION SECTION:
+;www.flowfence.com.		IN	A
+
+;; Query time: 2 msec
+;; SERVER: 10.1.2.1#53(10.1.2.1)
+;; WHEN: Mon Sep 14 15:08:40 2015
+;; MSG SIZE  rcvd: 35
+
+
+; <<>> DiG 9.8.1-P1 <<>> @10.1.2.1 www.flowfence.com
+; (1 server found)
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: SERVFAIL, id: 63989
+;; flags: qr rd; QUERY: 1, ANSWER: 0, AUTHORITY: 0, ADDITIONAL: 0
+;; WARNING: recursion requested but not available
+
+;; QUESTION SECTION:
+;www.flowfence.com.		IN	A
+
+;; Query time: 2 msec
+;; SERVER: 10.1.2.1#53(10.1.2.1)
+;; WHEN: Mon Sep 14 15:08:42 2015
+;; MSG SIZE  rcvd: 35
+
+
+; <<>> DiG 9.8.1-P1 <<>> @10.1.2.1 www.flowfence.com
+; (1 server found)
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: SERVFAIL, id: 41499
+;; flags: qr rd; QUERY: 1, ANSWER: 0, AUTHORITY: 0, ADDITIONAL: 0
+;; WARNING: recursion requested but not available
+
+;; QUESTION SECTION:
+;www.flowfence.com.		IN	A
+
+;; Query time: 2 msec
+;; SERVER: 10.1.2.1#53(10.1.2.1)
+;; WHEN: Mon Sep 14 15:08:44 2015
+;; MSG SIZE  rcvd: 35
+
+
+; <<>> DiG 9.8.1-P1 <<>> @10.1.2.1 www.flowfence.com
+; (1 server found)
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: SERVFAIL, id: 7500
+;; flags: qr rd; QUERY: 1, ANSWER: 0, AUTHORITY: 0, ADDITIONAL: 0
+;; WARNING: recursion requested but not available
+
+;; QUESTION SECTION:
+;www.flowfence.com.		IN	A
+
+;; Query time: 2 msec
+;; SERVER: 10.1.2.1#53(10.1.2.1)
+;; WHEN: Mon Sep 14 15:08:46 2015
+;; MSG SIZE  rcvd: 35
+
+
+; <<>> DiG 9.8.1-P1 <<>> @10.1.2.1 www.flowfence.com
+; (1 server found)
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: SERVFAIL, id: 26618
+;; flags: qr rd; QUERY: 1, ANSWER: 0, AUTHORITY: 0, ADDITIONAL: 0
+;; WARNING: recursion requested but not available
+
+;; QUESTION SECTION:
+;www.flowfence.com.		IN	A
+
+;; Query time: 1 msec
+;; SERVER: 10.1.2.1#53(10.1.2.1)
+;; WHEN: Mon Sep 14 15:08:48 2015
+;; MSG SIZE  rcvd: 35
+
+
+; <<>> DiG 9.8.1-P1 <<>> @10.1.2.1 www.flowfence.com
+; (1 server found)
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: SERVFAIL, id: 18286
+;; flags: qr rd; QUERY: 1, ANSWER: 0, AUTHORITY: 0, ADDITIONAL: 0
+;; WARNING: recursion requested but not available
+
+;; QUESTION SECTION:
+;www.flowfence.com.		IN	A
+
+;; Query time: 2 msec
+;; SERVER: 10.1.2.1#53(10.1.2.1)
+;; WHEN: Mon Sep 14 15:08:50 2015
+;; MSG SIZE  rcvd: 35
+
+
+; <<>> DiG 9.8.1-P1 <<>> @10.1.2.1 www.flowfence.com
+; (1 server found)
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: SERVFAIL, id: 2935
+;; flags: qr rd; QUERY: 1, ANSWER: 0, AUTHORITY: 0, ADDITIONAL: 0
+;; WARNING: recursion requested but not available
+
+;; QUESTION SECTION:
+;www.flowfence.com.		IN	A
+
+;; Query time: 2 msec
+;; SERVER: 10.1.2.1#53(10.1.2.1)
+;; WHEN: Mon Sep 14 15:08:52 2015
+;; MSG SIZE  rcvd: 35
+
+
+; <<>> DiG 9.8.1-P1 <<>> @10.1.2.1 www.flowfence.com
+; (1 server found)
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: SERVFAIL, id: 4286
+;; flags: qr rd; QUERY: 1, ANSWER: 0, AUTHORITY: 0, ADDITIONAL: 0
+;; WARNING: recursion requested but not available
+
+;; QUESTION SECTION:
+;www.flowfence.com.		IN	A
+
+;; Query time: 2 msec
+;; SERVER: 10.1.2.1#53(10.1.2.1)
+;; WHEN: Mon Sep 14 15:08:54 2015
+;; MSG SIZE  rcvd: 35
+
+
+; <<>> DiG 9.8.1-P1 <<>> @10.1.2.1 www.flowfence.com
+; (1 server found)
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: SERVFAIL, id: 49031
+;; flags: qr rd; QUERY: 1, ANSWER: 0, AUTHORITY: 0, ADDITIONAL: 0
+;; WARNING: recursion requested but not available
+
+;; QUESTION SECTION:
+;www.flowfence.com.		IN	A
+
+;; Query time: 2 msec
+;; SERVER: 10.1.2.1#53(10.1.2.1)
+;; WHEN: Mon Sep 14 15:08:56 2015
+;; MSG SIZE  rcvd: 35
+
+
+; <<>> DiG 9.8.1-P1 <<>> @10.1.2.1 www.flowfence.com
+; (1 server found)
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: SERVFAIL, id: 24957
+;; flags: qr rd; QUERY: 1, ANSWER: 0, AUTHORITY: 0, ADDITIONAL: 0
+;; WARNING: recursion requested but not available
+
+;; QUESTION SECTION:
+;www.flowfence.com.		IN	A
+
+;; Query time: 2 msec
+;; SERVER: 10.1.2.1#53(10.1.2.1)
+;; WHEN: Mon Sep 14 15:08:58 2015
+;; MSG SIZE  rcvd: 35
+
+
+; <<>> DiG 9.8.1-P1 <<>> @10.1.2.1 www.flowfence.com
+; (1 server found)
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: SERVFAIL, id: 13642
+;; flags: qr rd; QUERY: 1, ANSWER: 0, AUTHORITY: 0, ADDITIONAL: 0
+;; WARNING: recursion requested but not available
+
+;; QUESTION SECTION:
+;www.flowfence.com.		IN	A
+
+;; Query time: 2 msec
+;; SERVER: 10.1.2.1#53(10.1.2.1)
+;; WHEN: Mon Sep 14 15:09:00 2015
+;; MSG SIZE  rcvd: 35
+
+
+; <<>> DiG 9.8.1-P1 <<>> @10.1.2.1 www.flowfence.com
+; (1 server found)
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: SERVFAIL, id: 17608
+;; flags: qr rd; QUERY: 1, ANSWER: 0, AUTHORITY: 0, ADDITIONAL: 0
+;; WARNING: recursion requested but not available
+
+;; QUESTION SECTION:
+;www.flowfence.com.		IN	A
+
+;; Query time: 2 msec
+;; SERVER: 10.1.2.1#53(10.1.2.1)
+;; WHEN: Mon Sep 14 15:09:02 2015
+;; MSG SIZE  rcvd: 35
+
+
+; <<>> DiG 9.8.1-P1 <<>> @10.1.2.1 www.flowfence.com
+; (1 server found)
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: SERVFAIL, id: 25622
+;; flags: qr rd; QUERY: 1, ANSWER: 0, AUTHORITY: 0, ADDITIONAL: 0
+;; WARNING: recursion requested but not available
+
+;; QUESTION SECTION:
+;www.flowfence.com.		IN	A
+
+;; Query time: 2 msec
+;; SERVER: 10.1.2.1#53(10.1.2.1)
+;; WHEN: Mon Sep 14 15:09:05 2015
+;; MSG SIZE  rcvd: 35
+
+
+; <<>> DiG 9.8.1-P1 <<>> @10.1.2.1 www.flowfence.com
+; (1 server found)
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: SERVFAIL, id: 63618
+;; flags: qr rd; QUERY: 1, ANSWER: 0, AUTHORITY: 0, ADDITIONAL: 0
+;; WARNING: recursion requested but not available
+
+;; QUESTION SECTION:
+;www.flowfence.com.		IN	A
+
+;; Query time: 2 msec
+;; SERVER: 10.1.2.1#53(10.1.2.1)
+;; WHEN: Mon Sep 14 15:09:07 2015
+;; MSG SIZE  rcvd: 35
+
