@@ -70,7 +70,7 @@ class ApplicationSwitch:
                         #Link monitoring parameters
                         self.control_in_process = 0
 
-                        self.samples = 10
+                        self.samples = 1
                         self.period = 3
                         self.interval_time = 1.0
                         self.upper_limit = 100
@@ -143,6 +143,7 @@ class ApplicationSwitch:
 			#print "Message sent to: " + str(self.controller_ip,) + " Port: " + str(self.flowfence_port)
 			lock = Lock()
 			lock.acquire()
+			print "Switch created queues: ", feedback_dict['queue_list']
 			try:
 				self.msg_sender.send_message(notification_message, self.controller_ip, self.flowfence_port)
         	                #self.msg_sender.close_connection()
