@@ -215,8 +215,8 @@ class LearningSwitch (object):
                   (packet.src, event.port, packet.dst, port))
         msg = of.ofp_flow_mod()
         msg.match = of.ofp_match.from_packet(packet, event.port)
-        msg.idle_timeout = 5
-        msg.hard_timeout = 5
+        msg.idle_timeout = 10
+        msg.hard_timeout = 10
         msg.priority = 30000
         msg.actions.append(of.ofp_action_output(port = port))
         msg.data = event.ofp # 6a
@@ -265,6 +265,7 @@ class flow_fence (object):
 
   def _handle_ConnectionUp (self, event):
     log.debug("Connection %s" % (event.connection,))
+    print "Connection received", event.connection
     self.myconnections.append(event.connection) # will pass as a reference to above    
     LearningSwitch(event.connection, self.transparent)
 
@@ -345,7 +346,7 @@ class HandleMessage(Thread):
     switch_states.append(switch)
     Timer(flow_update_time, self.update_flow_stats, recurring = True, args=[dpid, connections])
     msg = of.ofp_stats_request(body=of.ofp_flow_stats_request())
-    #print 'Flow stats requets sent to: ' + str(connections)   
+    print 'Flow stats requets sent to: ' + str(connections)   
     self.send_command_to_switch(dpid, connections, msg)
     
   def update_flow_stats(self, dpid, connections):
@@ -417,7 +418,7 @@ class HandleMessage(Thread):
       dpid_str = dpidToStr(connection_dpid)
       dpid_str = dpid_str.replace("-", "")
       if dpid == dpid_str:
-        print "Sending message to switch: ", dpid
+        #print "Sending message to switch: ", dpid
         #print "Message sent: ", msg
         #print "Message match: ", msg.match
         #print "Message actions: ",msg.actions
@@ -435,7 +436,7 @@ class HandleMessage(Thread):
 
     """ Sends flow mod messages to redirect flows to created queues """
 
-    print "Received message for flow redirection: ", message
+    #print "Received message for flow redirection: ", message
 
     dpid = dpid[:len(dpid)-1]
     dpid = dpid[len(dpid)-12:]
@@ -451,7 +452,7 @@ class HandleMessage(Thread):
     # Create a new entry in our flow state table for the new flow
     for i in range(len(switch_states)):
 	if switch_states[i]['dpid'] == dpid:
-		print "found switch"
+		#print "found switch"
 		switch_index = i
 
     for i in range(len(message['bw_list'])):
@@ -495,7 +496,7 @@ class HandleMessage(Thread):
         msg.idle_timeout = 60
         msg.actions.append(of.ofp_action_enqueue(port=int(message['bw_list'][i]['action']), queue_id=int(message['queue_list'][i]['queueId'])))
 
-	print "Sending redirect"
+	#print "Sending redirect"
 	cls.send_command_to_switch(dpid, connections, msg)
 
     #if len(message['bw_list']) > capacity/min_sla:
@@ -532,8 +533,10 @@ def get_bw_flow_list(flow_list, indexes_to_process):
     flow_bw_dictt['nw_proto'] = flow_list[processing_indexes[0]]['match']['nw_proto']
     if 'tp_src' in flow_list[processing_indexes[0]]['match']:
 	flow_bw_dictt['tp_src'] = flow_list[processing_indexes[0]]['match']['tp_src']
-	
-    flow_bw_dictt['tp_dst'] = flow_list[processing_indexes[0]]['match']['tp_dst']
+
+    if 'tp_dst' in flow_list[processing_indexes[0]]['match']:
+        flow_bw_dictt['tp_dst'] = flow_list[processing_indexes[0]]['match']['tp_dst']
+
     flow_bw_dictt['action'] = flow_list[processing_indexes[0]]['actions'][0]['port']
     #flow_bw_dictt['in_port'] = flow_list[processing_indexes[0]]['match']['in_port']
 
@@ -591,8 +594,8 @@ def assign_bw(flow_stats, policy):
 	flow_stats[bad_flows_indexes[j]]
 	flow_stats[bad_flows_indexes[j]]['bw'] = assign_bw_to_bad_behaved(capacity, remaining_bw, bad_flows, num_flows, flow_stats[bad_flows_indexes[j]]['reportedBw'], alfa)
 
-	if flow_stats[bad_flows_indexes[j]]['bw'] < 200000:
-		flow_stats[bad_flows_indexes[j]]['bw'] = 200000
+	if flow_stats[bad_flows_indexes[j]]['bw'] < 20000:
+		flow_stats[bad_flows_indexes[j]]['bw'] = 20000
 	        #print "Bad behaved flow bw " +  str(flow_bw_list[i]['bw'])
         	remaining_bw = remaining_bw - flow_stats[bad_flows_indexes[j]]['bw']
 
@@ -646,7 +649,7 @@ def _handle_flowstats_received (event):
 
         flow_list = flow_stats_to_list(event.stats)
         #print "Raw flow list received: ", flow_list
-        print "Old flow list: ", switch_states[i]['flow_stats']
+        #print "Old flow list: ", switch_states[i]['flow_stats']
 
         if not flow_list:
 		print "Flow list empty!"
@@ -663,7 +666,7 @@ def _handle_flowstats_received (event):
         indexes_to_process = [flow_index for flow_index, flow in enumerate(flow_list) if str(flow['match']['nw_dst'])==server_target]
       
         current_flows = get_bw_flow_list(flow_list, indexes_to_process)
-        print "current flows: ", current_flows
+        #print "current flows: ", current_flows
         #new_flows_indexes = []
         stopped_flows_indexes = []
         #uptaded_indexes = []
@@ -729,7 +732,7 @@ def _handle_flowstats_received (event):
         #print "Raw flow list: ", flow_list
 
         switch_states[i]['flow_stats'] = get_bw_flow_list(flow_list, indexes_to_process)
-        print "Flow stats: "  + str(switch_states[i]['flow_stats'])
+        #print "Flow stats: "  + str(switch_states[i]['flow_stats'])
 
         if not switch_states[i]['flow_stats']:
           return
@@ -815,7 +818,9 @@ def check_policies():
       if bad_flow_count >= float(num_flows*bad_flow_count_th):
         # Number of bad flows is 90% of the total flow count, switch policy
         switch_states[i]['bw_policy'] = 'Equal'
+	print "Equal Policy"
       else:
+	print "Penalty policy"
         switch_states[i]['bw_policy'] = 'Penalty'
 
       if len(bw_list) > 1:
