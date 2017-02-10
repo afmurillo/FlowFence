@@ -49,12 +49,10 @@ class FlowMonitor_3:
 			for i in range(len(self.complete_interface_list)):
 				self.complete_interface_list[i]['use_averages'] = deque( maxlen=self.n_samples )
 
-			#Control variables
-			self.threads_id = []
-			#self.reset_queues()
-			#subprocess.check_output('ovs-ofctl add-flow eth0br in_port=LOCAL,dl_type=0x0800,nw_src=10.1.1.3,nw_dst=10.1.2.1,idle_timeout=20,actions=output:1', shell=True)
-			self.init_window()
-
+		#Control variables
+		self.threads_id = []
+		self.init_window()
+	
 	def reset_queues(self):
    	    """ Clears QoS queues in all interfaces """
 
