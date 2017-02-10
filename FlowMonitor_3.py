@@ -71,12 +71,13 @@ class FlowMonitor_3:
 
                 #sample list of dicts, each dict has ['name']['sample']
                 result = self.get_sample()
+
 	    for j in range(len(self.complete_interface_list)):
 		    last_samples = result[j]['sample']
                     self.complete_interface_list[j]['use_averages'].popleft()
 		    self.complete_interface_list[j]['use_averages'].append(last_samples)
-            if i == 0:
-                    self.complete_interface_list[j]['prevema'] = last_samples
+	            if i == 0:
+        	            self.complete_interface_list[j]['prevema'] = last_samples
 
 	    for j in range(len(self.complete_interface_list)):
 		for a_bar in enumerate(self.complete_interface_list[j]['use_averages']):
